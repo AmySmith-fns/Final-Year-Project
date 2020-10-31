@@ -1,0 +1,4403 @@
+
+getting_up_to_speed.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .isr_vector   000000c0  08000000  08000000  00010000  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  1 .text         00001db4  080000c0  080000c0  000100c0  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       000000fc  08001e74  08001e74  00011e74  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  3 .init_array   00000004  08001f70  08001f70  00011f70  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  4 .fini_array   00000004  08001f74  08001f74  00011f74  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  5 .data         00000004  20000000  08001f78  00020000  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .bss          0000001c  20000004  08001f7c  00020004  2**2
+                  ALLOC
+  7 ._user_heap_stack 00000080  20000020  08001f7c  00020020  2**0
+                  ALLOC
+  8 .ARM.attributes 00000028  00000000  00000000  00020004  2**0
+                  CONTENTS, READONLY
+  9 .debug_info   000012e6  00000000  00000000  0002002c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_abbrev 000003a0  00000000  00000000  00021312  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_aranges 00000068  00000000  00000000  000216b8  2**3
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 00000038  00000000  00000000  00021720  2**3
+                  CONTENTS, READONLY, DEBUGGING
+ 13 .debug_line   0000060b  00000000  00000000  00021758  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 14 .debug_str    00000856  00000000  00000000  00021d63  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 15 .comment      0000007c  00000000  00000000  000225b9  2**0
+                  CONTENTS, READONLY
+ 16 .debug_frame  00000330  00000000  00000000  00022638  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 17 .stabstr      0000003f  00000000  00000000  00022968  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+080000c0 <__do_global_dtors_aux>:
+ 80000c0:	b510      	push	{r4, lr}
+ 80000c2:	4c06      	ldr	r4, [pc, #24]	; (80000dc <__do_global_dtors_aux+0x1c>)
+ 80000c4:	7823      	ldrb	r3, [r4, #0]
+ 80000c6:	2b00      	cmp	r3, #0
+ 80000c8:	d107      	bne.n	80000da <__do_global_dtors_aux+0x1a>
+ 80000ca:	4b05      	ldr	r3, [pc, #20]	; (80000e0 <__do_global_dtors_aux+0x20>)
+ 80000cc:	2b00      	cmp	r3, #0
+ 80000ce:	d002      	beq.n	80000d6 <__do_global_dtors_aux+0x16>
+ 80000d0:	4804      	ldr	r0, [pc, #16]	; (80000e4 <__do_global_dtors_aux+0x24>)
+ 80000d2:	e000      	b.n	80000d6 <__do_global_dtors_aux+0x16>
+ 80000d4:	bf00      	nop
+ 80000d6:	2301      	movs	r3, #1
+ 80000d8:	7023      	strb	r3, [r4, #0]
+ 80000da:	bd10      	pop	{r4, pc}
+ 80000dc:	20000004 	.word	0x20000004
+ 80000e0:	00000000 	.word	0x00000000
+ 80000e4:	08001e5c 	.word	0x08001e5c
+
+080000e8 <frame_dummy>:
+ 80000e8:	4b04      	ldr	r3, [pc, #16]	; (80000fc <frame_dummy+0x14>)
+ 80000ea:	b510      	push	{r4, lr}
+ 80000ec:	2b00      	cmp	r3, #0
+ 80000ee:	d003      	beq.n	80000f8 <frame_dummy+0x10>
+ 80000f0:	4903      	ldr	r1, [pc, #12]	; (8000100 <frame_dummy+0x18>)
+ 80000f2:	4804      	ldr	r0, [pc, #16]	; (8000104 <frame_dummy+0x1c>)
+ 80000f4:	e000      	b.n	80000f8 <frame_dummy+0x10>
+ 80000f6:	bf00      	nop
+ 80000f8:	bd10      	pop	{r4, pc}
+ 80000fa:	46c0      	nop			; (mov r8, r8)
+ 80000fc:	00000000 	.word	0x00000000
+ 8000100:	20000008 	.word	0x20000008
+ 8000104:	08001e5c 	.word	0x08001e5c
+
+08000108 <eml_trees_predict_tree>:
+#ifndef EMTREES_MAX_CLASSES
+#define EMTREES_MAX_CLASSES 10
+#endif
+
+static int32_t
+eml_trees_predict_tree(const EmlTrees *forest, int32_t tree_root, const float *features, int8_t features_length) {
+ 8000108:	b580      	push	{r7, lr}
+ 800010a:	b088      	sub	sp, #32
+ 800010c:	af00      	add	r7, sp, #0
+ 800010e:	60f8      	str	r0, [r7, #12]
+ 8000110:	60b9      	str	r1, [r7, #8]
+ 8000112:	607a      	str	r2, [r7, #4]
+ 8000114:	001a      	movs	r2, r3
+ 8000116:	1cfb      	adds	r3, r7, #3
+ 8000118:	701a      	strb	r2, [r3, #0]
+    int32_t node_idx = tree_root;
+ 800011a:	68bb      	ldr	r3, [r7, #8]
+ 800011c:	61fb      	str	r3, [r7, #28]
+
+    // TODO: see if using a pointer node instead of indirect adressing using node_idx improves perf
+    while (forest->nodes[node_idx].feature >= 0) {
+ 800011e:	e03a      	b.n	8000196 <eml_trees_predict_tree+0x8e>
+        const int8_t feature = forest->nodes[node_idx].feature;
+ 8000120:	68fb      	ldr	r3, [r7, #12]
+ 8000122:	6859      	ldr	r1, [r3, #4]
+ 8000124:	69fa      	ldr	r2, [r7, #28]
+ 8000126:	0013      	movs	r3, r2
+ 8000128:	005b      	lsls	r3, r3, #1
+ 800012a:	189b      	adds	r3, r3, r2
+ 800012c:	009b      	lsls	r3, r3, #2
+ 800012e:	18ca      	adds	r2, r1, r3
+ 8000130:	231b      	movs	r3, #27
+ 8000132:	18fb      	adds	r3, r7, r3
+ 8000134:	7812      	ldrb	r2, [r2, #0]
+ 8000136:	701a      	strb	r2, [r3, #0]
+        const float value = features[feature];
+ 8000138:	231b      	movs	r3, #27
+ 800013a:	18fb      	adds	r3, r7, r3
+ 800013c:	781b      	ldrb	r3, [r3, #0]
+ 800013e:	b25b      	sxtb	r3, r3
+ 8000140:	009b      	lsls	r3, r3, #2
+ 8000142:	687a      	ldr	r2, [r7, #4]
+ 8000144:	18d3      	adds	r3, r2, r3
+ 8000146:	681b      	ldr	r3, [r3, #0]
+ 8000148:	617b      	str	r3, [r7, #20]
+        const float point = forest->nodes[node_idx].value;
+ 800014a:	68fb      	ldr	r3, [r7, #12]
+ 800014c:	6859      	ldr	r1, [r3, #4]
+ 800014e:	69fa      	ldr	r2, [r7, #28]
+ 8000150:	0013      	movs	r3, r2
+ 8000152:	005b      	lsls	r3, r3, #1
+ 8000154:	189b      	adds	r3, r3, r2
+ 8000156:	009b      	lsls	r3, r3, #2
+ 8000158:	18cb      	adds	r3, r1, r3
+ 800015a:	685b      	ldr	r3, [r3, #4]
+ 800015c:	613b      	str	r3, [r7, #16]
+        //printf("node %d feature %d. %d < %d\n", node_idx, feature, value, point);
+        node_idx = (value < point) ? forest->nodes[node_idx].left : forest->nodes[node_idx].right;
+ 800015e:	6939      	ldr	r1, [r7, #16]
+ 8000160:	6978      	ldr	r0, [r7, #20]
+ 8000162:	f001 fbbb 	bl	80018dc <__aeabi_fcmplt>
+ 8000166:	1e03      	subs	r3, r0, #0
+ 8000168:	d00a      	beq.n	8000180 <eml_trees_predict_tree+0x78>
+ 800016a:	68fb      	ldr	r3, [r7, #12]
+ 800016c:	6859      	ldr	r1, [r3, #4]
+ 800016e:	69fa      	ldr	r2, [r7, #28]
+ 8000170:	0013      	movs	r3, r2
+ 8000172:	005b      	lsls	r3, r3, #1
+ 8000174:	189b      	adds	r3, r3, r2
+ 8000176:	009b      	lsls	r3, r3, #2
+ 8000178:	18cb      	adds	r3, r1, r3
+ 800017a:	2208      	movs	r2, #8
+ 800017c:	5e9b      	ldrsh	r3, [r3, r2]
+ 800017e:	e009      	b.n	8000194 <eml_trees_predict_tree+0x8c>
+ 8000180:	68fb      	ldr	r3, [r7, #12]
+ 8000182:	6859      	ldr	r1, [r3, #4]
+ 8000184:	69fa      	ldr	r2, [r7, #28]
+ 8000186:	0013      	movs	r3, r2
+ 8000188:	005b      	lsls	r3, r3, #1
+ 800018a:	189b      	adds	r3, r3, r2
+ 800018c:	009b      	lsls	r3, r3, #2
+ 800018e:	18cb      	adds	r3, r1, r3
+ 8000190:	220a      	movs	r2, #10
+ 8000192:	5e9b      	ldrsh	r3, [r3, r2]
+ 8000194:	61fb      	str	r3, [r7, #28]
+    while (forest->nodes[node_idx].feature >= 0) {
+ 8000196:	68fb      	ldr	r3, [r7, #12]
+ 8000198:	6859      	ldr	r1, [r3, #4]
+ 800019a:	69fa      	ldr	r2, [r7, #28]
+ 800019c:	0013      	movs	r3, r2
+ 800019e:	005b      	lsls	r3, r3, #1
+ 80001a0:	189b      	adds	r3, r3, r2
+ 80001a2:	009b      	lsls	r3, r3, #2
+ 80001a4:	18cb      	adds	r3, r1, r3
+ 80001a6:	781b      	ldrb	r3, [r3, #0]
+ 80001a8:	b25b      	sxtb	r3, r3
+ 80001aa:	2b00      	cmp	r3, #0
+ 80001ac:	dab8      	bge.n	8000120 <eml_trees_predict_tree+0x18>
+    }
+    return forest->nodes[node_idx].value;
+ 80001ae:	68fb      	ldr	r3, [r7, #12]
+ 80001b0:	6859      	ldr	r1, [r3, #4]
+ 80001b2:	69fa      	ldr	r2, [r7, #28]
+ 80001b4:	0013      	movs	r3, r2
+ 80001b6:	005b      	lsls	r3, r3, #1
+ 80001b8:	189b      	adds	r3, r3, r2
+ 80001ba:	009b      	lsls	r3, r3, #2
+ 80001bc:	18cb      	adds	r3, r1, r3
+ 80001be:	685b      	ldr	r3, [r3, #4]
+ 80001c0:	1c18      	adds	r0, r3, #0
+ 80001c2:	f001 fc5b 	bl	8001a7c <__aeabi_f2iz>
+ 80001c6:	0003      	movs	r3, r0
+}
+ 80001c8:	0018      	movs	r0, r3
+ 80001ca:	46bd      	mov	sp, r7
+ 80001cc:	b008      	add	sp, #32
+ 80001ce:	bd80      	pop	{r7, pc}
+
+080001d0 <eml_trees_predict>:
+
+int32_t
+eml_trees_predict(const EmlTrees *forest, const float *features, int8_t features_length) {
+ 80001d0:	b580      	push	{r7, lr}
+ 80001d2:	b094      	sub	sp, #80	; 0x50
+ 80001d4:	af00      	add	r7, sp, #0
+ 80001d6:	60f8      	str	r0, [r7, #12]
+ 80001d8:	60b9      	str	r1, [r7, #8]
+ 80001da:	1dfb      	adds	r3, r7, #7
+ 80001dc:	701a      	strb	r2, [r3, #0]
+    //printf("nodes %d\n", forest->n_nodes);
+
+    // FIXME: check if number of tree features is bigger than provided
+    // FIXME: check if number of classes is bigger than MAX_CLASSES, error
+ 
+    int32_t votes[EMTREES_MAX_CLASSES] = {0};
+ 80001de:	2314      	movs	r3, #20
+ 80001e0:	18fb      	adds	r3, r7, r3
+ 80001e2:	0018      	movs	r0, r3
+ 80001e4:	2328      	movs	r3, #40	; 0x28
+ 80001e6:	001a      	movs	r2, r3
+ 80001e8:	2100      	movs	r1, #0
+ 80001ea:	f001 fe2e 	bl	8001e4a <memset>
+    for (int32_t i=0; i<forest->n_trees; i++) {
+ 80001ee:	2300      	movs	r3, #0
+ 80001f0:	64fb      	str	r3, [r7, #76]	; 0x4c
+ 80001f2:	e026      	b.n	8000242 <eml_trees_predict+0x72>
+        const int32_t _class = eml_trees_predict_tree(forest, forest->tree_roots[i], features, features_length);
+ 80001f4:	68fb      	ldr	r3, [r7, #12]
+ 80001f6:	68da      	ldr	r2, [r3, #12]
+ 80001f8:	6cfb      	ldr	r3, [r7, #76]	; 0x4c
+ 80001fa:	009b      	lsls	r3, r3, #2
+ 80001fc:	18d3      	adds	r3, r2, r3
+ 80001fe:	6819      	ldr	r1, [r3, #0]
+ 8000200:	1dfb      	adds	r3, r7, #7
+ 8000202:	781b      	ldrb	r3, [r3, #0]
+ 8000204:	b25b      	sxtb	r3, r3
+ 8000206:	68ba      	ldr	r2, [r7, #8]
+ 8000208:	68f8      	ldr	r0, [r7, #12]
+ 800020a:	f7ff ff7d 	bl	8000108 <eml_trees_predict_tree>
+ 800020e:	0003      	movs	r3, r0
+ 8000210:	63fb      	str	r3, [r7, #60]	; 0x3c
+        //printf("pred[%d]: %d\n", i, _class);
+        if (_class >= 0 && _class < EMTREES_MAX_CLASSES) {
+ 8000212:	6bfb      	ldr	r3, [r7, #60]	; 0x3c
+ 8000214:	2b00      	cmp	r3, #0
+ 8000216:	db11      	blt.n	800023c <eml_trees_predict+0x6c>
+ 8000218:	6bfb      	ldr	r3, [r7, #60]	; 0x3c
+ 800021a:	2b09      	cmp	r3, #9
+ 800021c:	dc0e      	bgt.n	800023c <eml_trees_predict+0x6c>
+            votes[_class] += 1;
+ 800021e:	2314      	movs	r3, #20
+ 8000220:	18fb      	adds	r3, r7, r3
+ 8000222:	6bfa      	ldr	r2, [r7, #60]	; 0x3c
+ 8000224:	0092      	lsls	r2, r2, #2
+ 8000226:	58d3      	ldr	r3, [r2, r3]
+ 8000228:	1c59      	adds	r1, r3, #1
+ 800022a:	2314      	movs	r3, #20
+ 800022c:	18fb      	adds	r3, r7, r3
+ 800022e:	6bfa      	ldr	r2, [r7, #60]	; 0x3c
+ 8000230:	0092      	lsls	r2, r2, #2
+ 8000232:	50d1      	str	r1, [r2, r3]
+    for (int32_t i=0; i<forest->n_trees; i++) {
+ 8000234:	6cfb      	ldr	r3, [r7, #76]	; 0x4c
+ 8000236:	3301      	adds	r3, #1
+ 8000238:	64fb      	str	r3, [r7, #76]	; 0x4c
+ 800023a:	e002      	b.n	8000242 <eml_trees_predict+0x72>
+        } else {
+            return -EmlTreesInvalidClassPredicted;
+ 800023c:	2302      	movs	r3, #2
+ 800023e:	425b      	negs	r3, r3
+ 8000240:	e023      	b.n	800028a <eml_trees_predict+0xba>
+    for (int32_t i=0; i<forest->n_trees; i++) {
+ 8000242:	68fb      	ldr	r3, [r7, #12]
+ 8000244:	689a      	ldr	r2, [r3, #8]
+ 8000246:	6cfb      	ldr	r3, [r7, #76]	; 0x4c
+ 8000248:	429a      	cmp	r2, r3
+ 800024a:	dcd3      	bgt.n	80001f4 <eml_trees_predict+0x24>
+        }
+    }
+    
+    int32_t most_voted_class = -1;
+ 800024c:	2301      	movs	r3, #1
+ 800024e:	425b      	negs	r3, r3
+ 8000250:	64bb      	str	r3, [r7, #72]	; 0x48
+    int32_t most_voted_votes = 0;
+ 8000252:	2300      	movs	r3, #0
+ 8000254:	647b      	str	r3, [r7, #68]	; 0x44
+    for (int32_t i=0; i<EMTREES_MAX_CLASSES; i++) {
+ 8000256:	2300      	movs	r3, #0
+ 8000258:	643b      	str	r3, [r7, #64]	; 0x40
+ 800025a:	e012      	b.n	8000282 <eml_trees_predict+0xb2>
+        //printf("votes[%d]: %d\n", i, votes[i]);
+        if (votes[i] > most_voted_votes) {
+ 800025c:	2314      	movs	r3, #20
+ 800025e:	18fb      	adds	r3, r7, r3
+ 8000260:	6c3a      	ldr	r2, [r7, #64]	; 0x40
+ 8000262:	0092      	lsls	r2, r2, #2
+ 8000264:	58d2      	ldr	r2, [r2, r3]
+ 8000266:	6c7b      	ldr	r3, [r7, #68]	; 0x44
+ 8000268:	429a      	cmp	r2, r3
+ 800026a:	dd07      	ble.n	800027c <eml_trees_predict+0xac>
+            most_voted_class = i;
+ 800026c:	6c3b      	ldr	r3, [r7, #64]	; 0x40
+ 800026e:	64bb      	str	r3, [r7, #72]	; 0x48
+            most_voted_votes = votes[i];
+ 8000270:	2314      	movs	r3, #20
+ 8000272:	18fb      	adds	r3, r7, r3
+ 8000274:	6c3a      	ldr	r2, [r7, #64]	; 0x40
+ 8000276:	0092      	lsls	r2, r2, #2
+ 8000278:	58d3      	ldr	r3, [r2, r3]
+ 800027a:	647b      	str	r3, [r7, #68]	; 0x44
+    for (int32_t i=0; i<EMTREES_MAX_CLASSES; i++) {
+ 800027c:	6c3b      	ldr	r3, [r7, #64]	; 0x40
+ 800027e:	3301      	adds	r3, #1
+ 8000280:	643b      	str	r3, [r7, #64]	; 0x40
+ 8000282:	6c3b      	ldr	r3, [r7, #64]	; 0x40
+ 8000284:	2b09      	cmp	r3, #9
+ 8000286:	dde9      	ble.n	800025c <eml_trees_predict+0x8c>
+        }
+    }
+
+    return most_voted_class;
+ 8000288:	6cbb      	ldr	r3, [r7, #72]	; 0x48
+}
+ 800028a:	0018      	movs	r0, r3
+ 800028c:	46bd      	mov	sp, r7
+ 800028e:	b014      	add	sp, #80	; 0x50
+ 8000290:	bd80      	pop	{r7, pc}
+
+08000292 <sonar_predict_tree_0>:
+        sonar_nodes,	  
+        1,
+        sonar_tree_roots,
+    };
+
+static inline int32_t sonar_predict_tree_0(const float *features, int32_t features_length) {
+ 8000292:	b580      	push	{r7, lr}
+ 8000294:	b082      	sub	sp, #8
+ 8000296:	af00      	add	r7, sp, #0
+ 8000298:	6078      	str	r0, [r7, #4]
+ 800029a:	6039      	str	r1, [r7, #0]
+          if (features[0] < 0.5) {
+ 800029c:	687b      	ldr	r3, [r7, #4]
+ 800029e:	681b      	ldr	r3, [r3, #0]
+ 80002a0:	21fc      	movs	r1, #252	; 0xfc
+ 80002a2:	0589      	lsls	r1, r1, #22
+ 80002a4:	1c18      	adds	r0, r3, #0
+ 80002a6:	f001 fb19 	bl	80018dc <__aeabi_fcmplt>
+ 80002aa:	1e03      	subs	r3, r0, #0
+ 80002ac:	d002      	beq.n	80002b4 <sonar_predict_tree_0+0x22>
+              return 1;
+ 80002ae:	2301      	movs	r3, #1
+ 80002b0:	f000 fd76 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+          } else {
+              if (features[9] < 6.5) {
+ 80002b4:	687b      	ldr	r3, [r7, #4]
+ 80002b6:	3324      	adds	r3, #36	; 0x24
+ 80002b8:	681b      	ldr	r3, [r3, #0]
+ 80002ba:	49ba      	ldr	r1, [pc, #744]	; (80005a4 <sonar_predict_tree_0+0x312>)
+ 80002bc:	1c18      	adds	r0, r3, #0
+ 80002be:	f001 fb0d 	bl	80018dc <__aeabi_fcmplt>
+ 80002c2:	1e03      	subs	r3, r0, #0
+ 80002c4:	d100      	bne.n	80002c8 <sonar_predict_tree_0+0x36>
+ 80002c6:	e0c6      	b.n	8000456 <sonar_predict_tree_0+0x1c4>
+                  if (features[9] < 4.5) {
+ 80002c8:	687b      	ldr	r3, [r7, #4]
+ 80002ca:	3324      	adds	r3, #36	; 0x24
+ 80002cc:	681b      	ldr	r3, [r3, #0]
+ 80002ce:	49b6      	ldr	r1, [pc, #728]	; (80005a8 <sonar_predict_tree_0+0x316>)
+ 80002d0:	1c18      	adds	r0, r3, #0
+ 80002d2:	f001 fb03 	bl	80018dc <__aeabi_fcmplt>
+ 80002d6:	1e03      	subs	r3, r0, #0
+ 80002d8:	d100      	bne.n	80002dc <sonar_predict_tree_0+0x4a>
+ 80002da:	e094      	b.n	8000406 <sonar_predict_tree_0+0x174>
+                      if (features[2] < 0.5) {
+ 80002dc:	687b      	ldr	r3, [r7, #4]
+ 80002de:	3308      	adds	r3, #8
+ 80002e0:	681b      	ldr	r3, [r3, #0]
+ 80002e2:	21fc      	movs	r1, #252	; 0xfc
+ 80002e4:	0589      	lsls	r1, r1, #22
+ 80002e6:	1c18      	adds	r0, r3, #0
+ 80002e8:	f001 faf8 	bl	80018dc <__aeabi_fcmplt>
+ 80002ec:	1e03      	subs	r3, r0, #0
+ 80002ee:	d00e      	beq.n	800030e <sonar_predict_tree_0+0x7c>
+                          if (features[9] < 2.5) {
+ 80002f0:	687b      	ldr	r3, [r7, #4]
+ 80002f2:	3324      	adds	r3, #36	; 0x24
+ 80002f4:	681b      	ldr	r3, [r3, #0]
+ 80002f6:	49ad      	ldr	r1, [pc, #692]	; (80005ac <sonar_predict_tree_0+0x31a>)
+ 80002f8:	1c18      	adds	r0, r3, #0
+ 80002fa:	f001 faef 	bl	80018dc <__aeabi_fcmplt>
+ 80002fe:	1e03      	subs	r3, r0, #0
+ 8000300:	d002      	beq.n	8000308 <sonar_predict_tree_0+0x76>
+                              return 0;
+ 8000302:	2300      	movs	r3, #0
+ 8000304:	f000 fd4c 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                          } else {
+                              return 1;
+ 8000308:	2301      	movs	r3, #1
+ 800030a:	f000 fd49 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                          }
+                      } else {
+                          if (features[10] < 0.002099999925121665) {
+ 800030e:	687b      	ldr	r3, [r7, #4]
+ 8000310:	3328      	adds	r3, #40	; 0x28
+ 8000312:	681b      	ldr	r3, [r3, #0]
+ 8000314:	49a6      	ldr	r1, [pc, #664]	; (80005b0 <sonar_predict_tree_0+0x31e>)
+ 8000316:	1c18      	adds	r0, r3, #0
+ 8000318:	f001 fae0 	bl	80018dc <__aeabi_fcmplt>
+ 800031c:	1e03      	subs	r3, r0, #0
+ 800031e:	d002      	beq.n	8000326 <sonar_predict_tree_0+0x94>
+                              return 1;
+ 8000320:	2301      	movs	r3, #1
+ 8000322:	f000 fd3d 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                          } else {
+                              if (features[10] < 2.127540111541748) {
+ 8000326:	687b      	ldr	r3, [r7, #4]
+ 8000328:	3328      	adds	r3, #40	; 0x28
+ 800032a:	681b      	ldr	r3, [r3, #0]
+ 800032c:	49a1      	ldr	r1, [pc, #644]	; (80005b4 <sonar_predict_tree_0+0x322>)
+ 800032e:	1c18      	adds	r0, r3, #0
+ 8000330:	f001 fad4 	bl	80018dc <__aeabi_fcmplt>
+ 8000334:	1e03      	subs	r3, r0, #0
+ 8000336:	d063      	beq.n	8000400 <sonar_predict_tree_0+0x16e>
+                                  if (features[8] < 196.0) {
+ 8000338:	687b      	ldr	r3, [r7, #4]
+ 800033a:	3320      	adds	r3, #32
+ 800033c:	681b      	ldr	r3, [r3, #0]
+ 800033e:	499e      	ldr	r1, [pc, #632]	; (80005b8 <sonar_predict_tree_0+0x326>)
+ 8000340:	1c18      	adds	r0, r3, #0
+ 8000342:	f001 facb 	bl	80018dc <__aeabi_fcmplt>
+ 8000346:	1e03      	subs	r3, r0, #0
+ 8000348:	d057      	beq.n	80003fa <sonar_predict_tree_0+0x168>
+                                      if (features[10] < 0.07230500131845474) {
+ 800034a:	687b      	ldr	r3, [r7, #4]
+ 800034c:	3328      	adds	r3, #40	; 0x28
+ 800034e:	681b      	ldr	r3, [r3, #0]
+ 8000350:	499a      	ldr	r1, [pc, #616]	; (80005bc <sonar_predict_tree_0+0x32a>)
+ 8000352:	1c18      	adds	r0, r3, #0
+ 8000354:	f001 fac2 	bl	80018dc <__aeabi_fcmplt>
+ 8000358:	1e03      	subs	r3, r0, #0
+ 800035a:	d032      	beq.n	80003c2 <sonar_predict_tree_0+0x130>
+                                          if (features[4] < 69.5) {
+ 800035c:	687b      	ldr	r3, [r7, #4]
+ 800035e:	3310      	adds	r3, #16
+ 8000360:	681b      	ldr	r3, [r3, #0]
+ 8000362:	4997      	ldr	r1, [pc, #604]	; (80005c0 <sonar_predict_tree_0+0x32e>)
+ 8000364:	1c18      	adds	r0, r3, #0
+ 8000366:	f001 fab9 	bl	80018dc <__aeabi_fcmplt>
+ 800036a:	1e03      	subs	r3, r0, #0
+ 800036c:	d01a      	beq.n	80003a4 <sonar_predict_tree_0+0x112>
+                                              if (features[4] < 24.5) {
+ 800036e:	687b      	ldr	r3, [r7, #4]
+ 8000370:	3310      	adds	r3, #16
+ 8000372:	681b      	ldr	r3, [r3, #0]
+ 8000374:	4993      	ldr	r1, [pc, #588]	; (80005c4 <sonar_predict_tree_0+0x332>)
+ 8000376:	1c18      	adds	r0, r3, #0
+ 8000378:	f001 fab0 	bl	80018dc <__aeabi_fcmplt>
+ 800037c:	1e03      	subs	r3, r0, #0
+ 800037e:	d002      	beq.n	8000386 <sonar_predict_tree_0+0xf4>
+                                                  return 0;
+ 8000380:	2300      	movs	r3, #0
+ 8000382:	f000 fd0d 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                              } else {
+                                                  if (features[5] < 13.0) {
+ 8000386:	687b      	ldr	r3, [r7, #4]
+ 8000388:	3314      	adds	r3, #20
+ 800038a:	681b      	ldr	r3, [r3, #0]
+ 800038c:	498e      	ldr	r1, [pc, #568]	; (80005c8 <sonar_predict_tree_0+0x336>)
+ 800038e:	1c18      	adds	r0, r3, #0
+ 8000390:	f001 faa4 	bl	80018dc <__aeabi_fcmplt>
+ 8000394:	1e03      	subs	r3, r0, #0
+ 8000396:	d002      	beq.n	800039e <sonar_predict_tree_0+0x10c>
+                                                      return 1;
+ 8000398:	2301      	movs	r3, #1
+ 800039a:	f000 fd01 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                  } else {
+                                                      return 0;
+ 800039e:	2300      	movs	r3, #0
+ 80003a0:	f000 fcfe 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                  }
+                                              }
+                                          } else {
+                                              if (features[5] < 35.5) {
+ 80003a4:	687b      	ldr	r3, [r7, #4]
+ 80003a6:	3314      	adds	r3, #20
+ 80003a8:	681b      	ldr	r3, [r3, #0]
+ 80003aa:	4988      	ldr	r1, [pc, #544]	; (80005cc <sonar_predict_tree_0+0x33a>)
+ 80003ac:	1c18      	adds	r0, r3, #0
+ 80003ae:	f001 fa95 	bl	80018dc <__aeabi_fcmplt>
+ 80003b2:	1e03      	subs	r3, r0, #0
+ 80003b4:	d002      	beq.n	80003bc <sonar_predict_tree_0+0x12a>
+                                                  return 1;
+ 80003b6:	2301      	movs	r3, #1
+ 80003b8:	f000 fcf2 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                              } else {
+                                                  return 0;
+ 80003bc:	2300      	movs	r3, #0
+ 80003be:	f000 fcef 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                              }
+                                          }
+                                      } else {
+                                          if (features[9] < 1.5) {
+ 80003c2:	687b      	ldr	r3, [r7, #4]
+ 80003c4:	3324      	adds	r3, #36	; 0x24
+ 80003c6:	681b      	ldr	r3, [r3, #0]
+ 80003c8:	21ff      	movs	r1, #255	; 0xff
+ 80003ca:	0589      	lsls	r1, r1, #22
+ 80003cc:	1c18      	adds	r0, r3, #0
+ 80003ce:	f001 fa85 	bl	80018dc <__aeabi_fcmplt>
+ 80003d2:	1e03      	subs	r3, r0, #0
+ 80003d4:	d002      	beq.n	80003dc <sonar_predict_tree_0+0x14a>
+                                              return 0;
+ 80003d6:	2300      	movs	r3, #0
+ 80003d8:	f000 fce2 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                          } else {
+                                              if (features[2] < 8.5) {
+ 80003dc:	687b      	ldr	r3, [r7, #4]
+ 80003de:	3308      	adds	r3, #8
+ 80003e0:	681b      	ldr	r3, [r3, #0]
+ 80003e2:	497b      	ldr	r1, [pc, #492]	; (80005d0 <sonar_predict_tree_0+0x33e>)
+ 80003e4:	1c18      	adds	r0, r3, #0
+ 80003e6:	f001 fa79 	bl	80018dc <__aeabi_fcmplt>
+ 80003ea:	1e03      	subs	r3, r0, #0
+ 80003ec:	d002      	beq.n	80003f4 <sonar_predict_tree_0+0x162>
+                                                  return 1;
+ 80003ee:	2301      	movs	r3, #1
+ 80003f0:	f000 fcd6 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                              } else {
+                                                  return 0;
+ 80003f4:	2300      	movs	r3, #0
+ 80003f6:	f000 fcd3 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                              }
+                                          }
+                                      }
+                                  } else {
+                                      return 0;
+ 80003fa:	2300      	movs	r3, #0
+ 80003fc:	f000 fcd0 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                  }
+                              } else {
+                                  return 0;
+ 8000400:	2300      	movs	r3, #0
+ 8000402:	f000 fccd 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                              }
+                          }
+                      }
+                  } else {
+                      if (features[2] < 8.5) {
+ 8000406:	687b      	ldr	r3, [r7, #4]
+ 8000408:	3308      	adds	r3, #8
+ 800040a:	681b      	ldr	r3, [r3, #0]
+ 800040c:	4970      	ldr	r1, [pc, #448]	; (80005d0 <sonar_predict_tree_0+0x33e>)
+ 800040e:	1c18      	adds	r0, r3, #0
+ 8000410:	f001 fa64 	bl	80018dc <__aeabi_fcmplt>
+ 8000414:	1e03      	subs	r3, r0, #0
+ 8000416:	d00e      	beq.n	8000436 <sonar_predict_tree_0+0x1a4>
+                          if (features[8] < 3.0) {
+ 8000418:	687b      	ldr	r3, [r7, #4]
+ 800041a:	3320      	adds	r3, #32
+ 800041c:	681b      	ldr	r3, [r3, #0]
+ 800041e:	496d      	ldr	r1, [pc, #436]	; (80005d4 <sonar_predict_tree_0+0x342>)
+ 8000420:	1c18      	adds	r0, r3, #0
+ 8000422:	f001 fa5b 	bl	80018dc <__aeabi_fcmplt>
+ 8000426:	1e03      	subs	r3, r0, #0
+ 8000428:	d002      	beq.n	8000430 <sonar_predict_tree_0+0x19e>
+                              return 1;
+ 800042a:	2301      	movs	r3, #1
+ 800042c:	f000 fcb8 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                          } else {
+                              return 0;
+ 8000430:	2300      	movs	r3, #0
+ 8000432:	f000 fcb5 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                          }
+                      } else {
+                          if (features[4] < 2.0) {
+ 8000436:	687b      	ldr	r3, [r7, #4]
+ 8000438:	3310      	adds	r3, #16
+ 800043a:	681b      	ldr	r3, [r3, #0]
+ 800043c:	2180      	movs	r1, #128	; 0x80
+ 800043e:	05c9      	lsls	r1, r1, #23
+ 8000440:	1c18      	adds	r0, r3, #0
+ 8000442:	f001 fa4b 	bl	80018dc <__aeabi_fcmplt>
+ 8000446:	1e03      	subs	r3, r0, #0
+ 8000448:	d002      	beq.n	8000450 <sonar_predict_tree_0+0x1be>
+                              return 0;
+ 800044a:	2300      	movs	r3, #0
+ 800044c:	f000 fca8 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                          } else {
+                              return 1;
+ 8000450:	2301      	movs	r3, #1
+ 8000452:	f000 fca5 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                          }
+                      }
+                  }
+              } else {
+                  if (features[1] < 2.0) {
+ 8000456:	687b      	ldr	r3, [r7, #4]
+ 8000458:	3304      	adds	r3, #4
+ 800045a:	681b      	ldr	r3, [r3, #0]
+ 800045c:	2180      	movs	r1, #128	; 0x80
+ 800045e:	05c9      	lsls	r1, r1, #23
+ 8000460:	1c18      	adds	r0, r3, #0
+ 8000462:	f001 fa3b 	bl	80018dc <__aeabi_fcmplt>
+ 8000466:	1e03      	subs	r3, r0, #0
+ 8000468:	d101      	bne.n	800046e <sonar_predict_tree_0+0x1dc>
+ 800046a:	f000 fc5d 	bl	8000d28 <sonar_predict_tree_0+0xa96>
+                      if (features[5] < 0.5) {
+ 800046e:	687b      	ldr	r3, [r7, #4]
+ 8000470:	3314      	adds	r3, #20
+ 8000472:	681b      	ldr	r3, [r3, #0]
+ 8000474:	21fc      	movs	r1, #252	; 0xfc
+ 8000476:	0589      	lsls	r1, r1, #22
+ 8000478:	1c18      	adds	r0, r3, #0
+ 800047a:	f001 fa2f 	bl	80018dc <__aeabi_fcmplt>
+ 800047e:	1e03      	subs	r3, r0, #0
+ 8000480:	d046      	beq.n	8000510 <sonar_predict_tree_0+0x27e>
+                          if (features[10] < 0.10669000074267387) {
+ 8000482:	687b      	ldr	r3, [r7, #4]
+ 8000484:	3328      	adds	r3, #40	; 0x28
+ 8000486:	681b      	ldr	r3, [r3, #0]
+ 8000488:	1c18      	adds	r0, r3, #0
+ 800048a:	f001 fc17 	bl	8001cbc <__aeabi_f2d>
+ 800048e:	22c0      	movs	r2, #192	; 0xc0
+ 8000490:	0592      	lsls	r2, r2, #22
+ 8000492:	4b51      	ldr	r3, [pc, #324]	; (80005d8 <sonar_predict_tree_0+0x346>)
+ 8000494:	f001 f9e8 	bl	8001868 <__aeabi_dcmplt>
+ 8000498:	1e03      	subs	r3, r0, #0
+ 800049a:	d00e      	beq.n	80004ba <sonar_predict_tree_0+0x228>
+                              if (features[9] < 12.0) {
+ 800049c:	687b      	ldr	r3, [r7, #4]
+ 800049e:	3324      	adds	r3, #36	; 0x24
+ 80004a0:	681b      	ldr	r3, [r3, #0]
+ 80004a2:	494e      	ldr	r1, [pc, #312]	; (80005dc <sonar_predict_tree_0+0x34a>)
+ 80004a4:	1c18      	adds	r0, r3, #0
+ 80004a6:	f001 fa19 	bl	80018dc <__aeabi_fcmplt>
+ 80004aa:	1e03      	subs	r3, r0, #0
+ 80004ac:	d002      	beq.n	80004b4 <sonar_predict_tree_0+0x222>
+                                  return 0;
+ 80004ae:	2300      	movs	r3, #0
+ 80004b0:	f000 fc76 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                              } else {
+                                  return 1;
+ 80004b4:	2301      	movs	r3, #1
+ 80004b6:	f000 fc73 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                              }
+                          } else {
+                              if (features[9] < 8.5) {
+ 80004ba:	687b      	ldr	r3, [r7, #4]
+ 80004bc:	3324      	adds	r3, #36	; 0x24
+ 80004be:	681b      	ldr	r3, [r3, #0]
+ 80004c0:	4943      	ldr	r1, [pc, #268]	; (80005d0 <sonar_predict_tree_0+0x33e>)
+ 80004c2:	1c18      	adds	r0, r3, #0
+ 80004c4:	f001 fa0a 	bl	80018dc <__aeabi_fcmplt>
+ 80004c8:	1e03      	subs	r3, r0, #0
+ 80004ca:	d01e      	beq.n	800050a <sonar_predict_tree_0+0x278>
+                                  if (features[10] < 0.5677450001239777) {
+ 80004cc:	687b      	ldr	r3, [r7, #4]
+ 80004ce:	3328      	adds	r3, #40	; 0x28
+ 80004d0:	681b      	ldr	r3, [r3, #0]
+ 80004d2:	1c18      	adds	r0, r3, #0
+ 80004d4:	f001 fbf2 	bl	8001cbc <__aeabi_f2d>
+ 80004d8:	2290      	movs	r2, #144	; 0x90
+ 80004da:	0612      	lsls	r2, r2, #24
+ 80004dc:	4b40      	ldr	r3, [pc, #256]	; (80005e0 <sonar_predict_tree_0+0x34e>)
+ 80004de:	f001 f9c3 	bl	8001868 <__aeabi_dcmplt>
+ 80004e2:	1e03      	subs	r3, r0, #0
+ 80004e4:	d00e      	beq.n	8000504 <sonar_predict_tree_0+0x272>
+                                      if (features[2] < 9.5) {
+ 80004e6:	687b      	ldr	r3, [r7, #4]
+ 80004e8:	3308      	adds	r3, #8
+ 80004ea:	681b      	ldr	r3, [r3, #0]
+ 80004ec:	493d      	ldr	r1, [pc, #244]	; (80005e4 <sonar_predict_tree_0+0x352>)
+ 80004ee:	1c18      	adds	r0, r3, #0
+ 80004f0:	f001 f9f4 	bl	80018dc <__aeabi_fcmplt>
+ 80004f4:	1e03      	subs	r3, r0, #0
+ 80004f6:	d002      	beq.n	80004fe <sonar_predict_tree_0+0x26c>
+                                          return 1;
+ 80004f8:	2301      	movs	r3, #1
+ 80004fa:	f000 fc51 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                      } else {
+                                          return 0;
+ 80004fe:	2300      	movs	r3, #0
+ 8000500:	f000 fc4e 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                      }
+                                  } else {
+                                      return 1;
+ 8000504:	2301      	movs	r3, #1
+ 8000506:	f000 fc4b 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                  }
+                              } else {
+                                  return 1;
+ 800050a:	2301      	movs	r3, #1
+ 800050c:	f000 fc48 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                              }
+                          }
+                      } else {
+                          if (features[10] < 2.30007004737854) {
+ 8000510:	687b      	ldr	r3, [r7, #4]
+ 8000512:	3328      	adds	r3, #40	; 0x28
+ 8000514:	681b      	ldr	r3, [r3, #0]
+ 8000516:	4934      	ldr	r1, [pc, #208]	; (80005e8 <sonar_predict_tree_0+0x356>)
+ 8000518:	1c18      	adds	r0, r3, #0
+ 800051a:	f001 f9df 	bl	80018dc <__aeabi_fcmplt>
+ 800051e:	1e03      	subs	r3, r0, #0
+ 8000520:	d100      	bne.n	8000524 <sonar_predict_tree_0+0x292>
+ 8000522:	e2c7      	b.n	8000ab4 <sonar_predict_tree_0+0x822>
+                              if (features[9] < 129.5) {
+ 8000524:	687b      	ldr	r3, [r7, #4]
+ 8000526:	3324      	adds	r3, #36	; 0x24
+ 8000528:	681b      	ldr	r3, [r3, #0]
+ 800052a:	4930      	ldr	r1, [pc, #192]	; (80005ec <sonar_predict_tree_0+0x35a>)
+ 800052c:	1c18      	adds	r0, r3, #0
+ 800052e:	f001 f9d5 	bl	80018dc <__aeabi_fcmplt>
+ 8000532:	1e03      	subs	r3, r0, #0
+ 8000534:	d100      	bne.n	8000538 <sonar_predict_tree_0+0x2a6>
+ 8000536:	e261      	b.n	80009fc <sonar_predict_tree_0+0x76a>
+                                  if (features[10] < 1.1470150351524353) {
+ 8000538:	687b      	ldr	r3, [r7, #4]
+ 800053a:	3328      	adds	r3, #40	; 0x28
+ 800053c:	681b      	ldr	r3, [r3, #0]
+ 800053e:	1c18      	adds	r0, r3, #0
+ 8000540:	f001 fbbc 	bl	8001cbc <__aeabi_f2d>
+ 8000544:	22e0      	movs	r2, #224	; 0xe0
+ 8000546:	05d2      	lsls	r2, r2, #23
+ 8000548:	4b29      	ldr	r3, [pc, #164]	; (80005f0 <sonar_predict_tree_0+0x35e>)
+ 800054a:	f001 f98d 	bl	8001868 <__aeabi_dcmplt>
+ 800054e:	1e03      	subs	r3, r0, #0
+ 8000550:	d054      	beq.n	80005fc <sonar_predict_tree_0+0x36a>
+                                      if (features[9] < 102.0) {
+ 8000552:	687b      	ldr	r3, [r7, #4]
+ 8000554:	3324      	adds	r3, #36	; 0x24
+ 8000556:	681b      	ldr	r3, [r3, #0]
+ 8000558:	4926      	ldr	r1, [pc, #152]	; (80005f4 <sonar_predict_tree_0+0x362>)
+ 800055a:	1c18      	adds	r0, r3, #0
+ 800055c:	f001 f9be 	bl	80018dc <__aeabi_fcmplt>
+ 8000560:	1e03      	subs	r3, r0, #0
+ 8000562:	d01b      	beq.n	800059c <sonar_predict_tree_0+0x30a>
+                                          if (features[5] < 1.5) {
+ 8000564:	687b      	ldr	r3, [r7, #4]
+ 8000566:	3314      	adds	r3, #20
+ 8000568:	681b      	ldr	r3, [r3, #0]
+ 800056a:	21ff      	movs	r1, #255	; 0xff
+ 800056c:	0589      	lsls	r1, r1, #22
+ 800056e:	1c18      	adds	r0, r3, #0
+ 8000570:	f001 f9b4 	bl	80018dc <__aeabi_fcmplt>
+ 8000574:	1e03      	subs	r3, r0, #0
+ 8000576:	d00e      	beq.n	8000596 <sonar_predict_tree_0+0x304>
+                                              if (features[10] < 0.3193050026893616) {
+ 8000578:	687b      	ldr	r3, [r7, #4]
+ 800057a:	3328      	adds	r3, #40	; 0x28
+ 800057c:	681b      	ldr	r3, [r3, #0]
+ 800057e:	491e      	ldr	r1, [pc, #120]	; (80005f8 <sonar_predict_tree_0+0x366>)
+ 8000580:	1c18      	adds	r0, r3, #0
+ 8000582:	f001 f9ab 	bl	80018dc <__aeabi_fcmplt>
+ 8000586:	1e03      	subs	r3, r0, #0
+ 8000588:	d002      	beq.n	8000590 <sonar_predict_tree_0+0x2fe>
+                                                  return 0;
+ 800058a:	2300      	movs	r3, #0
+ 800058c:	f000 fc08 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                              } else {
+                                                  return 1;
+ 8000590:	2301      	movs	r3, #1
+ 8000592:	f000 fc05 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                              }
+                                          } else {
+                                              return 0;
+ 8000596:	2300      	movs	r3, #0
+ 8000598:	f000 fc02 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                          }
+                                      } else {
+                                          return 0;
+ 800059c:	2300      	movs	r3, #0
+ 800059e:	f000 fbff 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+ 80005a2:	46c0      	nop			; (mov r8, r8)
+ 80005a4:	40d00000 	.word	0x40d00000
+ 80005a8:	40900000 	.word	0x40900000
+ 80005ac:	40200000 	.word	0x40200000
+ 80005b0:	3b09a027 	.word	0x3b09a027
+ 80005b4:	4008299e 	.word	0x4008299e
+ 80005b8:	43440000 	.word	0x43440000
+ 80005bc:	3d9414a5 	.word	0x3d9414a5
+ 80005c0:	428b0000 	.word	0x428b0000
+ 80005c4:	41c40000 	.word	0x41c40000
+ 80005c8:	41500000 	.word	0x41500000
+ 80005cc:	420e0000 	.word	0x420e0000
+ 80005d0:	41080000 	.word	0x41080000
+ 80005d4:	40400000 	.word	0x40400000
+ 80005d8:	3fbb5009 	.word	0x3fbb5009
+ 80005dc:	41400000 	.word	0x41400000
+ 80005e0:	3fe22af7 	.word	0x3fe22af7
+ 80005e4:	41180000 	.word	0x41180000
+ 80005e8:	40133459 	.word	0x40133459
+ 80005ec:	43018000 	.word	0x43018000
+ 80005f0:	3ff25a2c 	.word	0x3ff25a2c
+ 80005f4:	42cc0000 	.word	0x42cc0000
+ 80005f8:	3ea37bf2 	.word	0x3ea37bf2
+                                      }
+                                  } else {
+                                      if (features[2] < 4.5) {
+ 80005fc:	687b      	ldr	r3, [r7, #4]
+ 80005fe:	3308      	adds	r3, #8
+ 8000600:	681b      	ldr	r3, [r3, #0]
+ 8000602:	49c3      	ldr	r1, [pc, #780]	; (8000910 <sonar_predict_tree_0+0x67e>)
+ 8000604:	1c18      	adds	r0, r3, #0
+ 8000606:	f001 f969 	bl	80018dc <__aeabi_fcmplt>
+ 800060a:	1e03      	subs	r3, r0, #0
+ 800060c:	d100      	bne.n	8000610 <sonar_predict_tree_0+0x37e>
+ 800060e:	e114      	b.n	800083a <sonar_predict_tree_0+0x5a8>
+                                          if (features[9] < 56.5) {
+ 8000610:	687b      	ldr	r3, [r7, #4]
+ 8000612:	3324      	adds	r3, #36	; 0x24
+ 8000614:	681b      	ldr	r3, [r3, #0]
+ 8000616:	49bf      	ldr	r1, [pc, #764]	; (8000914 <sonar_predict_tree_0+0x682>)
+ 8000618:	1c18      	adds	r0, r3, #0
+ 800061a:	f001 f95f 	bl	80018dc <__aeabi_fcmplt>
+ 800061e:	1e03      	subs	r3, r0, #0
+ 8000620:	d100      	bne.n	8000624 <sonar_predict_tree_0+0x392>
+ 8000622:	e0c1      	b.n	80007a8 <sonar_predict_tree_0+0x516>
+                                              if (features[4] < 79.5) {
+ 8000624:	687b      	ldr	r3, [r7, #4]
+ 8000626:	3310      	adds	r3, #16
+ 8000628:	681b      	ldr	r3, [r3, #0]
+ 800062a:	49bb      	ldr	r1, [pc, #748]	; (8000918 <sonar_predict_tree_0+0x686>)
+ 800062c:	1c18      	adds	r0, r3, #0
+ 800062e:	f001 f955 	bl	80018dc <__aeabi_fcmplt>
+ 8000632:	1e03      	subs	r3, r0, #0
+ 8000634:	d100      	bne.n	8000638 <sonar_predict_tree_0+0x3a6>
+ 8000636:	e0aa      	b.n	800078e <sonar_predict_tree_0+0x4fc>
+                                                  if (features[10] < 2.2594600915908813) {
+ 8000638:	687b      	ldr	r3, [r7, #4]
+ 800063a:	3328      	adds	r3, #40	; 0x28
+ 800063c:	681b      	ldr	r3, [r3, #0]
+ 800063e:	1c18      	adds	r0, r3, #0
+ 8000640:	f001 fb3c 	bl	8001cbc <__aeabi_f2d>
+ 8000644:	22d0      	movs	r2, #208	; 0xd0
+ 8000646:	0612      	lsls	r2, r2, #24
+ 8000648:	4bb4      	ldr	r3, [pc, #720]	; (800091c <sonar_predict_tree_0+0x68a>)
+ 800064a:	f001 f90d 	bl	8001868 <__aeabi_dcmplt>
+ 800064e:	1e03      	subs	r3, r0, #0
+ 8000650:	d062      	beq.n	8000718 <sonar_predict_tree_0+0x486>
+                                                      if (features[9] < 38.5) {
+ 8000652:	687b      	ldr	r3, [r7, #4]
+ 8000654:	3324      	adds	r3, #36	; 0x24
+ 8000656:	681b      	ldr	r3, [r3, #0]
+ 8000658:	49b1      	ldr	r1, [pc, #708]	; (8000920 <sonar_predict_tree_0+0x68e>)
+ 800065a:	1c18      	adds	r0, r3, #0
+ 800065c:	f001 f93e 	bl	80018dc <__aeabi_fcmplt>
+ 8000660:	1e03      	subs	r3, r0, #0
+ 8000662:	d032      	beq.n	80006ca <sonar_predict_tree_0+0x438>
+                                                          if (features[4] < 37.5) {
+ 8000664:	687b      	ldr	r3, [r7, #4]
+ 8000666:	3310      	adds	r3, #16
+ 8000668:	681b      	ldr	r3, [r3, #0]
+ 800066a:	49ae      	ldr	r1, [pc, #696]	; (8000924 <sonar_predict_tree_0+0x692>)
+ 800066c:	1c18      	adds	r0, r3, #0
+ 800066e:	f001 f935 	bl	80018dc <__aeabi_fcmplt>
+ 8000672:	1e03      	subs	r3, r0, #0
+ 8000674:	d00e      	beq.n	8000694 <sonar_predict_tree_0+0x402>
+                                                              if (features[9] < 13.5) {
+ 8000676:	687b      	ldr	r3, [r7, #4]
+ 8000678:	3324      	adds	r3, #36	; 0x24
+ 800067a:	681b      	ldr	r3, [r3, #0]
+ 800067c:	49aa      	ldr	r1, [pc, #680]	; (8000928 <sonar_predict_tree_0+0x696>)
+ 800067e:	1c18      	adds	r0, r3, #0
+ 8000680:	f001 f92c 	bl	80018dc <__aeabi_fcmplt>
+ 8000684:	1e03      	subs	r3, r0, #0
+ 8000686:	d002      	beq.n	800068e <sonar_predict_tree_0+0x3fc>
+                                                                  return 1;
+ 8000688:	2301      	movs	r3, #1
+ 800068a:	f000 fb89 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                              } else {
+                                                                  return 0;
+ 800068e:	2300      	movs	r3, #0
+ 8000690:	f000 fb86 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                              }
+                                                          } else {
+                                                              if (features[9] < 20.5) {
+ 8000694:	687b      	ldr	r3, [r7, #4]
+ 8000696:	3324      	adds	r3, #36	; 0x24
+ 8000698:	681b      	ldr	r3, [r3, #0]
+ 800069a:	49a4      	ldr	r1, [pc, #656]	; (800092c <sonar_predict_tree_0+0x69a>)
+ 800069c:	1c18      	adds	r0, r3, #0
+ 800069e:	f001 f91d 	bl	80018dc <__aeabi_fcmplt>
+ 80006a2:	1e03      	subs	r3, r0, #0
+ 80006a4:	d002      	beq.n	80006ac <sonar_predict_tree_0+0x41a>
+                                                                  return 0;
+ 80006a6:	2300      	movs	r3, #0
+ 80006a8:	f000 fb7a 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                              } else {
+                                                                  if (features[5] < 20.0) {
+ 80006ac:	687b      	ldr	r3, [r7, #4]
+ 80006ae:	3314      	adds	r3, #20
+ 80006b0:	681b      	ldr	r3, [r3, #0]
+ 80006b2:	499f      	ldr	r1, [pc, #636]	; (8000930 <sonar_predict_tree_0+0x69e>)
+ 80006b4:	1c18      	adds	r0, r3, #0
+ 80006b6:	f001 f911 	bl	80018dc <__aeabi_fcmplt>
+ 80006ba:	1e03      	subs	r3, r0, #0
+ 80006bc:	d002      	beq.n	80006c4 <sonar_predict_tree_0+0x432>
+                                                                      return 1;
+ 80006be:	2301      	movs	r3, #1
+ 80006c0:	f000 fb6e 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                                  } else {
+                                                                      return 0;
+ 80006c4:	2300      	movs	r3, #0
+ 80006c6:	f000 fb6b 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                                  }
+                                                              }
+                                                          }
+                                                      } else {
+                                                          if (features[8] < 1104.5) {
+ 80006ca:	687b      	ldr	r3, [r7, #4]
+ 80006cc:	3320      	adds	r3, #32
+ 80006ce:	681b      	ldr	r3, [r3, #0]
+ 80006d0:	4998      	ldr	r1, [pc, #608]	; (8000934 <sonar_predict_tree_0+0x6a2>)
+ 80006d2:	1c18      	adds	r0, r3, #0
+ 80006d4:	f001 f902 	bl	80018dc <__aeabi_fcmplt>
+ 80006d8:	1e03      	subs	r3, r0, #0
+ 80006da:	d00e      	beq.n	80006fa <sonar_predict_tree_0+0x468>
+                                                              if (features[4] < 5.5) {
+ 80006dc:	687b      	ldr	r3, [r7, #4]
+ 80006de:	3310      	adds	r3, #16
+ 80006e0:	681b      	ldr	r3, [r3, #0]
+ 80006e2:	4995      	ldr	r1, [pc, #596]	; (8000938 <sonar_predict_tree_0+0x6a6>)
+ 80006e4:	1c18      	adds	r0, r3, #0
+ 80006e6:	f001 f8f9 	bl	80018dc <__aeabi_fcmplt>
+ 80006ea:	1e03      	subs	r3, r0, #0
+ 80006ec:	d002      	beq.n	80006f4 <sonar_predict_tree_0+0x462>
+                                                                  return 1;
+ 80006ee:	2301      	movs	r3, #1
+ 80006f0:	f000 fb56 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                              } else {
+                                                                  return 0;
+ 80006f4:	2300      	movs	r3, #0
+ 80006f6:	f000 fb53 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                              }
+                                                          } else {
+                                                              if (features[5] < 13.5) {
+ 80006fa:	687b      	ldr	r3, [r7, #4]
+ 80006fc:	3314      	adds	r3, #20
+ 80006fe:	681b      	ldr	r3, [r3, #0]
+ 8000700:	4989      	ldr	r1, [pc, #548]	; (8000928 <sonar_predict_tree_0+0x696>)
+ 8000702:	1c18      	adds	r0, r3, #0
+ 8000704:	f001 f8ea 	bl	80018dc <__aeabi_fcmplt>
+ 8000708:	1e03      	subs	r3, r0, #0
+ 800070a:	d002      	beq.n	8000712 <sonar_predict_tree_0+0x480>
+                                                                  return 1;
+ 800070c:	2301      	movs	r3, #1
+ 800070e:	f000 fb47 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                              } else {
+                                                                  return 0;
+ 8000712:	2300      	movs	r3, #0
+ 8000714:	f000 fb44 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                              }
+                                                          }
+                                                      }
+                                                  } else {
+                                                      if (features[8] < 1147.5) {
+ 8000718:	687b      	ldr	r3, [r7, #4]
+ 800071a:	3320      	adds	r3, #32
+ 800071c:	681b      	ldr	r3, [r3, #0]
+ 800071e:	4987      	ldr	r1, [pc, #540]	; (800093c <sonar_predict_tree_0+0x6aa>)
+ 8000720:	1c18      	adds	r0, r3, #0
+ 8000722:	f001 f8db 	bl	80018dc <__aeabi_fcmplt>
+ 8000726:	1e03      	subs	r3, r0, #0
+ 8000728:	d002      	beq.n	8000730 <sonar_predict_tree_0+0x49e>
+                                                          return 0;
+ 800072a:	2300      	movs	r3, #0
+ 800072c:	f000 fb38 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                      } else {
+                                                          if (features[9] < 19.5) {
+ 8000730:	687b      	ldr	r3, [r7, #4]
+ 8000732:	3324      	adds	r3, #36	; 0x24
+ 8000734:	681b      	ldr	r3, [r3, #0]
+ 8000736:	4982      	ldr	r1, [pc, #520]	; (8000940 <sonar_predict_tree_0+0x6ae>)
+ 8000738:	1c18      	adds	r0, r3, #0
+ 800073a:	f001 f8cf 	bl	80018dc <__aeabi_fcmplt>
+ 800073e:	1e03      	subs	r3, r0, #0
+ 8000740:	d002      	beq.n	8000748 <sonar_predict_tree_0+0x4b6>
+                                                              return 0;
+ 8000742:	2300      	movs	r3, #0
+ 8000744:	f000 fb2c 	bl	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                          } else {
+                                                              if (features[2] < 3.5) {
+ 8000748:	687b      	ldr	r3, [r7, #4]
+ 800074a:	3308      	adds	r3, #8
+ 800074c:	681b      	ldr	r3, [r3, #0]
+ 800074e:	497d      	ldr	r1, [pc, #500]	; (8000944 <sonar_predict_tree_0+0x6b2>)
+ 8000750:	1c18      	adds	r0, r3, #0
+ 8000752:	f001 f8c3 	bl	80018dc <__aeabi_fcmplt>
+ 8000756:	1e03      	subs	r3, r0, #0
+ 8000758:	d017      	beq.n	800078a <sonar_predict_tree_0+0x4f8>
+                                                                  if (features[4] < 40.5) {
+ 800075a:	687b      	ldr	r3, [r7, #4]
+ 800075c:	3310      	adds	r3, #16
+ 800075e:	681b      	ldr	r3, [r3, #0]
+ 8000760:	4979      	ldr	r1, [pc, #484]	; (8000948 <sonar_predict_tree_0+0x6b6>)
+ 8000762:	1c18      	adds	r0, r3, #0
+ 8000764:	f001 f8ba 	bl	80018dc <__aeabi_fcmplt>
+ 8000768:	1e03      	subs	r3, r0, #0
+ 800076a:	d00c      	beq.n	8000786 <sonar_predict_tree_0+0x4f4>
+                                                                      if (features[9] < 34.0) {
+ 800076c:	687b      	ldr	r3, [r7, #4]
+ 800076e:	3324      	adds	r3, #36	; 0x24
+ 8000770:	681b      	ldr	r3, [r3, #0]
+ 8000772:	4976      	ldr	r1, [pc, #472]	; (800094c <sonar_predict_tree_0+0x6ba>)
+ 8000774:	1c18      	adds	r0, r3, #0
+ 8000776:	f001 f8b1 	bl	80018dc <__aeabi_fcmplt>
+ 800077a:	1e03      	subs	r3, r0, #0
+ 800077c:	d001      	beq.n	8000782 <sonar_predict_tree_0+0x4f0>
+                                                                          return 0;
+ 800077e:	2300      	movs	r3, #0
+ 8000780:	e30e      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                                      } else {
+                                                                          return 1;
+ 8000782:	2301      	movs	r3, #1
+ 8000784:	e30c      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                                      }
+                                                                  } else {
+                                                                      return 1;
+ 8000786:	2301      	movs	r3, #1
+ 8000788:	e30a      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                                  }
+                                                              } else {
+                                                                  return 0;
+ 800078a:	2300      	movs	r3, #0
+ 800078c:	e308      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                              }
+                                                          }
+                                                      }
+                                                  }
+                                              } else {
+                                                  if (features[9] < 11.0) {
+ 800078e:	687b      	ldr	r3, [r7, #4]
+ 8000790:	3324      	adds	r3, #36	; 0x24
+ 8000792:	681b      	ldr	r3, [r3, #0]
+ 8000794:	496e      	ldr	r1, [pc, #440]	; (8000950 <sonar_predict_tree_0+0x6be>)
+ 8000796:	1c18      	adds	r0, r3, #0
+ 8000798:	f001 f8a0 	bl	80018dc <__aeabi_fcmplt>
+ 800079c:	1e03      	subs	r3, r0, #0
+ 800079e:	d001      	beq.n	80007a4 <sonar_predict_tree_0+0x512>
+                                                      return 0;
+ 80007a0:	2300      	movs	r3, #0
+ 80007a2:	e2fd      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                  } else {
+                                                      return 1;
+ 80007a4:	2301      	movs	r3, #1
+ 80007a6:	e2fb      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                  }
+                                              }
+                                          } else {
+                                              if (features[8] < 796.5) {
+ 80007a8:	687b      	ldr	r3, [r7, #4]
+ 80007aa:	3320      	adds	r3, #32
+ 80007ac:	681b      	ldr	r3, [r3, #0]
+ 80007ae:	4969      	ldr	r1, [pc, #420]	; (8000954 <sonar_predict_tree_0+0x6c2>)
+ 80007b0:	1c18      	adds	r0, r3, #0
+ 80007b2:	f001 f893 	bl	80018dc <__aeabi_fcmplt>
+ 80007b6:	1e03      	subs	r3, r0, #0
+ 80007b8:	d01b      	beq.n	80007f2 <sonar_predict_tree_0+0x560>
+                                                  if (features[10] < 1.625569999217987) {
+ 80007ba:	687b      	ldr	r3, [r7, #4]
+ 80007bc:	3328      	adds	r3, #40	; 0x28
+ 80007be:	681b      	ldr	r3, [r3, #0]
+ 80007c0:	1c18      	adds	r0, r3, #0
+ 80007c2:	f001 fa7b 	bl	8001cbc <__aeabi_f2d>
+ 80007c6:	22b0      	movs	r2, #176	; 0xb0
+ 80007c8:	0612      	lsls	r2, r2, #24
+ 80007ca:	4b63      	ldr	r3, [pc, #396]	; (8000958 <sonar_predict_tree_0+0x6c6>)
+ 80007cc:	f001 f84c 	bl	8001868 <__aeabi_dcmplt>
+ 80007d0:	1e03      	subs	r3, r0, #0
+ 80007d2:	d00c      	beq.n	80007ee <sonar_predict_tree_0+0x55c>
+                                                      if (features[2] < 2.5) {
+ 80007d4:	687b      	ldr	r3, [r7, #4]
+ 80007d6:	3308      	adds	r3, #8
+ 80007d8:	681b      	ldr	r3, [r3, #0]
+ 80007da:	4960      	ldr	r1, [pc, #384]	; (800095c <sonar_predict_tree_0+0x6ca>)
+ 80007dc:	1c18      	adds	r0, r3, #0
+ 80007de:	f001 f87d 	bl	80018dc <__aeabi_fcmplt>
+ 80007e2:	1e03      	subs	r3, r0, #0
+ 80007e4:	d001      	beq.n	80007ea <sonar_predict_tree_0+0x558>
+                                                          return 0;
+ 80007e6:	2300      	movs	r3, #0
+ 80007e8:	e2da      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                      } else {
+                                                          return 1;
+ 80007ea:	2301      	movs	r3, #1
+ 80007ec:	e2d8      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                      }
+                                                  } else {
+                                                      return 0;
+ 80007ee:	2300      	movs	r3, #0
+ 80007f0:	e2d6      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                  }
+                                              } else {
+                                                  if (features[5] < 4.0) {
+ 80007f2:	687b      	ldr	r3, [r7, #4]
+ 80007f4:	3314      	adds	r3, #20
+ 80007f6:	681b      	ldr	r3, [r3, #0]
+ 80007f8:	2181      	movs	r1, #129	; 0x81
+ 80007fa:	05c9      	lsls	r1, r1, #23
+ 80007fc:	1c18      	adds	r0, r3, #0
+ 80007fe:	f001 f86d 	bl	80018dc <__aeabi_fcmplt>
+ 8000802:	1e03      	subs	r3, r0, #0
+ 8000804:	d017      	beq.n	8000836 <sonar_predict_tree_0+0x5a4>
+                                                      if (features[9] < 67.0) {
+ 8000806:	687b      	ldr	r3, [r7, #4]
+ 8000808:	3324      	adds	r3, #36	; 0x24
+ 800080a:	681b      	ldr	r3, [r3, #0]
+ 800080c:	4954      	ldr	r1, [pc, #336]	; (8000960 <sonar_predict_tree_0+0x6ce>)
+ 800080e:	1c18      	adds	r0, r3, #0
+ 8000810:	f001 f864 	bl	80018dc <__aeabi_fcmplt>
+ 8000814:	1e03      	subs	r3, r0, #0
+ 8000816:	d00c      	beq.n	8000832 <sonar_predict_tree_0+0x5a0>
+                                                          if (features[4] < 11.0) {
+ 8000818:	687b      	ldr	r3, [r7, #4]
+ 800081a:	3310      	adds	r3, #16
+ 800081c:	681b      	ldr	r3, [r3, #0]
+ 800081e:	494c      	ldr	r1, [pc, #304]	; (8000950 <sonar_predict_tree_0+0x6be>)
+ 8000820:	1c18      	adds	r0, r3, #0
+ 8000822:	f001 f85b 	bl	80018dc <__aeabi_fcmplt>
+ 8000826:	1e03      	subs	r3, r0, #0
+ 8000828:	d001      	beq.n	800082e <sonar_predict_tree_0+0x59c>
+                                                              return 0;
+ 800082a:	2300      	movs	r3, #0
+ 800082c:	e2b8      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                          } else {
+                                                              return 1;
+ 800082e:	2301      	movs	r3, #1
+ 8000830:	e2b6      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                          }
+                                                      } else {
+                                                          return 1;
+ 8000832:	2301      	movs	r3, #1
+ 8000834:	e2b4      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                      }
+                                                  } else {
+                                                      return 0;
+ 8000836:	2300      	movs	r3, #0
+ 8000838:	e2b2      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                  }
+                                              }
+                                          }
+                                      } else {
+                                          if (features[9] < 54.5) {
+ 800083a:	687b      	ldr	r3, [r7, #4]
+ 800083c:	3324      	adds	r3, #36	; 0x24
+ 800083e:	681b      	ldr	r3, [r3, #0]
+ 8000840:	4948      	ldr	r1, [pc, #288]	; (8000964 <sonar_predict_tree_0+0x6d2>)
+ 8000842:	1c18      	adds	r0, r3, #0
+ 8000844:	f001 f84a 	bl	80018dc <__aeabi_fcmplt>
+ 8000848:	1e03      	subs	r3, r0, #0
+ 800084a:	d027      	beq.n	800089c <sonar_predict_tree_0+0x60a>
+                                              if (features[8] < 576.5) {
+ 800084c:	687b      	ldr	r3, [r7, #4]
+ 800084e:	3320      	adds	r3, #32
+ 8000850:	681b      	ldr	r3, [r3, #0]
+ 8000852:	4945      	ldr	r1, [pc, #276]	; (8000968 <sonar_predict_tree_0+0x6d6>)
+ 8000854:	1c18      	adds	r0, r3, #0
+ 8000856:	f001 f841 	bl	80018dc <__aeabi_fcmplt>
+ 800085a:	1e03      	subs	r3, r0, #0
+ 800085c:	d01c      	beq.n	8000898 <sonar_predict_tree_0+0x606>
+                                                  if (features[5] < 1.5) {
+ 800085e:	687b      	ldr	r3, [r7, #4]
+ 8000860:	3314      	adds	r3, #20
+ 8000862:	681b      	ldr	r3, [r3, #0]
+ 8000864:	21ff      	movs	r1, #255	; 0xff
+ 8000866:	0589      	lsls	r1, r1, #22
+ 8000868:	1c18      	adds	r0, r3, #0
+ 800086a:	f001 f837 	bl	80018dc <__aeabi_fcmplt>
+ 800086e:	1e03      	subs	r3, r0, #0
+ 8000870:	d010      	beq.n	8000894 <sonar_predict_tree_0+0x602>
+                                                      if (features[10] < 1.5243750214576721) {
+ 8000872:	687b      	ldr	r3, [r7, #4]
+ 8000874:	3328      	adds	r3, #40	; 0x28
+ 8000876:	681b      	ldr	r3, [r3, #0]
+ 8000878:	1c18      	adds	r0, r3, #0
+ 800087a:	f001 fa1f 	bl	8001cbc <__aeabi_f2d>
+ 800087e:	2280      	movs	r2, #128	; 0x80
+ 8000880:	0552      	lsls	r2, r2, #21
+ 8000882:	4b3a      	ldr	r3, [pc, #232]	; (800096c <sonar_predict_tree_0+0x6da>)
+ 8000884:	f000 fff0 	bl	8001868 <__aeabi_dcmplt>
+ 8000888:	1e03      	subs	r3, r0, #0
+ 800088a:	d001      	beq.n	8000890 <sonar_predict_tree_0+0x5fe>
+                                                          return 0;
+ 800088c:	2300      	movs	r3, #0
+ 800088e:	e287      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                      } else {
+                                                          return 1;
+ 8000890:	2301      	movs	r3, #1
+ 8000892:	e285      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                      }
+                                                  } else {
+                                                      return 0;
+ 8000894:	2300      	movs	r3, #0
+ 8000896:	e283      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                  }
+                                              } else {
+                                                  return 0;
+ 8000898:	2300      	movs	r3, #0
+ 800089a:	e281      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                              }
+                                          } else {
+                                              if (features[8] < 894.0) {
+ 800089c:	687b      	ldr	r3, [r7, #4]
+ 800089e:	3320      	adds	r3, #32
+ 80008a0:	681b      	ldr	r3, [r3, #0]
+ 80008a2:	4933      	ldr	r1, [pc, #204]	; (8000970 <sonar_predict_tree_0+0x6de>)
+ 80008a4:	1c18      	adds	r0, r3, #0
+ 80008a6:	f001 f819 	bl	80018dc <__aeabi_fcmplt>
+ 80008aa:	1e03      	subs	r3, r0, #0
+ 80008ac:	d100      	bne.n	80008b0 <sonar_predict_tree_0+0x61e>
+ 80008ae:	e082      	b.n	80009b6 <sonar_predict_tree_0+0x724>
+                                                  if (features[8] < 806.0) {
+ 80008b0:	687b      	ldr	r3, [r7, #4]
+ 80008b2:	3320      	adds	r3, #32
+ 80008b4:	681b      	ldr	r3, [r3, #0]
+ 80008b6:	492f      	ldr	r1, [pc, #188]	; (8000974 <sonar_predict_tree_0+0x6e2>)
+ 80008b8:	1c18      	adds	r0, r3, #0
+ 80008ba:	f001 f80f 	bl	80018dc <__aeabi_fcmplt>
+ 80008be:	1e03      	subs	r3, r0, #0
+ 80008c0:	d060      	beq.n	8000984 <sonar_predict_tree_0+0x6f2>
+                                                      if (features[2] < 26.5) {
+ 80008c2:	687b      	ldr	r3, [r7, #4]
+ 80008c4:	3308      	adds	r3, #8
+ 80008c6:	681b      	ldr	r3, [r3, #0]
+ 80008c8:	492b      	ldr	r1, [pc, #172]	; (8000978 <sonar_predict_tree_0+0x6e6>)
+ 80008ca:	1c18      	adds	r0, r3, #0
+ 80008cc:	f001 f806 	bl	80018dc <__aeabi_fcmplt>
+ 80008d0:	1e03      	subs	r3, r0, #0
+ 80008d2:	d01b      	beq.n	800090c <sonar_predict_tree_0+0x67a>
+                                                          if (features[10] < 1.6079400181770325) {
+ 80008d4:	687b      	ldr	r3, [r7, #4]
+ 80008d6:	3328      	adds	r3, #40	; 0x28
+ 80008d8:	681b      	ldr	r3, [r3, #0]
+ 80008da:	1c18      	adds	r0, r3, #0
+ 80008dc:	f001 f9ee 	bl	8001cbc <__aeabi_f2d>
+ 80008e0:	22a0      	movs	r2, #160	; 0xa0
+ 80008e2:	05d2      	lsls	r2, r2, #23
+ 80008e4:	4b25      	ldr	r3, [pc, #148]	; (800097c <sonar_predict_tree_0+0x6ea>)
+ 80008e6:	f000 ffbf 	bl	8001868 <__aeabi_dcmplt>
+ 80008ea:	1e03      	subs	r3, r0, #0
+ 80008ec:	d00c      	beq.n	8000908 <sonar_predict_tree_0+0x676>
+                                                              if (features[9] < 99.5) {
+ 80008ee:	687b      	ldr	r3, [r7, #4]
+ 80008f0:	3324      	adds	r3, #36	; 0x24
+ 80008f2:	681b      	ldr	r3, [r3, #0]
+ 80008f4:	4922      	ldr	r1, [pc, #136]	; (8000980 <sonar_predict_tree_0+0x6ee>)
+ 80008f6:	1c18      	adds	r0, r3, #0
+ 80008f8:	f000 fff0 	bl	80018dc <__aeabi_fcmplt>
+ 80008fc:	1e03      	subs	r3, r0, #0
+ 80008fe:	d001      	beq.n	8000904 <sonar_predict_tree_0+0x672>
+                                                                  return 0;
+ 8000900:	2300      	movs	r3, #0
+ 8000902:	e24d      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                              } else {
+                                                                  return 0;
+ 8000904:	2300      	movs	r3, #0
+ 8000906:	e24b      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                              }
+                                                          } else {
+                                                              return 0;
+ 8000908:	2300      	movs	r3, #0
+ 800090a:	e249      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                          }
+                                                      } else {
+                                                          return 1;
+ 800090c:	2301      	movs	r3, #1
+ 800090e:	e247      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+ 8000910:	40900000 	.word	0x40900000
+ 8000914:	42620000 	.word	0x42620000
+ 8000918:	429f0000 	.word	0x429f0000
+ 800091c:	4002135f 	.word	0x4002135f
+ 8000920:	421a0000 	.word	0x421a0000
+ 8000924:	42160000 	.word	0x42160000
+ 8000928:	41580000 	.word	0x41580000
+ 800092c:	41a40000 	.word	0x41a40000
+ 8000930:	41a00000 	.word	0x41a00000
+ 8000934:	448a1000 	.word	0x448a1000
+ 8000938:	40b00000 	.word	0x40b00000
+ 800093c:	448f7000 	.word	0x448f7000
+ 8000940:	419c0000 	.word	0x419c0000
+ 8000944:	40600000 	.word	0x40600000
+ 8000948:	42220000 	.word	0x42220000
+ 800094c:	42080000 	.word	0x42080000
+ 8000950:	41300000 	.word	0x41300000
+ 8000954:	44472000 	.word	0x44472000
+ 8000958:	3ffa0255 	.word	0x3ffa0255
+ 800095c:	40200000 	.word	0x40200000
+ 8000960:	42860000 	.word	0x42860000
+ 8000964:	425a0000 	.word	0x425a0000
+ 8000968:	44102000 	.word	0x44102000
+ 800096c:	3ff863d7 	.word	0x3ff863d7
+ 8000970:	445f8000 	.word	0x445f8000
+ 8000974:	44498000 	.word	0x44498000
+ 8000978:	41d40000 	.word	0x41d40000
+ 800097c:	3ff9ba1f 	.word	0x3ff9ba1f
+ 8000980:	42c70000 	.word	0x42c70000
+                                                      }
+                                                  } else {
+                                                      if (features[9] < 103.5) {
+ 8000984:	687b      	ldr	r3, [r7, #4]
+ 8000986:	3324      	adds	r3, #36	; 0x24
+ 8000988:	681b      	ldr	r3, [r3, #0]
+ 800098a:	49b4      	ldr	r1, [pc, #720]	; (8000c5c <sonar_predict_tree_0+0x9ca>)
+ 800098c:	1c18      	adds	r0, r3, #0
+ 800098e:	f000 ffa5 	bl	80018dc <__aeabi_fcmplt>
+ 8000992:	1e03      	subs	r3, r0, #0
+ 8000994:	d001      	beq.n	800099a <sonar_predict_tree_0+0x708>
+                                                          return 0;
+ 8000996:	2300      	movs	r3, #0
+ 8000998:	e202      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                      } else {
+                                                          if (features[5] < 4.0) {
+ 800099a:	687b      	ldr	r3, [r7, #4]
+ 800099c:	3314      	adds	r3, #20
+ 800099e:	681b      	ldr	r3, [r3, #0]
+ 80009a0:	2181      	movs	r1, #129	; 0x81
+ 80009a2:	05c9      	lsls	r1, r1, #23
+ 80009a4:	1c18      	adds	r0, r3, #0
+ 80009a6:	f000 ff99 	bl	80018dc <__aeabi_fcmplt>
+ 80009aa:	1e03      	subs	r3, r0, #0
+ 80009ac:	d001      	beq.n	80009b2 <sonar_predict_tree_0+0x720>
+                                                              return 1;
+ 80009ae:	2301      	movs	r3, #1
+ 80009b0:	e1f6      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                          } else {
+                                                              return 0;
+ 80009b2:	2300      	movs	r3, #0
+ 80009b4:	e1f4      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                          }
+                                                      }
+                                                  }
+                                              } else {
+                                                  if (features[5] < 5.5) {
+ 80009b6:	687b      	ldr	r3, [r7, #4]
+ 80009b8:	3314      	adds	r3, #20
+ 80009ba:	681b      	ldr	r3, [r3, #0]
+ 80009bc:	49a8      	ldr	r1, [pc, #672]	; (8000c60 <sonar_predict_tree_0+0x9ce>)
+ 80009be:	1c18      	adds	r0, r3, #0
+ 80009c0:	f000 ff8c 	bl	80018dc <__aeabi_fcmplt>
+ 80009c4:	1e03      	subs	r3, r0, #0
+ 80009c6:	d017      	beq.n	80009f8 <sonar_predict_tree_0+0x766>
+                                                      if (features[9] < 59.0) {
+ 80009c8:	687b      	ldr	r3, [r7, #4]
+ 80009ca:	3324      	adds	r3, #36	; 0x24
+ 80009cc:	681b      	ldr	r3, [r3, #0]
+ 80009ce:	49a5      	ldr	r1, [pc, #660]	; (8000c64 <sonar_predict_tree_0+0x9d2>)
+ 80009d0:	1c18      	adds	r0, r3, #0
+ 80009d2:	f000 ff83 	bl	80018dc <__aeabi_fcmplt>
+ 80009d6:	1e03      	subs	r3, r0, #0
+ 80009d8:	d00c      	beq.n	80009f4 <sonar_predict_tree_0+0x762>
+                                                          if (features[4] < 13.0) {
+ 80009da:	687b      	ldr	r3, [r7, #4]
+ 80009dc:	3310      	adds	r3, #16
+ 80009de:	681b      	ldr	r3, [r3, #0]
+ 80009e0:	49a1      	ldr	r1, [pc, #644]	; (8000c68 <sonar_predict_tree_0+0x9d6>)
+ 80009e2:	1c18      	adds	r0, r3, #0
+ 80009e4:	f000 ff7a 	bl	80018dc <__aeabi_fcmplt>
+ 80009e8:	1e03      	subs	r3, r0, #0
+ 80009ea:	d001      	beq.n	80009f0 <sonar_predict_tree_0+0x75e>
+                                                              return 0;
+ 80009ec:	2300      	movs	r3, #0
+ 80009ee:	e1d7      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                          } else {
+                                                              return 1;
+ 80009f0:	2301      	movs	r3, #1
+ 80009f2:	e1d5      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                          }
+                                                      } else {
+                                                          return 1;
+ 80009f4:	2301      	movs	r3, #1
+ 80009f6:	e1d3      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                      }
+                                                  } else {
+                                                      return 0;
+ 80009f8:	2300      	movs	r3, #0
+ 80009fa:	e1d1      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                              }
+                                          }
+                                      }
+                                  }
+                              } else {
+                                  if (features[8] < 349.5) {
+ 80009fc:	687b      	ldr	r3, [r7, #4]
+ 80009fe:	3320      	adds	r3, #32
+ 8000a00:	681b      	ldr	r3, [r3, #0]
+ 8000a02:	499a      	ldr	r1, [pc, #616]	; (8000c6c <sonar_predict_tree_0+0x9da>)
+ 8000a04:	1c18      	adds	r0, r3, #0
+ 8000a06:	f000 ff69 	bl	80018dc <__aeabi_fcmplt>
+ 8000a0a:	1e03      	subs	r3, r0, #0
+ 8000a0c:	d044      	beq.n	8000a98 <sonar_predict_tree_0+0x806>
+                                      if (features[2] < 4.5) {
+ 8000a0e:	687b      	ldr	r3, [r7, #4]
+ 8000a10:	3308      	adds	r3, #8
+ 8000a12:	681b      	ldr	r3, [r3, #0]
+ 8000a14:	4996      	ldr	r1, [pc, #600]	; (8000c70 <sonar_predict_tree_0+0x9de>)
+ 8000a16:	1c18      	adds	r0, r3, #0
+ 8000a18:	f000 ff60 	bl	80018dc <__aeabi_fcmplt>
+ 8000a1c:	1e03      	subs	r3, r0, #0
+ 8000a1e:	d001      	beq.n	8000a24 <sonar_predict_tree_0+0x792>
+                                          return 0;
+ 8000a20:	2300      	movs	r3, #0
+ 8000a22:	e1bd      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                      } else {
+                                          if (features[10] < 0.5906450152397156) {
+ 8000a24:	687b      	ldr	r3, [r7, #4]
+ 8000a26:	3328      	adds	r3, #40	; 0x28
+ 8000a28:	681b      	ldr	r3, [r3, #0]
+ 8000a2a:	4992      	ldr	r1, [pc, #584]	; (8000c74 <sonar_predict_tree_0+0x9e2>)
+ 8000a2c:	1c18      	adds	r0, r3, #0
+ 8000a2e:	f000 ff55 	bl	80018dc <__aeabi_fcmplt>
+ 8000a32:	1e03      	subs	r3, r0, #0
+ 8000a34:	d001      	beq.n	8000a3a <sonar_predict_tree_0+0x7a8>
+                                              return 1;
+ 8000a36:	2301      	movs	r3, #1
+ 8000a38:	e1b2      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                          } else {
+                                              if (features[5] < 2.0) {
+ 8000a3a:	687b      	ldr	r3, [r7, #4]
+ 8000a3c:	3314      	adds	r3, #20
+ 8000a3e:	681b      	ldr	r3, [r3, #0]
+ 8000a40:	2180      	movs	r1, #128	; 0x80
+ 8000a42:	05c9      	lsls	r1, r1, #23
+ 8000a44:	1c18      	adds	r0, r3, #0
+ 8000a46:	f000 ff49 	bl	80018dc <__aeabi_fcmplt>
+ 8000a4a:	1e03      	subs	r3, r0, #0
+ 8000a4c:	d022      	beq.n	8000a94 <sonar_predict_tree_0+0x802>
+                                                  if (features[9] < 220.0) {
+ 8000a4e:	687b      	ldr	r3, [r7, #4]
+ 8000a50:	3324      	adds	r3, #36	; 0x24
+ 8000a52:	681b      	ldr	r3, [r3, #0]
+ 8000a54:	4988      	ldr	r1, [pc, #544]	; (8000c78 <sonar_predict_tree_0+0x9e6>)
+ 8000a56:	1c18      	adds	r0, r3, #0
+ 8000a58:	f000 ff40 	bl	80018dc <__aeabi_fcmplt>
+ 8000a5c:	1e03      	subs	r3, r0, #0
+ 8000a5e:	d017      	beq.n	8000a90 <sonar_predict_tree_0+0x7fe>
+                                                      if (features[9] < 141.5) {
+ 8000a60:	687b      	ldr	r3, [r7, #4]
+ 8000a62:	3324      	adds	r3, #36	; 0x24
+ 8000a64:	681b      	ldr	r3, [r3, #0]
+ 8000a66:	4985      	ldr	r1, [pc, #532]	; (8000c7c <sonar_predict_tree_0+0x9ea>)
+ 8000a68:	1c18      	adds	r0, r3, #0
+ 8000a6a:	f000 ff37 	bl	80018dc <__aeabi_fcmplt>
+ 8000a6e:	1e03      	subs	r3, r0, #0
+ 8000a70:	d001      	beq.n	8000a76 <sonar_predict_tree_0+0x7e4>
+                                                          return 0;
+ 8000a72:	2300      	movs	r3, #0
+ 8000a74:	e194      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                      } else {
+                                                          if (features[8] < 226.5) {
+ 8000a76:	687b      	ldr	r3, [r7, #4]
+ 8000a78:	3320      	adds	r3, #32
+ 8000a7a:	681b      	ldr	r3, [r3, #0]
+ 8000a7c:	4980      	ldr	r1, [pc, #512]	; (8000c80 <sonar_predict_tree_0+0x9ee>)
+ 8000a7e:	1c18      	adds	r0, r3, #0
+ 8000a80:	f000 ff2c 	bl	80018dc <__aeabi_fcmplt>
+ 8000a84:	1e03      	subs	r3, r0, #0
+ 8000a86:	d001      	beq.n	8000a8c <sonar_predict_tree_0+0x7fa>
+                                                              return 0;
+ 8000a88:	2300      	movs	r3, #0
+ 8000a8a:	e189      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                          } else {
+                                                              return 1;
+ 8000a8c:	2301      	movs	r3, #1
+ 8000a8e:	e187      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                          }
+                                                      }
+                                                  } else {
+                                                      return 0;
+ 8000a90:	2300      	movs	r3, #0
+ 8000a92:	e185      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                  }
+                                              } else {
+                                                  return 0;
+ 8000a94:	2300      	movs	r3, #0
+ 8000a96:	e183      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                              }
+                                          }
+                                      }
+                                  } else {
+                                      if (features[5] < 1.5) {
+ 8000a98:	687b      	ldr	r3, [r7, #4]
+ 8000a9a:	3314      	adds	r3, #20
+ 8000a9c:	681b      	ldr	r3, [r3, #0]
+ 8000a9e:	21ff      	movs	r1, #255	; 0xff
+ 8000aa0:	0589      	lsls	r1, r1, #22
+ 8000aa2:	1c18      	adds	r0, r3, #0
+ 8000aa4:	f000 ff1a 	bl	80018dc <__aeabi_fcmplt>
+ 8000aa8:	1e03      	subs	r3, r0, #0
+ 8000aaa:	d001      	beq.n	8000ab0 <sonar_predict_tree_0+0x81e>
+                                          return 1;
+ 8000aac:	2301      	movs	r3, #1
+ 8000aae:	e177      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                      } else {
+                                          return 0;
+ 8000ab0:	2300      	movs	r3, #0
+ 8000ab2:	e175      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                      }
+                                  }
+                              }
+                          } else {
+                              if (features[5] < 1.5) {
+ 8000ab4:	687b      	ldr	r3, [r7, #4]
+ 8000ab6:	3314      	adds	r3, #20
+ 8000ab8:	681b      	ldr	r3, [r3, #0]
+ 8000aba:	21ff      	movs	r1, #255	; 0xff
+ 8000abc:	0589      	lsls	r1, r1, #22
+ 8000abe:	1c18      	adds	r0, r3, #0
+ 8000ac0:	f000 ff0c 	bl	80018dc <__aeabi_fcmplt>
+ 8000ac4:	1e03      	subs	r3, r0, #0
+ 8000ac6:	d100      	bne.n	8000aca <sonar_predict_tree_0+0x838>
+ 8000ac8:	e12c      	b.n	8000d24 <sonar_predict_tree_0+0xa92>
+                                  if (features[4] < 1.5) {
+ 8000aca:	687b      	ldr	r3, [r7, #4]
+ 8000acc:	3310      	adds	r3, #16
+ 8000ace:	681b      	ldr	r3, [r3, #0]
+ 8000ad0:	21ff      	movs	r1, #255	; 0xff
+ 8000ad2:	0589      	lsls	r1, r1, #22
+ 8000ad4:	1c18      	adds	r0, r3, #0
+ 8000ad6:	f000 ff01 	bl	80018dc <__aeabi_fcmplt>
+ 8000ada:	1e03      	subs	r3, r0, #0
+ 8000adc:	d031      	beq.n	8000b42 <sonar_predict_tree_0+0x8b0>
+                                      if (features[9] < 235.5) {
+ 8000ade:	687b      	ldr	r3, [r7, #4]
+ 8000ae0:	3324      	adds	r3, #36	; 0x24
+ 8000ae2:	681b      	ldr	r3, [r3, #0]
+ 8000ae4:	4967      	ldr	r1, [pc, #412]	; (8000c84 <sonar_predict_tree_0+0x9f2>)
+ 8000ae6:	1c18      	adds	r0, r3, #0
+ 8000ae8:	f000 fef8 	bl	80018dc <__aeabi_fcmplt>
+ 8000aec:	1e03      	subs	r3, r0, #0
+ 8000aee:	d017      	beq.n	8000b20 <sonar_predict_tree_0+0x88e>
+                                          if (features[9] < 151.0) {
+ 8000af0:	687b      	ldr	r3, [r7, #4]
+ 8000af2:	3324      	adds	r3, #36	; 0x24
+ 8000af4:	681b      	ldr	r3, [r3, #0]
+ 8000af6:	4964      	ldr	r1, [pc, #400]	; (8000c88 <sonar_predict_tree_0+0x9f6>)
+ 8000af8:	1c18      	adds	r0, r3, #0
+ 8000afa:	f000 feef 	bl	80018dc <__aeabi_fcmplt>
+ 8000afe:	1e03      	subs	r3, r0, #0
+ 8000b00:	d001      	beq.n	8000b06 <sonar_predict_tree_0+0x874>
+                                              return 0;
+ 8000b02:	2300      	movs	r3, #0
+ 8000b04:	e14c      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                          } else {
+                                              if (features[8] < 236.5) {
+ 8000b06:	687b      	ldr	r3, [r7, #4]
+ 8000b08:	3320      	adds	r3, #32
+ 8000b0a:	681b      	ldr	r3, [r3, #0]
+ 8000b0c:	495f      	ldr	r1, [pc, #380]	; (8000c8c <sonar_predict_tree_0+0x9fa>)
+ 8000b0e:	1c18      	adds	r0, r3, #0
+ 8000b10:	f000 fee4 	bl	80018dc <__aeabi_fcmplt>
+ 8000b14:	1e03      	subs	r3, r0, #0
+ 8000b16:	d001      	beq.n	8000b1c <sonar_predict_tree_0+0x88a>
+                                                  return 0;
+ 8000b18:	2300      	movs	r3, #0
+ 8000b1a:	e141      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                              } else {
+                                                  return 1;
+ 8000b1c:	2301      	movs	r3, #1
+ 8000b1e:	e13f      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                              }
+                                          }
+                                      } else {
+                                          if (features[10] < 2.746440052986145) {
+ 8000b20:	687b      	ldr	r3, [r7, #4]
+ 8000b22:	3328      	adds	r3, #40	; 0x28
+ 8000b24:	681b      	ldr	r3, [r3, #0]
+ 8000b26:	1c18      	adds	r0, r3, #0
+ 8000b28:	f001 f8c8 	bl	8001cbc <__aeabi_f2d>
+ 8000b2c:	2290      	movs	r2, #144	; 0x90
+ 8000b2e:	0612      	lsls	r2, r2, #24
+ 8000b30:	4b57      	ldr	r3, [pc, #348]	; (8000c90 <sonar_predict_tree_0+0x9fe>)
+ 8000b32:	f000 fe99 	bl	8001868 <__aeabi_dcmplt>
+ 8000b36:	1e03      	subs	r3, r0, #0
+ 8000b38:	d001      	beq.n	8000b3e <sonar_predict_tree_0+0x8ac>
+                                              return 0;
+ 8000b3a:	2300      	movs	r3, #0
+ 8000b3c:	e130      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                          } else {
+                                              return 1;
+ 8000b3e:	2301      	movs	r3, #1
+ 8000b40:	e12e      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                          }
+                                      }
+                                  } else {
+                                      if (features[9] < 102.5) {
+ 8000b42:	687b      	ldr	r3, [r7, #4]
+ 8000b44:	3324      	adds	r3, #36	; 0x24
+ 8000b46:	681b      	ldr	r3, [r3, #0]
+ 8000b48:	4952      	ldr	r1, [pc, #328]	; (8000c94 <sonar_predict_tree_0+0xa02>)
+ 8000b4a:	1c18      	adds	r0, r3, #0
+ 8000b4c:	f000 fec6 	bl	80018dc <__aeabi_fcmplt>
+ 8000b50:	1e03      	subs	r3, r0, #0
+ 8000b52:	d100      	bne.n	8000b56 <sonar_predict_tree_0+0x8c4>
+ 8000b54:	e0ce      	b.n	8000cf4 <sonar_predict_tree_0+0xa62>
+                                          if (features[4] < 9.5) {
+ 8000b56:	687b      	ldr	r3, [r7, #4]
+ 8000b58:	3310      	adds	r3, #16
+ 8000b5a:	681b      	ldr	r3, [r3, #0]
+ 8000b5c:	494e      	ldr	r1, [pc, #312]	; (8000c98 <sonar_predict_tree_0+0xa06>)
+ 8000b5e:	1c18      	adds	r0, r3, #0
+ 8000b60:	f000 febc 	bl	80018dc <__aeabi_fcmplt>
+ 8000b64:	1e03      	subs	r3, r0, #0
+ 8000b66:	d026      	beq.n	8000bb6 <sonar_predict_tree_0+0x924>
+                                              if (features[10] < 4.086290121078491) {
+ 8000b68:	687b      	ldr	r3, [r7, #4]
+ 8000b6a:	3328      	adds	r3, #40	; 0x28
+ 8000b6c:	681b      	ldr	r3, [r3, #0]
+ 8000b6e:	1c18      	adds	r0, r3, #0
+ 8000b70:	f001 f8a4 	bl	8001cbc <__aeabi_f2d>
+ 8000b74:	22e0      	movs	r2, #224	; 0xe0
+ 8000b76:	05d2      	lsls	r2, r2, #23
+ 8000b78:	4b48      	ldr	r3, [pc, #288]	; (8000c9c <sonar_predict_tree_0+0xa0a>)
+ 8000b7a:	f000 fe75 	bl	8001868 <__aeabi_dcmplt>
+ 8000b7e:	1e03      	subs	r3, r0, #0
+ 8000b80:	d017      	beq.n	8000bb2 <sonar_predict_tree_0+0x920>
+                                                  if (features[4] < 7.5) {
+ 8000b82:	687b      	ldr	r3, [r7, #4]
+ 8000b84:	3310      	adds	r3, #16
+ 8000b86:	681b      	ldr	r3, [r3, #0]
+ 8000b88:	4945      	ldr	r1, [pc, #276]	; (8000ca0 <sonar_predict_tree_0+0xa0e>)
+ 8000b8a:	1c18      	adds	r0, r3, #0
+ 8000b8c:	f000 fea6 	bl	80018dc <__aeabi_fcmplt>
+ 8000b90:	1e03      	subs	r3, r0, #0
+ 8000b92:	d001      	beq.n	8000b98 <sonar_predict_tree_0+0x906>
+                                                      return 0;
+ 8000b94:	2300      	movs	r3, #0
+ 8000b96:	e103      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                  } else {
+                                                      if (features[9] < 78.0) {
+ 8000b98:	687b      	ldr	r3, [r7, #4]
+ 8000b9a:	3324      	adds	r3, #36	; 0x24
+ 8000b9c:	681b      	ldr	r3, [r3, #0]
+ 8000b9e:	4941      	ldr	r1, [pc, #260]	; (8000ca4 <sonar_predict_tree_0+0xa12>)
+ 8000ba0:	1c18      	adds	r0, r3, #0
+ 8000ba2:	f000 fe9b 	bl	80018dc <__aeabi_fcmplt>
+ 8000ba6:	1e03      	subs	r3, r0, #0
+ 8000ba8:	d001      	beq.n	8000bae <sonar_predict_tree_0+0x91c>
+                                                          return 0;
+ 8000baa:	2300      	movs	r3, #0
+ 8000bac:	e0f8      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                      } else {
+                                                          return 1;
+ 8000bae:	2301      	movs	r3, #1
+ 8000bb0:	e0f6      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                      }
+                                                  }
+                                              } else {
+                                                  return 1;
+ 8000bb2:	2301      	movs	r3, #1
+ 8000bb4:	e0f4      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                              }
+                                          } else {
+                                              if (features[9] < 47.5) {
+ 8000bb6:	687b      	ldr	r3, [r7, #4]
+ 8000bb8:	3324      	adds	r3, #36	; 0x24
+ 8000bba:	681b      	ldr	r3, [r3, #0]
+ 8000bbc:	493a      	ldr	r1, [pc, #232]	; (8000ca8 <sonar_predict_tree_0+0xa16>)
+ 8000bbe:	1c18      	adds	r0, r3, #0
+ 8000bc0:	f000 fe8c 	bl	80018dc <__aeabi_fcmplt>
+ 8000bc4:	1e03      	subs	r3, r0, #0
+ 8000bc6:	d100      	bne.n	8000bca <sonar_predict_tree_0+0x938>
+ 8000bc8:	e07c      	b.n	8000cc4 <sonar_predict_tree_0+0xa32>
+                                                  if (features[4] < 25.5) {
+ 8000bca:	687b      	ldr	r3, [r7, #4]
+ 8000bcc:	3310      	adds	r3, #16
+ 8000bce:	681b      	ldr	r3, [r3, #0]
+ 8000bd0:	4936      	ldr	r1, [pc, #216]	; (8000cac <sonar_predict_tree_0+0xa1a>)
+ 8000bd2:	1c18      	adds	r0, r3, #0
+ 8000bd4:	f000 fe82 	bl	80018dc <__aeabi_fcmplt>
+ 8000bd8:	1e03      	subs	r3, r0, #0
+ 8000bda:	d001      	beq.n	8000be0 <sonar_predict_tree_0+0x94e>
+                                                      return 0;
+ 8000bdc:	2300      	movs	r3, #0
+ 8000bde:	e0df      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                  } else {
+                                                      if (features[9] < 21.5) {
+ 8000be0:	687b      	ldr	r3, [r7, #4]
+ 8000be2:	3324      	adds	r3, #36	; 0x24
+ 8000be4:	681b      	ldr	r3, [r3, #0]
+ 8000be6:	4932      	ldr	r1, [pc, #200]	; (8000cb0 <sonar_predict_tree_0+0xa1e>)
+ 8000be8:	1c18      	adds	r0, r3, #0
+ 8000bea:	f000 fe77 	bl	80018dc <__aeabi_fcmplt>
+ 8000bee:	1e03      	subs	r3, r0, #0
+ 8000bf0:	d00c      	beq.n	8000c0c <sonar_predict_tree_0+0x97a>
+                                                          if (features[8] < 1300.0) {
+ 8000bf2:	687b      	ldr	r3, [r7, #4]
+ 8000bf4:	3320      	adds	r3, #32
+ 8000bf6:	681b      	ldr	r3, [r3, #0]
+ 8000bf8:	492e      	ldr	r1, [pc, #184]	; (8000cb4 <sonar_predict_tree_0+0xa22>)
+ 8000bfa:	1c18      	adds	r0, r3, #0
+ 8000bfc:	f000 fe6e 	bl	80018dc <__aeabi_fcmplt>
+ 8000c00:	1e03      	subs	r3, r0, #0
+ 8000c02:	d001      	beq.n	8000c08 <sonar_predict_tree_0+0x976>
+                                                              return 0;
+ 8000c04:	2300      	movs	r3, #0
+ 8000c06:	e0cb      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                          } else {
+                                                              return 1;
+ 8000c08:	2301      	movs	r3, #1
+ 8000c0a:	e0c9      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                          }
+                                                      } else {
+                                                          if (features[10] < 2.7888799905776978) {
+ 8000c0c:	687b      	ldr	r3, [r7, #4]
+ 8000c0e:	3328      	adds	r3, #40	; 0x28
+ 8000c10:	681b      	ldr	r3, [r3, #0]
+ 8000c12:	1c18      	adds	r0, r3, #0
+ 8000c14:	f001 f852 	bl	8001cbc <__aeabi_f2d>
+ 8000c18:	22a0      	movs	r2, #160	; 0xa0
+ 8000c1a:	05d2      	lsls	r2, r2, #23
+ 8000c1c:	4b26      	ldr	r3, [pc, #152]	; (8000cb8 <sonar_predict_tree_0+0xa26>)
+ 8000c1e:	f000 fe23 	bl	8001868 <__aeabi_dcmplt>
+ 8000c22:	1e03      	subs	r3, r0, #0
+ 8000c24:	d017      	beq.n	8000c56 <sonar_predict_tree_0+0x9c4>
+                                                              if (features[9] < 28.5) {
+ 8000c26:	687b      	ldr	r3, [r7, #4]
+ 8000c28:	3324      	adds	r3, #36	; 0x24
+ 8000c2a:	681b      	ldr	r3, [r3, #0]
+ 8000c2c:	4923      	ldr	r1, [pc, #140]	; (8000cbc <sonar_predict_tree_0+0xa2a>)
+ 8000c2e:	1c18      	adds	r0, r3, #0
+ 8000c30:	f000 fe54 	bl	80018dc <__aeabi_fcmplt>
+ 8000c34:	1e03      	subs	r3, r0, #0
+ 8000c36:	d00c      	beq.n	8000c52 <sonar_predict_tree_0+0x9c0>
+                                                                  if (features[4] < 39.0) {
+ 8000c38:	687b      	ldr	r3, [r7, #4]
+ 8000c3a:	3310      	adds	r3, #16
+ 8000c3c:	681b      	ldr	r3, [r3, #0]
+ 8000c3e:	4920      	ldr	r1, [pc, #128]	; (8000cc0 <sonar_predict_tree_0+0xa2e>)
+ 8000c40:	1c18      	adds	r0, r3, #0
+ 8000c42:	f000 fe4b 	bl	80018dc <__aeabi_fcmplt>
+ 8000c46:	1e03      	subs	r3, r0, #0
+ 8000c48:	d001      	beq.n	8000c4e <sonar_predict_tree_0+0x9bc>
+                                                                      return 0;
+ 8000c4a:	2300      	movs	r3, #0
+ 8000c4c:	e0a8      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                                  } else {
+                                                                      return 1;
+ 8000c4e:	2301      	movs	r3, #1
+ 8000c50:	e0a6      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                                  }
+                                                              } else {
+                                                                  return 1;
+ 8000c52:	2301      	movs	r3, #1
+ 8000c54:	e0a4      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                              }
+                                                          } else {
+                                                              return 0;
+ 8000c56:	2300      	movs	r3, #0
+ 8000c58:	e0a2      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+ 8000c5a:	46c0      	nop			; (mov r8, r8)
+ 8000c5c:	42cf0000 	.word	0x42cf0000
+ 8000c60:	40b00000 	.word	0x40b00000
+ 8000c64:	426c0000 	.word	0x426c0000
+ 8000c68:	41500000 	.word	0x41500000
+ 8000c6c:	43aec000 	.word	0x43aec000
+ 8000c70:	40900000 	.word	0x40900000
+ 8000c74:	3f173483 	.word	0x3f173483
+ 8000c78:	435c0000 	.word	0x435c0000
+ 8000c7c:	430d8000 	.word	0x430d8000
+ 8000c80:	43628000 	.word	0x43628000
+ 8000c84:	436b8000 	.word	0x436b8000
+ 8000c88:	43170000 	.word	0x43170000
+ 8000c8c:	436c8000 	.word	0x436c8000
+ 8000c90:	4005f8b5 	.word	0x4005f8b5
+ 8000c94:	42cd0000 	.word	0x42cd0000
+ 8000c98:	41180000 	.word	0x41180000
+ 8000c9c:	4010585c 	.word	0x4010585c
+ 8000ca0:	40f00000 	.word	0x40f00000
+ 8000ca4:	429c0000 	.word	0x429c0000
+ 8000ca8:	423e0000 	.word	0x423e0000
+ 8000cac:	41cc0000 	.word	0x41cc0000
+ 8000cb0:	41ac0000 	.word	0x41ac0000
+ 8000cb4:	44a28000 	.word	0x44a28000
+ 8000cb8:	40064fa0 	.word	0x40064fa0
+ 8000cbc:	41e40000 	.word	0x41e40000
+ 8000cc0:	421c0000 	.word	0x421c0000
+                                                          }
+                                                      }
+                                                  }
+                                              } else {
+                                                  if (features[9] < 53.5) {
+ 8000cc4:	687b      	ldr	r3, [r7, #4]
+ 8000cc6:	3324      	adds	r3, #36	; 0x24
+ 8000cc8:	681b      	ldr	r3, [r3, #0]
+ 8000cca:	4937      	ldr	r1, [pc, #220]	; (8000da8 <sonar_predict_tree_0+0xb16>)
+ 8000ccc:	1c18      	adds	r0, r3, #0
+ 8000cce:	f000 fe05 	bl	80018dc <__aeabi_fcmplt>
+ 8000cd2:	1e03      	subs	r3, r0, #0
+ 8000cd4:	d00c      	beq.n	8000cf0 <sonar_predict_tree_0+0xa5e>
+                                                      if (features[4] < 12.5) {
+ 8000cd6:	687b      	ldr	r3, [r7, #4]
+ 8000cd8:	3310      	adds	r3, #16
+ 8000cda:	681b      	ldr	r3, [r3, #0]
+ 8000cdc:	4933      	ldr	r1, [pc, #204]	; (8000dac <sonar_predict_tree_0+0xb1a>)
+ 8000cde:	1c18      	adds	r0, r3, #0
+ 8000ce0:	f000 fdfc 	bl	80018dc <__aeabi_fcmplt>
+ 8000ce4:	1e03      	subs	r3, r0, #0
+ 8000ce6:	d001      	beq.n	8000cec <sonar_predict_tree_0+0xa5a>
+                                                          return 0;
+ 8000ce8:	2300      	movs	r3, #0
+ 8000cea:	e059      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                      } else {
+                                                          return 1;
+ 8000cec:	2301      	movs	r3, #1
+ 8000cee:	e057      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                      }
+                                                  } else {
+                                                      return 1;
+ 8000cf0:	2301      	movs	r3, #1
+ 8000cf2:	e055      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                                  }
+                                              }
+                                          }
+                                      } else {
+                                          if (features[9] < 110.5) {
+ 8000cf4:	687b      	ldr	r3, [r7, #4]
+ 8000cf6:	3324      	adds	r3, #36	; 0x24
+ 8000cf8:	681b      	ldr	r3, [r3, #0]
+ 8000cfa:	492d      	ldr	r1, [pc, #180]	; (8000db0 <sonar_predict_tree_0+0xb1e>)
+ 8000cfc:	1c18      	adds	r0, r3, #0
+ 8000cfe:	f000 fded 	bl	80018dc <__aeabi_fcmplt>
+ 8000d02:	1e03      	subs	r3, r0, #0
+ 8000d04:	d00c      	beq.n	8000d20 <sonar_predict_tree_0+0xa8e>
+                                              if (features[4] < 2.5) {
+ 8000d06:	687b      	ldr	r3, [r7, #4]
+ 8000d08:	3310      	adds	r3, #16
+ 8000d0a:	681b      	ldr	r3, [r3, #0]
+ 8000d0c:	4929      	ldr	r1, [pc, #164]	; (8000db4 <sonar_predict_tree_0+0xb22>)
+ 8000d0e:	1c18      	adds	r0, r3, #0
+ 8000d10:	f000 fde4 	bl	80018dc <__aeabi_fcmplt>
+ 8000d14:	1e03      	subs	r3, r0, #0
+ 8000d16:	d001      	beq.n	8000d1c <sonar_predict_tree_0+0xa8a>
+                                                  return 0;
+ 8000d18:	2300      	movs	r3, #0
+ 8000d1a:	e041      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                              } else {
+                                                  return 1;
+ 8000d1c:	2301      	movs	r3, #1
+ 8000d1e:	e03f      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                              }
+                                          } else {
+                                              return 1;
+ 8000d20:	2301      	movs	r3, #1
+ 8000d22:	e03d      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                          }
+                                      }
+                                  }
+                              } else {
+                                  return 0;
+ 8000d24:	2300      	movs	r3, #0
+ 8000d26:	e03b      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                              }
+                          }
+                      }
+                  } else {
+                      if (features[10] < 0.584865003824234) {
+ 8000d28:	687b      	ldr	r3, [r7, #4]
+ 8000d2a:	3328      	adds	r3, #40	; 0x28
+ 8000d2c:	681b      	ldr	r3, [r3, #0]
+ 8000d2e:	1c18      	adds	r0, r3, #0
+ 8000d30:	f000 ffc4 	bl	8001cbc <__aeabi_f2d>
+ 8000d34:	22d0      	movs	r2, #208	; 0xd0
+ 8000d36:	0612      	lsls	r2, r2, #24
+ 8000d38:	4b1f      	ldr	r3, [pc, #124]	; (8000db8 <sonar_predict_tree_0+0xb26>)
+ 8000d3a:	f000 fd95 	bl	8001868 <__aeabi_dcmplt>
+ 8000d3e:	1e03      	subs	r3, r0, #0
+ 8000d40:	d001      	beq.n	8000d46 <sonar_predict_tree_0+0xab4>
+                          return 0;
+ 8000d42:	2300      	movs	r3, #0
+ 8000d44:	e02c      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                      } else {
+                          if (features[10] < 0.6520349979400635) {
+ 8000d46:	687b      	ldr	r3, [r7, #4]
+ 8000d48:	3328      	adds	r3, #40	; 0x28
+ 8000d4a:	681b      	ldr	r3, [r3, #0]
+ 8000d4c:	491b      	ldr	r1, [pc, #108]	; (8000dbc <sonar_predict_tree_0+0xb2a>)
+ 8000d4e:	1c18      	adds	r0, r3, #0
+ 8000d50:	f000 fdc4 	bl	80018dc <__aeabi_fcmplt>
+ 8000d54:	1e03      	subs	r3, r0, #0
+ 8000d56:	d017      	beq.n	8000d88 <sonar_predict_tree_0+0xaf6>
+                              if (features[1] < 9.5) {
+ 8000d58:	687b      	ldr	r3, [r7, #4]
+ 8000d5a:	3304      	adds	r3, #4
+ 8000d5c:	681b      	ldr	r3, [r3, #0]
+ 8000d5e:	4918      	ldr	r1, [pc, #96]	; (8000dc0 <sonar_predict_tree_0+0xb2e>)
+ 8000d60:	1c18      	adds	r0, r3, #0
+ 8000d62:	f000 fdbb 	bl	80018dc <__aeabi_fcmplt>
+ 8000d66:	1e03      	subs	r3, r0, #0
+ 8000d68:	d001      	beq.n	8000d6e <sonar_predict_tree_0+0xadc>
+                                  return 1;
+ 8000d6a:	2301      	movs	r3, #1
+ 8000d6c:	e018      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                              } else {
+                                  if (features[1] < 18.5) {
+ 8000d6e:	687b      	ldr	r3, [r7, #4]
+ 8000d70:	3304      	adds	r3, #4
+ 8000d72:	681b      	ldr	r3, [r3, #0]
+ 8000d74:	4913      	ldr	r1, [pc, #76]	; (8000dc4 <sonar_predict_tree_0+0xb32>)
+ 8000d76:	1c18      	adds	r0, r3, #0
+ 8000d78:	f000 fdb0 	bl	80018dc <__aeabi_fcmplt>
+ 8000d7c:	1e03      	subs	r3, r0, #0
+ 8000d7e:	d001      	beq.n	8000d84 <sonar_predict_tree_0+0xaf2>
+                                      return 0;
+ 8000d80:	2300      	movs	r3, #0
+ 8000d82:	e00d      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                  } else {
+                                      return 0;
+ 8000d84:	2300      	movs	r3, #0
+ 8000d86:	e00b      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                                  }
+                              }
+                          } else {
+                              if (features[1] < 19.5) {
+ 8000d88:	687b      	ldr	r3, [r7, #4]
+ 8000d8a:	3304      	adds	r3, #4
+ 8000d8c:	681b      	ldr	r3, [r3, #0]
+ 8000d8e:	490e      	ldr	r1, [pc, #56]	; (8000dc8 <sonar_predict_tree_0+0xb36>)
+ 8000d90:	1c18      	adds	r0, r3, #0
+ 8000d92:	f000 fda3 	bl	80018dc <__aeabi_fcmplt>
+ 8000d96:	1e03      	subs	r3, r0, #0
+ 8000d98:	d001      	beq.n	8000d9e <sonar_predict_tree_0+0xb0c>
+                                  return 0;
+ 8000d9a:	2300      	movs	r3, #0
+ 8000d9c:	e000      	b.n	8000da0 <sonar_predict_tree_0+0xb0e>
+                              } else {
+                                  return 0;
+ 8000d9e:	2300      	movs	r3, #0
+                          }
+                      }
+                  }
+              }
+          }
+        }
+ 8000da0:	0018      	movs	r0, r3
+ 8000da2:	46bd      	mov	sp, r7
+ 8000da4:	b002      	add	sp, #8
+ 8000da6:	bd80      	pop	{r7, pc}
+ 8000da8:	42560000 	.word	0x42560000
+ 8000dac:	41480000 	.word	0x41480000
+ 8000db0:	42dd0000 	.word	0x42dd0000
+ 8000db4:	40200000 	.word	0x40200000
+ 8000db8:	3fe2b736 	.word	0x3fe2b736
+ 8000dbc:	3f26ebc4 	.word	0x3f26ebc4
+ 8000dc0:	41180000 	.word	0x41180000
+ 8000dc4:	41940000 	.word	0x41940000
+ 8000dc8:	419c0000 	.word	0x419c0000
+
+08000dcc <sonar_predict>:
+        
+
+int32_t sonar_predict(const float *features, int32_t features_length) {
+ 8000dcc:	b580      	push	{r7, lr}
+ 8000dce:	b088      	sub	sp, #32
+ 8000dd0:	af00      	add	r7, sp, #0
+ 8000dd2:	6078      	str	r0, [r7, #4]
+ 8000dd4:	6039      	str	r1, [r7, #0]
+
+        int32_t votes[2] = {0,};
+ 8000dd6:	2308      	movs	r3, #8
+ 8000dd8:	18fb      	adds	r3, r7, r3
+ 8000dda:	0018      	movs	r0, r3
+ 8000ddc:	2308      	movs	r3, #8
+ 8000dde:	001a      	movs	r2, r3
+ 8000de0:	2100      	movs	r1, #0
+ 8000de2:	f001 f832 	bl	8001e4a <memset>
+        int32_t _class = -1;
+ 8000de6:	2301      	movs	r3, #1
+ 8000de8:	425b      	negs	r3, r3
+ 8000dea:	613b      	str	r3, [r7, #16]
+
+        _class = sonar_predict_tree_0(features, features_length); votes[_class] += 1;
+ 8000dec:	683a      	ldr	r2, [r7, #0]
+ 8000dee:	687b      	ldr	r3, [r7, #4]
+ 8000df0:	0011      	movs	r1, r2
+ 8000df2:	0018      	movs	r0, r3
+ 8000df4:	f7ff fa4d 	bl	8000292 <sonar_predict_tree_0>
+ 8000df8:	0003      	movs	r3, r0
+ 8000dfa:	613b      	str	r3, [r7, #16]
+ 8000dfc:	2308      	movs	r3, #8
+ 8000dfe:	18fb      	adds	r3, r7, r3
+ 8000e00:	693a      	ldr	r2, [r7, #16]
+ 8000e02:	0092      	lsls	r2, r2, #2
+ 8000e04:	58d3      	ldr	r3, [r2, r3]
+ 8000e06:	1c59      	adds	r1, r3, #1
+ 8000e08:	2308      	movs	r3, #8
+ 8000e0a:	18fb      	adds	r3, r7, r3
+ 8000e0c:	693a      	ldr	r2, [r7, #16]
+ 8000e0e:	0092      	lsls	r2, r2, #2
+ 8000e10:	50d1      	str	r1, [r2, r3]
+    
+        int32_t most_voted_class = -1;
+ 8000e12:	2301      	movs	r3, #1
+ 8000e14:	425b      	negs	r3, r3
+ 8000e16:	61fb      	str	r3, [r7, #28]
+        int32_t most_voted_votes = 0;
+ 8000e18:	2300      	movs	r3, #0
+ 8000e1a:	61bb      	str	r3, [r7, #24]
+        for (int32_t i=0; i<2; i++) {
+ 8000e1c:	2300      	movs	r3, #0
+ 8000e1e:	617b      	str	r3, [r7, #20]
+ 8000e20:	e012      	b.n	8000e48 <sonar_predict+0x7c>
+
+            if (votes[i] > most_voted_votes) {
+ 8000e22:	2308      	movs	r3, #8
+ 8000e24:	18fb      	adds	r3, r7, r3
+ 8000e26:	697a      	ldr	r2, [r7, #20]
+ 8000e28:	0092      	lsls	r2, r2, #2
+ 8000e2a:	58d2      	ldr	r2, [r2, r3]
+ 8000e2c:	69bb      	ldr	r3, [r7, #24]
+ 8000e2e:	429a      	cmp	r2, r3
+ 8000e30:	dd07      	ble.n	8000e42 <sonar_predict+0x76>
+                most_voted_class = i;
+ 8000e32:	697b      	ldr	r3, [r7, #20]
+ 8000e34:	61fb      	str	r3, [r7, #28]
+                most_voted_votes = votes[i];
+ 8000e36:	2308      	movs	r3, #8
+ 8000e38:	18fb      	adds	r3, r7, r3
+ 8000e3a:	697a      	ldr	r2, [r7, #20]
+ 8000e3c:	0092      	lsls	r2, r2, #2
+ 8000e3e:	58d3      	ldr	r3, [r2, r3]
+ 8000e40:	61bb      	str	r3, [r7, #24]
+        for (int32_t i=0; i<2; i++) {
+ 8000e42:	697b      	ldr	r3, [r7, #20]
+ 8000e44:	3301      	adds	r3, #1
+ 8000e46:	617b      	str	r3, [r7, #20]
+ 8000e48:	697b      	ldr	r3, [r7, #20]
+ 8000e4a:	2b01      	cmp	r3, #1
+ 8000e4c:	dde9      	ble.n	8000e22 <sonar_predict+0x56>
+            }
+        }
+        return most_voted_class;
+ 8000e4e:	69fb      	ldr	r3, [r7, #28]
+    }
+ 8000e50:	0018      	movs	r0, r3
+ 8000e52:	46bd      	mov	sp, r7
+ 8000e54:	b008      	add	sp, #32
+ 8000e56:	bd80      	pop	{r7, pc}
+
+08000e58 <main>:
+**  Abstract: main program
+**
+**===========================================================================
+*/
+int main(void)
+{
+ 8000e58:	b590      	push	{r4, r7, lr}
+ 8000e5a:	4cfe      	ldr	r4, [pc, #1016]	; (8001254 <main+0x3fc>)
+ 8000e5c:	44a5      	add	sp, r4
+ 8000e5e:	af00      	add	r7, sp, #0
+  uint32_t i = 0;
+ 8000e60:	2300      	movs	r3, #0
+ 8000e62:	4afd      	ldr	r2, [pc, #1012]	; (8001258 <main+0x400>)
+ 8000e64:	18ba      	adds	r2, r7, r2
+ 8000e66:	6013      	str	r3, [r2, #0]
+  //setup gpio
+  	//========================
+  	// enable clock for push-buttons
+  	 RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
+ 8000e68:	4bfc      	ldr	r3, [pc, #1008]	; (800125c <main+0x404>)
+ 8000e6a:	4afc      	ldr	r2, [pc, #1008]	; (800125c <main+0x404>)
+ 8000e6c:	6952      	ldr	r2, [r2, #20]
+ 8000e6e:	2180      	movs	r1, #128	; 0x80
+ 8000e70:	02c9      	lsls	r1, r1, #11
+ 8000e72:	430a      	orrs	r2, r1
+ 8000e74:	615a      	str	r2, [r3, #20]
+  	// set pins B0-B7, B10-B11 to GPIO outputs, GPIOB_MODERx = 01
+  	 GPIOB->MODER |= (GPIO_MODER_MODER0_0|GPIO_MODER_MODER1_0| GPIO_MODER_MODER2_0|GPIO_MODER_MODER3_0|GPIO_MODER_MODER4_0| GPIO_MODER_MODER5_0|GPIO_MODER_MODER6_0|GPIO_MODER_MODER7_0| GPIO_MODER_MODER10_0| GPIO_MODER_MODER11_0);
+ 8000e76:	4bfa      	ldr	r3, [pc, #1000]	; (8001260 <main+0x408>)
+ 8000e78:	4af9      	ldr	r2, [pc, #996]	; (8001260 <main+0x408>)
+ 8000e7a:	6812      	ldr	r2, [r2, #0]
+ 8000e7c:	49f9      	ldr	r1, [pc, #996]	; (8001264 <main+0x40c>)
+ 8000e7e:	430a      	orrs	r2, r1
+ 8000e80:	601a      	str	r2, [r3, #0]
+  	 // load a bit pattern to entire output register, GPIOB_ODR
+  	 GPIOB->ODR = 0;
+ 8000e82:	4bf7      	ldr	r3, [pc, #988]	; (8001260 <main+0x408>)
+ 8000e84:	2200      	movs	r2, #0
+ 8000e86:	615a      	str	r2, [r3, #20]
+  	 //===============================
+  //setup clock
+  	RCC->APB1ENR |= RCC_APB1ENR_TIM14EN;
+ 8000e88:	4bf4      	ldr	r3, [pc, #976]	; (800125c <main+0x404>)
+ 8000e8a:	4af4      	ldr	r2, [pc, #976]	; (800125c <main+0x404>)
+ 8000e8c:	69d2      	ldr	r2, [r2, #28]
+ 8000e8e:	2180      	movs	r1, #128	; 0x80
+ 8000e90:	0049      	lsls	r1, r1, #1
+ 8000e92:	430a      	orrs	r2, r1
+ 8000e94:	61da      	str	r2, [r3, #28]
+  	TIM14->PSC = 756;
+ 8000e96:	4bf4      	ldr	r3, [pc, #976]	; (8001268 <main+0x410>)
+ 8000e98:	22bd      	movs	r2, #189	; 0xbd
+ 8000e9a:	0092      	lsls	r2, r2, #2
+ 8000e9c:	629a      	str	r2, [r3, #40]	; 0x28
+  	TIM14->ARR = 65306;
+ 8000e9e:	4bf2      	ldr	r3, [pc, #968]	; (8001268 <main+0x410>)
+ 8000ea0:	4af2      	ldr	r2, [pc, #968]	; (800126c <main+0x414>)
+ 8000ea2:	62da      	str	r2, [r3, #44]	; 0x2c
+  	//start counting
+  	TIM14->CR1|=  TIM_CR1_CEN;
+ 8000ea4:	4bf0      	ldr	r3, [pc, #960]	; (8001268 <main+0x410>)
+ 8000ea6:	4af0      	ldr	r2, [pc, #960]	; (8001268 <main+0x410>)
+ 8000ea8:	6812      	ldr	r2, [r2, #0]
+ 8000eaa:	2101      	movs	r1, #1
+ 8000eac:	430a      	orrs	r2, r1
+ 8000eae:	601a      	str	r2, [r3, #0]
+
+
+  	float values[11] = {1,1,26,0,0,0,0,0,0,3,0.044989999999999995};//A
+ 8000eb0:	4bef      	ldr	r3, [pc, #956]	; (8001270 <main+0x418>)
+ 8000eb2:	22a6      	movs	r2, #166	; 0xa6
+ 8000eb4:	00d2      	lsls	r2, r2, #3
+ 8000eb6:	4694      	mov	ip, r2
+ 8000eb8:	44bc      	add	ip, r7
+ 8000eba:	4463      	add	r3, ip
+ 8000ebc:	4aed      	ldr	r2, [pc, #948]	; (8001274 <main+0x41c>)
+ 8000ebe:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8000ec0:	c313      	stmia	r3!, {r0, r1, r4}
+ 8000ec2:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8000ec4:	c313      	stmia	r3!, {r0, r1, r4}
+ 8000ec6:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8000ec8:	c313      	stmia	r3!, {r0, r1, r4}
+ 8000eca:	ca03      	ldmia	r2!, {r0, r1}
+ 8000ecc:	c303      	stmia	r3!, {r0, r1}
+  	  Classify(values);
+ 8000ece:	003b      	movs	r3, r7
+ 8000ed0:	0018      	movs	r0, r3
+ 8000ed2:	f000 fb5b 	bl	800158c <Classify>
+
+
+  	  memcpy(values, (float[]){0.0,0.0,3.0,1.0,0.0,0.0,1.0,42.0,0.0,0.0,0.07378},11);//N
+ 8000ed6:	4be8      	ldr	r3, [pc, #928]	; (8001278 <main+0x420>)
+ 8000ed8:	22a6      	movs	r2, #166	; 0xa6
+ 8000eda:	00d2      	lsls	r2, r2, #3
+ 8000edc:	4694      	mov	ip, r2
+ 8000ede:	44bc      	add	ip, r7
+ 8000ee0:	4463      	add	r3, ip
+ 8000ee2:	4ae6      	ldr	r2, [pc, #920]	; (800127c <main+0x424>)
+ 8000ee4:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8000ee6:	c313      	stmia	r3!, {r0, r1, r4}
+ 8000ee8:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8000eea:	c313      	stmia	r3!, {r0, r1, r4}
+ 8000eec:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8000eee:	c313      	stmia	r3!, {r0, r1, r4}
+ 8000ef0:	ca03      	ldmia	r2!, {r0, r1}
+ 8000ef2:	c303      	stmia	r3!, {r0, r1}
+ 8000ef4:	232c      	movs	r3, #44	; 0x2c
+ 8000ef6:	18f9      	adds	r1, r7, r3
+ 8000ef8:	003b      	movs	r3, r7
+ 8000efa:	220b      	movs	r2, #11
+ 8000efc:	0018      	movs	r0, r3
+ 8000efe:	f000 ff9b 	bl	8001e38 <memcpy>
+  	  Classify(values);
+ 8000f02:	003b      	movs	r3, r7
+ 8000f04:	0018      	movs	r0, r3
+ 8000f06:	f000 fb41 	bl	800158c <Classify>
+
+
+
+  	  memcpy(values, (float[]){0.0,0.0,8.0,1.0,0.0,0.0,1.0,120.0,0.0,0.0,0.20961},11);//A
+ 8000f0a:	4bdd      	ldr	r3, [pc, #884]	; (8001280 <main+0x428>)
+ 8000f0c:	22a6      	movs	r2, #166	; 0xa6
+ 8000f0e:	00d2      	lsls	r2, r2, #3
+ 8000f10:	4694      	mov	ip, r2
+ 8000f12:	44bc      	add	ip, r7
+ 8000f14:	4463      	add	r3, ip
+ 8000f16:	4adb      	ldr	r2, [pc, #876]	; (8001284 <main+0x42c>)
+ 8000f18:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8000f1a:	c313      	stmia	r3!, {r0, r1, r4}
+ 8000f1c:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8000f1e:	c313      	stmia	r3!, {r0, r1, r4}
+ 8000f20:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8000f22:	c313      	stmia	r3!, {r0, r1, r4}
+ 8000f24:	ca03      	ldmia	r2!, {r0, r1}
+ 8000f26:	c303      	stmia	r3!, {r0, r1}
+ 8000f28:	2358      	movs	r3, #88	; 0x58
+ 8000f2a:	18f9      	adds	r1, r7, r3
+ 8000f2c:	003b      	movs	r3, r7
+ 8000f2e:	220b      	movs	r2, #11
+ 8000f30:	0018      	movs	r0, r3
+ 8000f32:	f000 ff81 	bl	8001e38 <memcpy>
+  	  Classify(values);
+ 8000f36:	003b      	movs	r3, r7
+ 8000f38:	0018      	movs	r0, r3
+ 8000f3a:	f000 fb27 	bl	800158c <Classify>
+
+
+
+  	  memcpy(values, (float[]){0.0,0.0,4.0,1.0,0.0,0.0,1.0,22.0,0.0,0.0,0.04189},11);//N
+ 8000f3e:	4bd2      	ldr	r3, [pc, #840]	; (8001288 <main+0x430>)
+ 8000f40:	22a6      	movs	r2, #166	; 0xa6
+ 8000f42:	00d2      	lsls	r2, r2, #3
+ 8000f44:	4694      	mov	ip, r2
+ 8000f46:	44bc      	add	ip, r7
+ 8000f48:	4463      	add	r3, ip
+ 8000f4a:	4ad0      	ldr	r2, [pc, #832]	; (800128c <main+0x434>)
+ 8000f4c:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8000f4e:	c313      	stmia	r3!, {r0, r1, r4}
+ 8000f50:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8000f52:	c313      	stmia	r3!, {r0, r1, r4}
+ 8000f54:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8000f56:	c313      	stmia	r3!, {r0, r1, r4}
+ 8000f58:	ca03      	ldmia	r2!, {r0, r1}
+ 8000f5a:	c303      	stmia	r3!, {r0, r1}
+ 8000f5c:	2384      	movs	r3, #132	; 0x84
+ 8000f5e:	18f9      	adds	r1, r7, r3
+ 8000f60:	003b      	movs	r3, r7
+ 8000f62:	220b      	movs	r2, #11
+ 8000f64:	0018      	movs	r0, r3
+ 8000f66:	f000 ff67 	bl	8001e38 <memcpy>
+  	  Classify(values);
+ 8000f6a:	003b      	movs	r3, r7
+ 8000f6c:	0018      	movs	r0, r3
+ 8000f6e:	f000 fb0d 	bl	800158c <Classify>
+
+
+
+  	  memcpy(values, (float[]){1,1,26,0,0,0,0,0,0,3,0.044989999999999995},11);//A
+ 8000f72:	4bc7      	ldr	r3, [pc, #796]	; (8001290 <main+0x438>)
+ 8000f74:	22a6      	movs	r2, #166	; 0xa6
+ 8000f76:	00d2      	lsls	r2, r2, #3
+ 8000f78:	4694      	mov	ip, r2
+ 8000f7a:	44bc      	add	ip, r7
+ 8000f7c:	4463      	add	r3, ip
+ 8000f7e:	4abd      	ldr	r2, [pc, #756]	; (8001274 <main+0x41c>)
+ 8000f80:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8000f82:	c313      	stmia	r3!, {r0, r1, r4}
+ 8000f84:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8000f86:	c313      	stmia	r3!, {r0, r1, r4}
+ 8000f88:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8000f8a:	c313      	stmia	r3!, {r0, r1, r4}
+ 8000f8c:	ca03      	ldmia	r2!, {r0, r1}
+ 8000f8e:	c303      	stmia	r3!, {r0, r1}
+ 8000f90:	23b0      	movs	r3, #176	; 0xb0
+ 8000f92:	18f9      	adds	r1, r7, r3
+ 8000f94:	003b      	movs	r3, r7
+ 8000f96:	220b      	movs	r2, #11
+ 8000f98:	0018      	movs	r0, r3
+ 8000f9a:	f000 ff4d 	bl	8001e38 <memcpy>
+  	   Classify(values);
+ 8000f9e:	003b      	movs	r3, r7
+ 8000fa0:	0018      	movs	r0, r3
+ 8000fa2:	f000 faf3 	bl	800158c <Classify>
+
+
+
+
+
+  	  memcpy(values, (float[]){0.0,0.0,4.0,1.0,0.0,0.0,1.0,22.0,0.0,0.0,0.04189},11);//N
+ 8000fa6:	4bbb      	ldr	r3, [pc, #748]	; (8001294 <main+0x43c>)
+ 8000fa8:	22a6      	movs	r2, #166	; 0xa6
+ 8000faa:	00d2      	lsls	r2, r2, #3
+ 8000fac:	4694      	mov	ip, r2
+ 8000fae:	44bc      	add	ip, r7
+ 8000fb0:	4463      	add	r3, ip
+ 8000fb2:	4ab6      	ldr	r2, [pc, #728]	; (800128c <main+0x434>)
+ 8000fb4:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8000fb6:	c313      	stmia	r3!, {r0, r1, r4}
+ 8000fb8:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8000fba:	c313      	stmia	r3!, {r0, r1, r4}
+ 8000fbc:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8000fbe:	c313      	stmia	r3!, {r0, r1, r4}
+ 8000fc0:	ca03      	ldmia	r2!, {r0, r1}
+ 8000fc2:	c303      	stmia	r3!, {r0, r1}
+ 8000fc4:	23dc      	movs	r3, #220	; 0xdc
+ 8000fc6:	18f9      	adds	r1, r7, r3
+ 8000fc8:	003b      	movs	r3, r7
+ 8000fca:	220b      	movs	r2, #11
+ 8000fcc:	0018      	movs	r0, r3
+ 8000fce:	f000 ff33 	bl	8001e38 <memcpy>
+  	  Classify(values);
+ 8000fd2:	003b      	movs	r3, r7
+ 8000fd4:	0018      	movs	r0, r3
+ 8000fd6:	f000 fad9 	bl	800158c <Classify>
+
+
+
+  	  memcpy(values, (float[]){1,1,26,0,0,0,0,0,0,3,0.044989999999999995},11);//A
+ 8000fda:	4baf      	ldr	r3, [pc, #700]	; (8001298 <main+0x440>)
+ 8000fdc:	22a6      	movs	r2, #166	; 0xa6
+ 8000fde:	00d2      	lsls	r2, r2, #3
+ 8000fe0:	4694      	mov	ip, r2
+ 8000fe2:	44bc      	add	ip, r7
+ 8000fe4:	4463      	add	r3, ip
+ 8000fe6:	4aa3      	ldr	r2, [pc, #652]	; (8001274 <main+0x41c>)
+ 8000fe8:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8000fea:	c313      	stmia	r3!, {r0, r1, r4}
+ 8000fec:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8000fee:	c313      	stmia	r3!, {r0, r1, r4}
+ 8000ff0:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8000ff2:	c313      	stmia	r3!, {r0, r1, r4}
+ 8000ff4:	ca03      	ldmia	r2!, {r0, r1}
+ 8000ff6:	c303      	stmia	r3!, {r0, r1}
+ 8000ff8:	2384      	movs	r3, #132	; 0x84
+ 8000ffa:	005b      	lsls	r3, r3, #1
+ 8000ffc:	18f9      	adds	r1, r7, r3
+ 8000ffe:	003b      	movs	r3, r7
+ 8001000:	220b      	movs	r2, #11
+ 8001002:	0018      	movs	r0, r3
+ 8001004:	f000 ff18 	bl	8001e38 <memcpy>
+  	   Classify(values);
+ 8001008:	003b      	movs	r3, r7
+ 800100a:	0018      	movs	r0, r3
+ 800100c:	f000 fabe 	bl	800158c <Classify>
+
+
+
+
+
+  	  memcpy(values, (float[]){0.0,0.0,4.0,1.0,0.0,0.0,1.0,22.0,0.0,0.0,0.04189},11);//N
+ 8001010:	4ba2      	ldr	r3, [pc, #648]	; (800129c <main+0x444>)
+ 8001012:	22a6      	movs	r2, #166	; 0xa6
+ 8001014:	00d2      	lsls	r2, r2, #3
+ 8001016:	4694      	mov	ip, r2
+ 8001018:	44bc      	add	ip, r7
+ 800101a:	4463      	add	r3, ip
+ 800101c:	4a9b      	ldr	r2, [pc, #620]	; (800128c <main+0x434>)
+ 800101e:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001020:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001022:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001024:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001026:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001028:	c313      	stmia	r3!, {r0, r1, r4}
+ 800102a:	ca03      	ldmia	r2!, {r0, r1}
+ 800102c:	c303      	stmia	r3!, {r0, r1}
+ 800102e:	239a      	movs	r3, #154	; 0x9a
+ 8001030:	005b      	lsls	r3, r3, #1
+ 8001032:	18f9      	adds	r1, r7, r3
+ 8001034:	003b      	movs	r3, r7
+ 8001036:	220b      	movs	r2, #11
+ 8001038:	0018      	movs	r0, r3
+ 800103a:	f000 fefd 	bl	8001e38 <memcpy>
+  	  Classify(values);
+ 800103e:	003b      	movs	r3, r7
+ 8001040:	0018      	movs	r0, r3
+ 8001042:	f000 faa3 	bl	800158c <Classify>
+
+
+
+  	  memcpy(values, (float[]){1,1,26,0,0,0,0,0,0,3,0.044989999999999995},11);//A
+ 8001046:	4b96      	ldr	r3, [pc, #600]	; (80012a0 <main+0x448>)
+ 8001048:	22a6      	movs	r2, #166	; 0xa6
+ 800104a:	00d2      	lsls	r2, r2, #3
+ 800104c:	4694      	mov	ip, r2
+ 800104e:	44bc      	add	ip, r7
+ 8001050:	4463      	add	r3, ip
+ 8001052:	4a88      	ldr	r2, [pc, #544]	; (8001274 <main+0x41c>)
+ 8001054:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001056:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001058:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 800105a:	c313      	stmia	r3!, {r0, r1, r4}
+ 800105c:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 800105e:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001060:	ca03      	ldmia	r2!, {r0, r1}
+ 8001062:	c303      	stmia	r3!, {r0, r1}
+ 8001064:	23b0      	movs	r3, #176	; 0xb0
+ 8001066:	005b      	lsls	r3, r3, #1
+ 8001068:	18f9      	adds	r1, r7, r3
+ 800106a:	003b      	movs	r3, r7
+ 800106c:	220b      	movs	r2, #11
+ 800106e:	0018      	movs	r0, r3
+ 8001070:	f000 fee2 	bl	8001e38 <memcpy>
+  	   Classify(values);
+ 8001074:	003b      	movs	r3, r7
+ 8001076:	0018      	movs	r0, r3
+ 8001078:	f000 fa88 	bl	800158c <Classify>
+
+
+
+
+
+  	  memcpy(values, (float[]){0.0,0.0,4.0,1.0,0.0,0.0,1.0,22.0,0.0,0.0,0.04189},11);//N
+ 800107c:	4b89      	ldr	r3, [pc, #548]	; (80012a4 <main+0x44c>)
+ 800107e:	22a6      	movs	r2, #166	; 0xa6
+ 8001080:	00d2      	lsls	r2, r2, #3
+ 8001082:	4694      	mov	ip, r2
+ 8001084:	44bc      	add	ip, r7
+ 8001086:	4463      	add	r3, ip
+ 8001088:	4a80      	ldr	r2, [pc, #512]	; (800128c <main+0x434>)
+ 800108a:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 800108c:	c313      	stmia	r3!, {r0, r1, r4}
+ 800108e:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001090:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001092:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001094:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001096:	ca03      	ldmia	r2!, {r0, r1}
+ 8001098:	c303      	stmia	r3!, {r0, r1}
+ 800109a:	23c6      	movs	r3, #198	; 0xc6
+ 800109c:	005b      	lsls	r3, r3, #1
+ 800109e:	18f9      	adds	r1, r7, r3
+ 80010a0:	003b      	movs	r3, r7
+ 80010a2:	220b      	movs	r2, #11
+ 80010a4:	0018      	movs	r0, r3
+ 80010a6:	f000 fec7 	bl	8001e38 <memcpy>
+  	  Classify(values);
+ 80010aa:	003b      	movs	r3, r7
+ 80010ac:	0018      	movs	r0, r3
+ 80010ae:	f000 fa6d 	bl	800158c <Classify>
+
+
+
+  	  memcpy(values, (float[]){1,1,26,0,0,0,0,0,0,3,0.044989999999999995},11);//A
+ 80010b2:	4b7d      	ldr	r3, [pc, #500]	; (80012a8 <main+0x450>)
+ 80010b4:	22a6      	movs	r2, #166	; 0xa6
+ 80010b6:	00d2      	lsls	r2, r2, #3
+ 80010b8:	4694      	mov	ip, r2
+ 80010ba:	44bc      	add	ip, r7
+ 80010bc:	4463      	add	r3, ip
+ 80010be:	4a6d      	ldr	r2, [pc, #436]	; (8001274 <main+0x41c>)
+ 80010c0:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80010c2:	c313      	stmia	r3!, {r0, r1, r4}
+ 80010c4:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80010c6:	c313      	stmia	r3!, {r0, r1, r4}
+ 80010c8:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80010ca:	c313      	stmia	r3!, {r0, r1, r4}
+ 80010cc:	ca03      	ldmia	r2!, {r0, r1}
+ 80010ce:	c303      	stmia	r3!, {r0, r1}
+ 80010d0:	23dc      	movs	r3, #220	; 0xdc
+ 80010d2:	005b      	lsls	r3, r3, #1
+ 80010d4:	18f9      	adds	r1, r7, r3
+ 80010d6:	003b      	movs	r3, r7
+ 80010d8:	220b      	movs	r2, #11
+ 80010da:	0018      	movs	r0, r3
+ 80010dc:	f000 feac 	bl	8001e38 <memcpy>
+  	   Classify(values);
+ 80010e0:	003b      	movs	r3, r7
+ 80010e2:	0018      	movs	r0, r3
+ 80010e4:	f000 fa52 	bl	800158c <Classify>
+
+
+
+
+
+  	  memcpy(values, (float[]){0.0,0.0,4.0,1.0,0.0,0.0,1.0,22.0,0.0,0.0,0.04189},11);//N
+ 80010e8:	4b70      	ldr	r3, [pc, #448]	; (80012ac <main+0x454>)
+ 80010ea:	22a6      	movs	r2, #166	; 0xa6
+ 80010ec:	00d2      	lsls	r2, r2, #3
+ 80010ee:	4694      	mov	ip, r2
+ 80010f0:	44bc      	add	ip, r7
+ 80010f2:	4463      	add	r3, ip
+ 80010f4:	4a65      	ldr	r2, [pc, #404]	; (800128c <main+0x434>)
+ 80010f6:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80010f8:	c313      	stmia	r3!, {r0, r1, r4}
+ 80010fa:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80010fc:	c313      	stmia	r3!, {r0, r1, r4}
+ 80010fe:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001100:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001102:	ca03      	ldmia	r2!, {r0, r1}
+ 8001104:	c303      	stmia	r3!, {r0, r1}
+ 8001106:	23f2      	movs	r3, #242	; 0xf2
+ 8001108:	005b      	lsls	r3, r3, #1
+ 800110a:	18f9      	adds	r1, r7, r3
+ 800110c:	003b      	movs	r3, r7
+ 800110e:	220b      	movs	r2, #11
+ 8001110:	0018      	movs	r0, r3
+ 8001112:	f000 fe91 	bl	8001e38 <memcpy>
+  	  Classify(values);
+ 8001116:	003b      	movs	r3, r7
+ 8001118:	0018      	movs	r0, r3
+ 800111a:	f000 fa37 	bl	800158c <Classify>
+
+
+
+  	  memcpy(values, (float[]){1,1,26,0,0,0,0,0,0,3,0.044989999999999995},11);//A
+ 800111e:	4b64      	ldr	r3, [pc, #400]	; (80012b0 <main+0x458>)
+ 8001120:	22a6      	movs	r2, #166	; 0xa6
+ 8001122:	00d2      	lsls	r2, r2, #3
+ 8001124:	4694      	mov	ip, r2
+ 8001126:	44bc      	add	ip, r7
+ 8001128:	4463      	add	r3, ip
+ 800112a:	4a52      	ldr	r2, [pc, #328]	; (8001274 <main+0x41c>)
+ 800112c:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 800112e:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001130:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001132:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001134:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001136:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001138:	ca03      	ldmia	r2!, {r0, r1}
+ 800113a:	c303      	stmia	r3!, {r0, r1}
+ 800113c:	2384      	movs	r3, #132	; 0x84
+ 800113e:	009b      	lsls	r3, r3, #2
+ 8001140:	18f9      	adds	r1, r7, r3
+ 8001142:	003b      	movs	r3, r7
+ 8001144:	220b      	movs	r2, #11
+ 8001146:	0018      	movs	r0, r3
+ 8001148:	f000 fe76 	bl	8001e38 <memcpy>
+  	   Classify(values);
+ 800114c:	003b      	movs	r3, r7
+ 800114e:	0018      	movs	r0, r3
+ 8001150:	f000 fa1c 	bl	800158c <Classify>
+
+
+
+
+
+  	  memcpy(values, (float[]){0.0,0.0,4.0,1.0,0.0,0.0,1.0,22.0,0.0,0.0,0.04189},11);//N
+ 8001154:	4b57      	ldr	r3, [pc, #348]	; (80012b4 <main+0x45c>)
+ 8001156:	22a6      	movs	r2, #166	; 0xa6
+ 8001158:	00d2      	lsls	r2, r2, #3
+ 800115a:	4694      	mov	ip, r2
+ 800115c:	44bc      	add	ip, r7
+ 800115e:	4463      	add	r3, ip
+ 8001160:	4a4a      	ldr	r2, [pc, #296]	; (800128c <main+0x434>)
+ 8001162:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001164:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001166:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001168:	c313      	stmia	r3!, {r0, r1, r4}
+ 800116a:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 800116c:	c313      	stmia	r3!, {r0, r1, r4}
+ 800116e:	ca03      	ldmia	r2!, {r0, r1}
+ 8001170:	c303      	stmia	r3!, {r0, r1}
+ 8001172:	238f      	movs	r3, #143	; 0x8f
+ 8001174:	009b      	lsls	r3, r3, #2
+ 8001176:	18f9      	adds	r1, r7, r3
+ 8001178:	003b      	movs	r3, r7
+ 800117a:	220b      	movs	r2, #11
+ 800117c:	0018      	movs	r0, r3
+ 800117e:	f000 fe5b 	bl	8001e38 <memcpy>
+  	  Classify(values);
+ 8001182:	003b      	movs	r3, r7
+ 8001184:	0018      	movs	r0, r3
+ 8001186:	f000 fa01 	bl	800158c <Classify>
+
+
+
+  	  memcpy(values, (float[]){1,1,26,0,0,0,0,0,0,3,0.044989999999999995},11);//A
+ 800118a:	4b4b      	ldr	r3, [pc, #300]	; (80012b8 <main+0x460>)
+ 800118c:	22a6      	movs	r2, #166	; 0xa6
+ 800118e:	00d2      	lsls	r2, r2, #3
+ 8001190:	4694      	mov	ip, r2
+ 8001192:	44bc      	add	ip, r7
+ 8001194:	4463      	add	r3, ip
+ 8001196:	4a37      	ldr	r2, [pc, #220]	; (8001274 <main+0x41c>)
+ 8001198:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 800119a:	c313      	stmia	r3!, {r0, r1, r4}
+ 800119c:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 800119e:	c313      	stmia	r3!, {r0, r1, r4}
+ 80011a0:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80011a2:	c313      	stmia	r3!, {r0, r1, r4}
+ 80011a4:	ca03      	ldmia	r2!, {r0, r1}
+ 80011a6:	c303      	stmia	r3!, {r0, r1}
+ 80011a8:	239a      	movs	r3, #154	; 0x9a
+ 80011aa:	009b      	lsls	r3, r3, #2
+ 80011ac:	18f9      	adds	r1, r7, r3
+ 80011ae:	003b      	movs	r3, r7
+ 80011b0:	220b      	movs	r2, #11
+ 80011b2:	0018      	movs	r0, r3
+ 80011b4:	f000 fe40 	bl	8001e38 <memcpy>
+  	   Classify(values);
+ 80011b8:	003b      	movs	r3, r7
+ 80011ba:	0018      	movs	r0, r3
+ 80011bc:	f000 f9e6 	bl	800158c <Classify>
+
+
+
+
+
+  	  memcpy(values, (float[]){0.0,0.0,4.0,1.0,0.0,0.0,1.0,22.0,0.0,0.0,0.04189},11);//N
+ 80011c0:	4b3e      	ldr	r3, [pc, #248]	; (80012bc <main+0x464>)
+ 80011c2:	22a6      	movs	r2, #166	; 0xa6
+ 80011c4:	00d2      	lsls	r2, r2, #3
+ 80011c6:	4694      	mov	ip, r2
+ 80011c8:	44bc      	add	ip, r7
+ 80011ca:	4463      	add	r3, ip
+ 80011cc:	4a2f      	ldr	r2, [pc, #188]	; (800128c <main+0x434>)
+ 80011ce:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80011d0:	c313      	stmia	r3!, {r0, r1, r4}
+ 80011d2:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80011d4:	c313      	stmia	r3!, {r0, r1, r4}
+ 80011d6:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80011d8:	c313      	stmia	r3!, {r0, r1, r4}
+ 80011da:	ca03      	ldmia	r2!, {r0, r1}
+ 80011dc:	c303      	stmia	r3!, {r0, r1}
+ 80011de:	23a5      	movs	r3, #165	; 0xa5
+ 80011e0:	009b      	lsls	r3, r3, #2
+ 80011e2:	18f9      	adds	r1, r7, r3
+ 80011e4:	003b      	movs	r3, r7
+ 80011e6:	220b      	movs	r2, #11
+ 80011e8:	0018      	movs	r0, r3
+ 80011ea:	f000 fe25 	bl	8001e38 <memcpy>
+  	  Classify(values);
+ 80011ee:	003b      	movs	r3, r7
+ 80011f0:	0018      	movs	r0, r3
+ 80011f2:	f000 f9cb 	bl	800158c <Classify>
+
+
+
+  	  memcpy(values, (float[]){1,1,26,0,0,0,0,0,0,3,0.044989999999999995},11);//A
+ 80011f6:	4b32      	ldr	r3, [pc, #200]	; (80012c0 <main+0x468>)
+ 80011f8:	22a6      	movs	r2, #166	; 0xa6
+ 80011fa:	00d2      	lsls	r2, r2, #3
+ 80011fc:	4694      	mov	ip, r2
+ 80011fe:	44bc      	add	ip, r7
+ 8001200:	4463      	add	r3, ip
+ 8001202:	4a1c      	ldr	r2, [pc, #112]	; (8001274 <main+0x41c>)
+ 8001204:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001206:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001208:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 800120a:	c313      	stmia	r3!, {r0, r1, r4}
+ 800120c:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 800120e:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001210:	ca03      	ldmia	r2!, {r0, r1}
+ 8001212:	c303      	stmia	r3!, {r0, r1}
+ 8001214:	23b0      	movs	r3, #176	; 0xb0
+ 8001216:	009b      	lsls	r3, r3, #2
+ 8001218:	18f9      	adds	r1, r7, r3
+ 800121a:	003b      	movs	r3, r7
+ 800121c:	220b      	movs	r2, #11
+ 800121e:	0018      	movs	r0, r3
+ 8001220:	f000 fe0a 	bl	8001e38 <memcpy>
+  	   Classify(values);
+ 8001224:	003b      	movs	r3, r7
+ 8001226:	0018      	movs	r0, r3
+ 8001228:	f000 f9b0 	bl	800158c <Classify>
+
+
+
+
+
+  	  memcpy(values, (float[]){0.0,0.0,4.0,1.0,0.0,0.0,1.0,22.0,0.0,0.0,0.04189},11);//N
+ 800122c:	4b25      	ldr	r3, [pc, #148]	; (80012c4 <main+0x46c>)
+ 800122e:	22a6      	movs	r2, #166	; 0xa6
+ 8001230:	00d2      	lsls	r2, r2, #3
+ 8001232:	4694      	mov	ip, r2
+ 8001234:	44bc      	add	ip, r7
+ 8001236:	4463      	add	r3, ip
+ 8001238:	4a14      	ldr	r2, [pc, #80]	; (800128c <main+0x434>)
+ 800123a:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 800123c:	c313      	stmia	r3!, {r0, r1, r4}
+ 800123e:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001240:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001242:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001244:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001246:	ca03      	ldmia	r2!, {r0, r1}
+ 8001248:	c303      	stmia	r3!, {r0, r1}
+ 800124a:	23bb      	movs	r3, #187	; 0xbb
+ 800124c:	009b      	lsls	r3, r3, #2
+ 800124e:	18f9      	adds	r1, r7, r3
+ 8001250:	003b      	movs	r3, r7
+ 8001252:	e039      	b.n	80012c8 <main+0x470>
+ 8001254:	fffffacc 	.word	0xfffffacc
+ 8001258:	0000052c 	.word	0x0000052c
+ 800125c:	40021000 	.word	0x40021000
+ 8001260:	48000400 	.word	0x48000400
+ 8001264:	00505555 	.word	0x00505555
+ 8001268:	40002000 	.word	0x40002000
+ 800126c:	0000ff1a 	.word	0x0000ff1a
+ 8001270:	fffffad0 	.word	0xfffffad0
+ 8001274:	08001eb0 	.word	0x08001eb0
+ 8001278:	fffffafc 	.word	0xfffffafc
+ 800127c:	08001edc 	.word	0x08001edc
+ 8001280:	fffffb28 	.word	0xfffffb28
+ 8001284:	08001f08 	.word	0x08001f08
+ 8001288:	fffffb54 	.word	0xfffffb54
+ 800128c:	08001f34 	.word	0x08001f34
+ 8001290:	fffffb80 	.word	0xfffffb80
+ 8001294:	fffffbac 	.word	0xfffffbac
+ 8001298:	fffffbd8 	.word	0xfffffbd8
+ 800129c:	fffffc04 	.word	0xfffffc04
+ 80012a0:	fffffc30 	.word	0xfffffc30
+ 80012a4:	fffffc5c 	.word	0xfffffc5c
+ 80012a8:	fffffc88 	.word	0xfffffc88
+ 80012ac:	fffffcb4 	.word	0xfffffcb4
+ 80012b0:	fffffce0 	.word	0xfffffce0
+ 80012b4:	fffffd0c 	.word	0xfffffd0c
+ 80012b8:	fffffd38 	.word	0xfffffd38
+ 80012bc:	fffffd64 	.word	0xfffffd64
+ 80012c0:	fffffd90 	.word	0xfffffd90
+ 80012c4:	fffffdbc 	.word	0xfffffdbc
+ 80012c8:	220b      	movs	r2, #11
+ 80012ca:	0018      	movs	r0, r3
+ 80012cc:	f000 fdb4 	bl	8001e38 <memcpy>
+  	  Classify(values);
+ 80012d0:	003b      	movs	r3, r7
+ 80012d2:	0018      	movs	r0, r3
+ 80012d4:	f000 f95a 	bl	800158c <Classify>
+
+
+
+  	  memcpy(values, (float[]){1,1,26,0,0,0,0,0,0,3,0.044989999999999995},11);//A
+ 80012d8:	4b9e      	ldr	r3, [pc, #632]	; (8001554 <main+0x6fc>)
+ 80012da:	22a6      	movs	r2, #166	; 0xa6
+ 80012dc:	00d2      	lsls	r2, r2, #3
+ 80012de:	4694      	mov	ip, r2
+ 80012e0:	44bc      	add	ip, r7
+ 80012e2:	4463      	add	r3, ip
+ 80012e4:	4a9c      	ldr	r2, [pc, #624]	; (8001558 <main+0x700>)
+ 80012e6:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80012e8:	c313      	stmia	r3!, {r0, r1, r4}
+ 80012ea:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80012ec:	c313      	stmia	r3!, {r0, r1, r4}
+ 80012ee:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80012f0:	c313      	stmia	r3!, {r0, r1, r4}
+ 80012f2:	ca03      	ldmia	r2!, {r0, r1}
+ 80012f4:	c303      	stmia	r3!, {r0, r1}
+ 80012f6:	23c6      	movs	r3, #198	; 0xc6
+ 80012f8:	009b      	lsls	r3, r3, #2
+ 80012fa:	18f9      	adds	r1, r7, r3
+ 80012fc:	003b      	movs	r3, r7
+ 80012fe:	220b      	movs	r2, #11
+ 8001300:	0018      	movs	r0, r3
+ 8001302:	f000 fd99 	bl	8001e38 <memcpy>
+  	   Classify(values);
+ 8001306:	003b      	movs	r3, r7
+ 8001308:	0018      	movs	r0, r3
+ 800130a:	f000 f93f 	bl	800158c <Classify>
+
+
+
+
+
+  	  memcpy(values, (float[]){0.0,0.0,4.0,1.0,0.0,0.0,1.0,22.0,0.0,0.0,0.04189},11);//N
+ 800130e:	4b93      	ldr	r3, [pc, #588]	; (800155c <main+0x704>)
+ 8001310:	22a6      	movs	r2, #166	; 0xa6
+ 8001312:	00d2      	lsls	r2, r2, #3
+ 8001314:	4694      	mov	ip, r2
+ 8001316:	44bc      	add	ip, r7
+ 8001318:	4463      	add	r3, ip
+ 800131a:	4a91      	ldr	r2, [pc, #580]	; (8001560 <main+0x708>)
+ 800131c:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 800131e:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001320:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001322:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001324:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001326:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001328:	ca03      	ldmia	r2!, {r0, r1}
+ 800132a:	c303      	stmia	r3!, {r0, r1}
+ 800132c:	23d1      	movs	r3, #209	; 0xd1
+ 800132e:	009b      	lsls	r3, r3, #2
+ 8001330:	18f9      	adds	r1, r7, r3
+ 8001332:	003b      	movs	r3, r7
+ 8001334:	220b      	movs	r2, #11
+ 8001336:	0018      	movs	r0, r3
+ 8001338:	f000 fd7e 	bl	8001e38 <memcpy>
+  	  Classify(values);
+ 800133c:	003b      	movs	r3, r7
+ 800133e:	0018      	movs	r0, r3
+ 8001340:	f000 f924 	bl	800158c <Classify>
+
+
+
+  	  memcpy(values, (float[]){1,1,26,0,0,0,0,0,0,3,0.044989999999999995},11);//A
+ 8001344:	4b87      	ldr	r3, [pc, #540]	; (8001564 <main+0x70c>)
+ 8001346:	22a6      	movs	r2, #166	; 0xa6
+ 8001348:	00d2      	lsls	r2, r2, #3
+ 800134a:	4694      	mov	ip, r2
+ 800134c:	44bc      	add	ip, r7
+ 800134e:	4463      	add	r3, ip
+ 8001350:	4a81      	ldr	r2, [pc, #516]	; (8001558 <main+0x700>)
+ 8001352:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001354:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001356:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001358:	c313      	stmia	r3!, {r0, r1, r4}
+ 800135a:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 800135c:	c313      	stmia	r3!, {r0, r1, r4}
+ 800135e:	ca03      	ldmia	r2!, {r0, r1}
+ 8001360:	c303      	stmia	r3!, {r0, r1}
+ 8001362:	23dc      	movs	r3, #220	; 0xdc
+ 8001364:	009b      	lsls	r3, r3, #2
+ 8001366:	18f9      	adds	r1, r7, r3
+ 8001368:	003b      	movs	r3, r7
+ 800136a:	220b      	movs	r2, #11
+ 800136c:	0018      	movs	r0, r3
+ 800136e:	f000 fd63 	bl	8001e38 <memcpy>
+  	   Classify(values);
+ 8001372:	003b      	movs	r3, r7
+ 8001374:	0018      	movs	r0, r3
+ 8001376:	f000 f909 	bl	800158c <Classify>
+
+
+
+
+
+  	  memcpy(values, (float[]){0.0,0.0,4.0,1.0,0.0,0.0,1.0,22.0,0.0,0.0,0.04189},11);//N
+ 800137a:	4b7b      	ldr	r3, [pc, #492]	; (8001568 <main+0x710>)
+ 800137c:	22a6      	movs	r2, #166	; 0xa6
+ 800137e:	00d2      	lsls	r2, r2, #3
+ 8001380:	4694      	mov	ip, r2
+ 8001382:	44bc      	add	ip, r7
+ 8001384:	4463      	add	r3, ip
+ 8001386:	4a76      	ldr	r2, [pc, #472]	; (8001560 <main+0x708>)
+ 8001388:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 800138a:	c313      	stmia	r3!, {r0, r1, r4}
+ 800138c:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 800138e:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001390:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001392:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001394:	ca03      	ldmia	r2!, {r0, r1}
+ 8001396:	c303      	stmia	r3!, {r0, r1}
+ 8001398:	23e7      	movs	r3, #231	; 0xe7
+ 800139a:	009b      	lsls	r3, r3, #2
+ 800139c:	18f9      	adds	r1, r7, r3
+ 800139e:	003b      	movs	r3, r7
+ 80013a0:	220b      	movs	r2, #11
+ 80013a2:	0018      	movs	r0, r3
+ 80013a4:	f000 fd48 	bl	8001e38 <memcpy>
+  	  Classify(values);
+ 80013a8:	003b      	movs	r3, r7
+ 80013aa:	0018      	movs	r0, r3
+ 80013ac:	f000 f8ee 	bl	800158c <Classify>
+
+
+
+  	  memcpy(values, (float[]){1,1,26,0,0,0,0,0,0,3,0.044989999999999995},11);//A
+ 80013b0:	4b6e      	ldr	r3, [pc, #440]	; (800156c <main+0x714>)
+ 80013b2:	22a6      	movs	r2, #166	; 0xa6
+ 80013b4:	00d2      	lsls	r2, r2, #3
+ 80013b6:	4694      	mov	ip, r2
+ 80013b8:	44bc      	add	ip, r7
+ 80013ba:	4463      	add	r3, ip
+ 80013bc:	4a66      	ldr	r2, [pc, #408]	; (8001558 <main+0x700>)
+ 80013be:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80013c0:	c313      	stmia	r3!, {r0, r1, r4}
+ 80013c2:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80013c4:	c313      	stmia	r3!, {r0, r1, r4}
+ 80013c6:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80013c8:	c313      	stmia	r3!, {r0, r1, r4}
+ 80013ca:	ca03      	ldmia	r2!, {r0, r1}
+ 80013cc:	c303      	stmia	r3!, {r0, r1}
+ 80013ce:	23f2      	movs	r3, #242	; 0xf2
+ 80013d0:	009b      	lsls	r3, r3, #2
+ 80013d2:	18f9      	adds	r1, r7, r3
+ 80013d4:	003b      	movs	r3, r7
+ 80013d6:	220b      	movs	r2, #11
+ 80013d8:	0018      	movs	r0, r3
+ 80013da:	f000 fd2d 	bl	8001e38 <memcpy>
+  	   Classify(values);
+ 80013de:	003b      	movs	r3, r7
+ 80013e0:	0018      	movs	r0, r3
+ 80013e2:	f000 f8d3 	bl	800158c <Classify>
+
+
+
+
+
+  	  memcpy(values, (float[]){0.0,0.0,4.0,1.0,0.0,0.0,1.0,22.0,0.0,0.0,0.04189},11);//N
+ 80013e6:	4b62      	ldr	r3, [pc, #392]	; (8001570 <main+0x718>)
+ 80013e8:	22a6      	movs	r2, #166	; 0xa6
+ 80013ea:	00d2      	lsls	r2, r2, #3
+ 80013ec:	4694      	mov	ip, r2
+ 80013ee:	44bc      	add	ip, r7
+ 80013f0:	4463      	add	r3, ip
+ 80013f2:	4a5b      	ldr	r2, [pc, #364]	; (8001560 <main+0x708>)
+ 80013f4:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80013f6:	c313      	stmia	r3!, {r0, r1, r4}
+ 80013f8:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80013fa:	c313      	stmia	r3!, {r0, r1, r4}
+ 80013fc:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80013fe:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001400:	ca03      	ldmia	r2!, {r0, r1}
+ 8001402:	c303      	stmia	r3!, {r0, r1}
+ 8001404:	23fd      	movs	r3, #253	; 0xfd
+ 8001406:	009b      	lsls	r3, r3, #2
+ 8001408:	18f9      	adds	r1, r7, r3
+ 800140a:	003b      	movs	r3, r7
+ 800140c:	220b      	movs	r2, #11
+ 800140e:	0018      	movs	r0, r3
+ 8001410:	f000 fd12 	bl	8001e38 <memcpy>
+  	  Classify(values);
+ 8001414:	003b      	movs	r3, r7
+ 8001416:	0018      	movs	r0, r3
+ 8001418:	f000 f8b8 	bl	800158c <Classify>
+
+
+
+  	  memcpy(values, (float[]){1,1,26,0,0,0,0,0,0,3,0.044989999999999995},11);//A
+ 800141c:	4b55      	ldr	r3, [pc, #340]	; (8001574 <main+0x71c>)
+ 800141e:	22a6      	movs	r2, #166	; 0xa6
+ 8001420:	00d2      	lsls	r2, r2, #3
+ 8001422:	4694      	mov	ip, r2
+ 8001424:	44bc      	add	ip, r7
+ 8001426:	4463      	add	r3, ip
+ 8001428:	4a4b      	ldr	r2, [pc, #300]	; (8001558 <main+0x700>)
+ 800142a:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 800142c:	c313      	stmia	r3!, {r0, r1, r4}
+ 800142e:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001430:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001432:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001434:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001436:	ca03      	ldmia	r2!, {r0, r1}
+ 8001438:	c303      	stmia	r3!, {r0, r1}
+ 800143a:	2384      	movs	r3, #132	; 0x84
+ 800143c:	00db      	lsls	r3, r3, #3
+ 800143e:	18f9      	adds	r1, r7, r3
+ 8001440:	003b      	movs	r3, r7
+ 8001442:	220b      	movs	r2, #11
+ 8001444:	0018      	movs	r0, r3
+ 8001446:	f000 fcf7 	bl	8001e38 <memcpy>
+  	   Classify(values);
+ 800144a:	003b      	movs	r3, r7
+ 800144c:	0018      	movs	r0, r3
+ 800144e:	f000 f89d 	bl	800158c <Classify>
+
+
+
+
+
+  	  memcpy(values, (float[]){0.0,0.0,4.0,1.0,0.0,0.0,1.0,22.0,0.0,0.0,0.04189},11);//N
+ 8001452:	4b49      	ldr	r3, [pc, #292]	; (8001578 <main+0x720>)
+ 8001454:	18fb      	adds	r3, r7, r3
+ 8001456:	4a42      	ldr	r2, [pc, #264]	; (8001560 <main+0x708>)
+ 8001458:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 800145a:	c313      	stmia	r3!, {r0, r1, r4}
+ 800145c:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 800145e:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001460:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001462:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001464:	ca03      	ldmia	r2!, {r0, r1}
+ 8001466:	c303      	stmia	r3!, {r0, r1}
+ 8001468:	4b43      	ldr	r3, [pc, #268]	; (8001578 <main+0x720>)
+ 800146a:	18f9      	adds	r1, r7, r3
+ 800146c:	003b      	movs	r3, r7
+ 800146e:	220b      	movs	r2, #11
+ 8001470:	0018      	movs	r0, r3
+ 8001472:	f000 fce1 	bl	8001e38 <memcpy>
+  	  Classify(values);
+ 8001476:	003b      	movs	r3, r7
+ 8001478:	0018      	movs	r0, r3
+ 800147a:	f000 f887 	bl	800158c <Classify>
+
+
+
+  	  memcpy(values, (float[]){1,1,26,0,0,0,0,0,0,3,0.044989999999999995},11);//A
+ 800147e:	238f      	movs	r3, #143	; 0x8f
+ 8001480:	00db      	lsls	r3, r3, #3
+ 8001482:	18fb      	adds	r3, r7, r3
+ 8001484:	4a34      	ldr	r2, [pc, #208]	; (8001558 <main+0x700>)
+ 8001486:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001488:	c313      	stmia	r3!, {r0, r1, r4}
+ 800148a:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 800148c:	c313      	stmia	r3!, {r0, r1, r4}
+ 800148e:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001490:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001492:	ca03      	ldmia	r2!, {r0, r1}
+ 8001494:	c303      	stmia	r3!, {r0, r1}
+ 8001496:	238f      	movs	r3, #143	; 0x8f
+ 8001498:	00db      	lsls	r3, r3, #3
+ 800149a:	18f9      	adds	r1, r7, r3
+ 800149c:	003b      	movs	r3, r7
+ 800149e:	220b      	movs	r2, #11
+ 80014a0:	0018      	movs	r0, r3
+ 80014a2:	f000 fcc9 	bl	8001e38 <memcpy>
+  	   Classify(values);
+ 80014a6:	003b      	movs	r3, r7
+ 80014a8:	0018      	movs	r0, r3
+ 80014aa:	f000 f86f 	bl	800158c <Classify>
+
+
+
+
+
+  	  memcpy(values, (float[]){0.0,0.0,4.0,1.0,0.0,0.0,1.0,22.0,0.0,0.0,0.04189},11);//N
+ 80014ae:	4b33      	ldr	r3, [pc, #204]	; (800157c <main+0x724>)
+ 80014b0:	18fb      	adds	r3, r7, r3
+ 80014b2:	4a2b      	ldr	r2, [pc, #172]	; (8001560 <main+0x708>)
+ 80014b4:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80014b6:	c313      	stmia	r3!, {r0, r1, r4}
+ 80014b8:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80014ba:	c313      	stmia	r3!, {r0, r1, r4}
+ 80014bc:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80014be:	c313      	stmia	r3!, {r0, r1, r4}
+ 80014c0:	ca03      	ldmia	r2!, {r0, r1}
+ 80014c2:	c303      	stmia	r3!, {r0, r1}
+ 80014c4:	4b2d      	ldr	r3, [pc, #180]	; (800157c <main+0x724>)
+ 80014c6:	18f9      	adds	r1, r7, r3
+ 80014c8:	003b      	movs	r3, r7
+ 80014ca:	220b      	movs	r2, #11
+ 80014cc:	0018      	movs	r0, r3
+ 80014ce:	f000 fcb3 	bl	8001e38 <memcpy>
+  	  Classify(values);
+ 80014d2:	003b      	movs	r3, r7
+ 80014d4:	0018      	movs	r0, r3
+ 80014d6:	f000 f859 	bl	800158c <Classify>
+
+
+
+  	  memcpy(values, (float[]){1,1,26,0,0,0,0,0,0,3,0.044989999999999995},11);//A
+ 80014da:	239a      	movs	r3, #154	; 0x9a
+ 80014dc:	00db      	lsls	r3, r3, #3
+ 80014de:	18fb      	adds	r3, r7, r3
+ 80014e0:	4a1d      	ldr	r2, [pc, #116]	; (8001558 <main+0x700>)
+ 80014e2:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80014e4:	c313      	stmia	r3!, {r0, r1, r4}
+ 80014e6:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80014e8:	c313      	stmia	r3!, {r0, r1, r4}
+ 80014ea:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 80014ec:	c313      	stmia	r3!, {r0, r1, r4}
+ 80014ee:	ca03      	ldmia	r2!, {r0, r1}
+ 80014f0:	c303      	stmia	r3!, {r0, r1}
+ 80014f2:	239a      	movs	r3, #154	; 0x9a
+ 80014f4:	00db      	lsls	r3, r3, #3
+ 80014f6:	18f9      	adds	r1, r7, r3
+ 80014f8:	003b      	movs	r3, r7
+ 80014fa:	220b      	movs	r2, #11
+ 80014fc:	0018      	movs	r0, r3
+ 80014fe:	f000 fc9b 	bl	8001e38 <memcpy>
+  	   Classify(values);
+ 8001502:	003b      	movs	r3, r7
+ 8001504:	0018      	movs	r0, r3
+ 8001506:	f000 f841 	bl	800158c <Classify>
+
+
+
+
+
+  	  memcpy(values, (float[]){0.0,0.0,4.0,1.0,0.0,0.0,1.0,22.0,0.0,0.0,0.04189},11);//N
+ 800150a:	4b1d      	ldr	r3, [pc, #116]	; (8001580 <main+0x728>)
+ 800150c:	18fb      	adds	r3, r7, r3
+ 800150e:	4a14      	ldr	r2, [pc, #80]	; (8001560 <main+0x708>)
+ 8001510:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001512:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001514:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 8001516:	c313      	stmia	r3!, {r0, r1, r4}
+ 8001518:	ca13      	ldmia	r2!, {r0, r1, r4}
+ 800151a:	c313      	stmia	r3!, {r0, r1, r4}
+ 800151c:	ca03      	ldmia	r2!, {r0, r1}
+ 800151e:	c303      	stmia	r3!, {r0, r1}
+ 8001520:	4b17      	ldr	r3, [pc, #92]	; (8001580 <main+0x728>)
+ 8001522:	18f9      	adds	r1, r7, r3
+ 8001524:	003b      	movs	r3, r7
+ 8001526:	220b      	movs	r2, #11
+ 8001528:	0018      	movs	r0, r3
+ 800152a:	f000 fc85 	bl	8001e38 <memcpy>
+  	  Classify(values);
+ 800152e:	003b      	movs	r3, r7
+ 8001530:	0018      	movs	r0, r3
+ 8001532:	f000 f82b 	bl	800158c <Classify>
+
+//TIM14->CR1 &= ~TIM_CR1_CEN;
+
+  	int time= TIM14->CNT;
+ 8001536:	4b13      	ldr	r3, [pc, #76]	; (8001584 <main+0x72c>)
+ 8001538:	6a5b      	ldr	r3, [r3, #36]	; 0x24
+ 800153a:	22a5      	movs	r2, #165	; 0xa5
+ 800153c:	00d2      	lsls	r2, r2, #3
+ 800153e:	18ba      	adds	r2, r7, r2
+ 8001540:	6013      	str	r3, [r2, #0]
+  /* Infinite loop */
+  while (1)
+  {
+	i++;
+ 8001542:	4b11      	ldr	r3, [pc, #68]	; (8001588 <main+0x730>)
+ 8001544:	18fb      	adds	r3, r7, r3
+ 8001546:	681b      	ldr	r3, [r3, #0]
+ 8001548:	3301      	adds	r3, #1
+ 800154a:	4a0f      	ldr	r2, [pc, #60]	; (8001588 <main+0x730>)
+ 800154c:	18ba      	adds	r2, r7, r2
+ 800154e:	6013      	str	r3, [r2, #0]
+ 8001550:	e7f7      	b.n	8001542 <main+0x6ea>
+ 8001552:	46c0      	nop			; (mov r8, r8)
+ 8001554:	fffffde8 	.word	0xfffffde8
+ 8001558:	08001eb0 	.word	0x08001eb0
+ 800155c:	fffffe14 	.word	0xfffffe14
+ 8001560:	08001f34 	.word	0x08001f34
+ 8001564:	fffffe40 	.word	0xfffffe40
+ 8001568:	fffffe6c 	.word	0xfffffe6c
+ 800156c:	fffffe98 	.word	0xfffffe98
+ 8001570:	fffffec4 	.word	0xfffffec4
+ 8001574:	fffffef0 	.word	0xfffffef0
+ 8001578:	0000044c 	.word	0x0000044c
+ 800157c:	000004a4 	.word	0x000004a4
+ 8001580:	000004fc 	.word	0x000004fc
+ 8001584:	40002000 	.word	0x40002000
+ 8001588:	0000052c 	.word	0x0000052c
+
+0800158c <Classify>:
+  }
+}
+
+
+void Classify(float values[11]){
+ 800158c:	b580      	push	{r7, lr}
+ 800158e:	b084      	sub	sp, #16
+ 8001590:	af00      	add	r7, sp, #0
+ 8001592:	6078      	str	r0, [r7, #4]
+	const int predicted_class = sonar_predict(values, length); // 0=A 1=N
+ 8001594:	220b      	movs	r2, #11
+ 8001596:	687b      	ldr	r3, [r7, #4]
+ 8001598:	0011      	movs	r1, r2
+ 800159a:	0018      	movs	r0, r3
+ 800159c:	f7ff fc16 	bl	8000dcc <sonar_predict>
+ 80015a0:	0003      	movs	r3, r0
+ 80015a2:	60fb      	str	r3, [r7, #12]
+
+	  if (predicted_class==1){
+ 80015a4:	68fb      	ldr	r3, [r7, #12]
+ 80015a6:	2b01      	cmp	r3, #1
+ 80015a8:	d103      	bne.n	80015b2 <Classify+0x26>
+		  //turn on LED1
+
+		  GPIOB->ODR =0b0000000000000001;
+ 80015aa:	4b05      	ldr	r3, [pc, #20]	; (80015c0 <Classify+0x34>)
+ 80015ac:	2201      	movs	r2, #1
+ 80015ae:	615a      	str	r2, [r3, #20]
+
+	  }
+	  else{
+		  GPIOB->ODR =0b0000000000000010;
+	  }
+}
+ 80015b0:	e002      	b.n	80015b8 <Classify+0x2c>
+		  GPIOB->ODR =0b0000000000000010;
+ 80015b2:	4b03      	ldr	r3, [pc, #12]	; (80015c0 <Classify+0x34>)
+ 80015b4:	2202      	movs	r2, #2
+ 80015b6:	615a      	str	r2, [r3, #20]
+}
+ 80015b8:	46c0      	nop			; (mov r8, r8)
+ 80015ba:	46bd      	mov	sp, r7
+ 80015bc:	b004      	add	sp, #16
+ 80015be:	bd80      	pop	{r7, pc}
+ 80015c0:	48000400 	.word	0x48000400
+
+080015c4 <SystemInit>:
+  *         Initialize the default HSI clock source, vector table location and the PLL configuration is reset.
+  * @param  None
+  * @retval None
+  */
+void SystemInit(void)
+{
+ 80015c4:	b580      	push	{r7, lr}
+ 80015c6:	af00      	add	r7, sp, #0
+  /* Reset the RCC clock configuration to the default reset state ------------*/
+  /* Set HSION bit */
+  RCC->CR |= (uint32_t)0x00000001U;
+ 80015c8:	4b1a      	ldr	r3, [pc, #104]	; (8001634 <SystemInit+0x70>)
+ 80015ca:	4a1a      	ldr	r2, [pc, #104]	; (8001634 <SystemInit+0x70>)
+ 80015cc:	6812      	ldr	r2, [r2, #0]
+ 80015ce:	2101      	movs	r1, #1
+ 80015d0:	430a      	orrs	r2, r1
+ 80015d2:	601a      	str	r2, [r3, #0]
+
+#if defined (STM32F051x8) || defined (STM32F058x8)
+  /* Reset SW[1:0], HPRE[3:0], PPRE[2:0], ADCPRE and MCOSEL[2:0] bits */
+  RCC->CFGR &= (uint32_t)0xF8FFB80CU;
+ 80015d4:	4b17      	ldr	r3, [pc, #92]	; (8001634 <SystemInit+0x70>)
+ 80015d6:	4a17      	ldr	r2, [pc, #92]	; (8001634 <SystemInit+0x70>)
+ 80015d8:	6852      	ldr	r2, [r2, #4]
+ 80015da:	4917      	ldr	r1, [pc, #92]	; (8001638 <SystemInit+0x74>)
+ 80015dc:	400a      	ands	r2, r1
+ 80015de:	605a      	str	r2, [r3, #4]
+  /* Reset SW[1:0], HPRE[3:0], PPRE[2:0], ADCPRE, MCOSEL[2:0], MCOPRE[2:0] and PLLNODIV bits */
+  RCC->CFGR &= (uint32_t)0x08FFB80CU;
+#endif /* STM32F051x8 or STM32F058x8 */
+  
+  /* Reset HSEON, CSSON and PLLON bits */
+  RCC->CR &= (uint32_t)0xFEF6FFFFU;
+ 80015e0:	4b14      	ldr	r3, [pc, #80]	; (8001634 <SystemInit+0x70>)
+ 80015e2:	4a14      	ldr	r2, [pc, #80]	; (8001634 <SystemInit+0x70>)
+ 80015e4:	6812      	ldr	r2, [r2, #0]
+ 80015e6:	4915      	ldr	r1, [pc, #84]	; (800163c <SystemInit+0x78>)
+ 80015e8:	400a      	ands	r2, r1
+ 80015ea:	601a      	str	r2, [r3, #0]
+
+  /* Reset HSEBYP bit */
+  RCC->CR &= (uint32_t)0xFFFBFFFFU;
+ 80015ec:	4b11      	ldr	r3, [pc, #68]	; (8001634 <SystemInit+0x70>)
+ 80015ee:	4a11      	ldr	r2, [pc, #68]	; (8001634 <SystemInit+0x70>)
+ 80015f0:	6812      	ldr	r2, [r2, #0]
+ 80015f2:	4913      	ldr	r1, [pc, #76]	; (8001640 <SystemInit+0x7c>)
+ 80015f4:	400a      	ands	r2, r1
+ 80015f6:	601a      	str	r2, [r3, #0]
+
+  /* Reset PLLSRC, PLLXTPRE and PLLMUL[3:0] bits */
+  RCC->CFGR &= (uint32_t)0xFFC0FFFFU;
+ 80015f8:	4b0e      	ldr	r3, [pc, #56]	; (8001634 <SystemInit+0x70>)
+ 80015fa:	4a0e      	ldr	r2, [pc, #56]	; (8001634 <SystemInit+0x70>)
+ 80015fc:	6852      	ldr	r2, [r2, #4]
+ 80015fe:	4911      	ldr	r1, [pc, #68]	; (8001644 <SystemInit+0x80>)
+ 8001600:	400a      	ands	r2, r1
+ 8001602:	605a      	str	r2, [r3, #4]
+
+  /* Reset PREDIV[3:0] bits */
+  RCC->CFGR2 &= (uint32_t)0xFFFFFFF0U;
+ 8001604:	4b0b      	ldr	r3, [pc, #44]	; (8001634 <SystemInit+0x70>)
+ 8001606:	4a0b      	ldr	r2, [pc, #44]	; (8001634 <SystemInit+0x70>)
+ 8001608:	6ad2      	ldr	r2, [r2, #44]	; 0x2c
+ 800160a:	210f      	movs	r1, #15
+ 800160c:	438a      	bics	r2, r1
+ 800160e:	62da      	str	r2, [r3, #44]	; 0x2c
+#elif defined (STM32F030x6) || defined (STM32F030x8) || defined (STM32F031x6) || defined (STM32F038xx) || defined (STM32F030xC)
+  /* Reset USART1SW[1:0], I2C1SW and ADCSW bits */
+  RCC->CFGR3 &= (uint32_t)0xFFFFFEECU;
+#elif defined (STM32F051x8) || defined (STM32F058xx)
+  /* Reset USART1SW[1:0], I2C1SW, CECSW and ADCSW bits */
+  RCC->CFGR3 &= (uint32_t)0xFFFFFEACU;
+ 8001610:	4b08      	ldr	r3, [pc, #32]	; (8001634 <SystemInit+0x70>)
+ 8001612:	4a08      	ldr	r2, [pc, #32]	; (8001634 <SystemInit+0x70>)
+ 8001614:	6b12      	ldr	r2, [r2, #48]	; 0x30
+ 8001616:	490c      	ldr	r1, [pc, #48]	; (8001648 <SystemInit+0x84>)
+ 8001618:	400a      	ands	r2, r1
+ 800161a:	631a      	str	r2, [r3, #48]	; 0x30
+#else
+ #warning "No target selected"
+#endif
+
+  /* Reset HSI14 bit */
+  RCC->CR2 &= (uint32_t)0xFFFFFFFEU;
+ 800161c:	4b05      	ldr	r3, [pc, #20]	; (8001634 <SystemInit+0x70>)
+ 800161e:	4a05      	ldr	r2, [pc, #20]	; (8001634 <SystemInit+0x70>)
+ 8001620:	6b52      	ldr	r2, [r2, #52]	; 0x34
+ 8001622:	2101      	movs	r1, #1
+ 8001624:	438a      	bics	r2, r1
+ 8001626:	635a      	str	r2, [r3, #52]	; 0x34
+
+  /* Disable all interrupts */
+  RCC->CIR = 0x00000000U;
+ 8001628:	4b02      	ldr	r3, [pc, #8]	; (8001634 <SystemInit+0x70>)
+ 800162a:	2200      	movs	r2, #0
+ 800162c:	609a      	str	r2, [r3, #8]
+
+}
+ 800162e:	46c0      	nop			; (mov r8, r8)
+ 8001630:	46bd      	mov	sp, r7
+ 8001632:	bd80      	pop	{r7, pc}
+ 8001634:	40021000 	.word	0x40021000
+ 8001638:	f8ffb80c 	.word	0xf8ffb80c
+ 800163c:	fef6ffff 	.word	0xfef6ffff
+ 8001640:	fffbffff 	.word	0xfffbffff
+ 8001644:	ffc0ffff 	.word	0xffc0ffff
+ 8001648:	fffffeac 	.word	0xfffffeac
+
+0800164c <SystemCoreClockUpdate>:
+  *
+  * @param  None
+  * @retval None
+  */
+void SystemCoreClockUpdate (void)
+{
+ 800164c:	b580      	push	{r7, lr}
+ 800164e:	b084      	sub	sp, #16
+ 8001650:	af00      	add	r7, sp, #0
+  uint32_t tmp = 0, pllmull = 0, pllsource = 0, predivfactor = 0;
+ 8001652:	2300      	movs	r3, #0
+ 8001654:	60fb      	str	r3, [r7, #12]
+ 8001656:	2300      	movs	r3, #0
+ 8001658:	60bb      	str	r3, [r7, #8]
+ 800165a:	2300      	movs	r3, #0
+ 800165c:	607b      	str	r3, [r7, #4]
+ 800165e:	2300      	movs	r3, #0
+ 8001660:	603b      	str	r3, [r7, #0]
+
+  /* Get SYSCLK source -------------------------------------------------------*/
+  tmp = RCC->CFGR & RCC_CFGR_SWS;
+ 8001662:	4b2b      	ldr	r3, [pc, #172]	; (8001710 <SystemCoreClockUpdate+0xc4>)
+ 8001664:	685b      	ldr	r3, [r3, #4]
+ 8001666:	220c      	movs	r2, #12
+ 8001668:	4013      	ands	r3, r2
+ 800166a:	60fb      	str	r3, [r7, #12]
+
+  switch (tmp)
+ 800166c:	68fb      	ldr	r3, [r7, #12]
+ 800166e:	2b04      	cmp	r3, #4
+ 8001670:	d007      	beq.n	8001682 <SystemCoreClockUpdate+0x36>
+ 8001672:	2b08      	cmp	r3, #8
+ 8001674:	d009      	beq.n	800168a <SystemCoreClockUpdate+0x3e>
+ 8001676:	2b00      	cmp	r3, #0
+ 8001678:	d133      	bne.n	80016e2 <SystemCoreClockUpdate+0x96>
+  {
+    case RCC_CFGR_SWS_HSI:  /* HSI used as system clock */
+      SystemCoreClock = HSI_VALUE;
+ 800167a:	4b26      	ldr	r3, [pc, #152]	; (8001714 <SystemCoreClockUpdate+0xc8>)
+ 800167c:	4a26      	ldr	r2, [pc, #152]	; (8001718 <SystemCoreClockUpdate+0xcc>)
+ 800167e:	601a      	str	r2, [r3, #0]
+      break;
+ 8001680:	e033      	b.n	80016ea <SystemCoreClockUpdate+0x9e>
+    case RCC_CFGR_SWS_HSE:  /* HSE used as system clock */
+      SystemCoreClock = HSE_VALUE;
+ 8001682:	4b24      	ldr	r3, [pc, #144]	; (8001714 <SystemCoreClockUpdate+0xc8>)
+ 8001684:	4a24      	ldr	r2, [pc, #144]	; (8001718 <SystemCoreClockUpdate+0xcc>)
+ 8001686:	601a      	str	r2, [r3, #0]
+      break;
+ 8001688:	e02f      	b.n	80016ea <SystemCoreClockUpdate+0x9e>
+    case RCC_CFGR_SWS_PLL:  /* PLL used as system clock */
+      /* Get PLL clock source and multiplication factor ----------------------*/
+      pllmull = RCC->CFGR & RCC_CFGR_PLLMUL;
+ 800168a:	4b21      	ldr	r3, [pc, #132]	; (8001710 <SystemCoreClockUpdate+0xc4>)
+ 800168c:	685a      	ldr	r2, [r3, #4]
+ 800168e:	23f0      	movs	r3, #240	; 0xf0
+ 8001690:	039b      	lsls	r3, r3, #14
+ 8001692:	4013      	ands	r3, r2
+ 8001694:	60bb      	str	r3, [r7, #8]
+      pllsource = RCC->CFGR & RCC_CFGR_PLLSRC;
+ 8001696:	4b1e      	ldr	r3, [pc, #120]	; (8001710 <SystemCoreClockUpdate+0xc4>)
+ 8001698:	685a      	ldr	r2, [r3, #4]
+ 800169a:	2380      	movs	r3, #128	; 0x80
+ 800169c:	025b      	lsls	r3, r3, #9
+ 800169e:	4013      	ands	r3, r2
+ 80016a0:	607b      	str	r3, [r7, #4]
+      pllmull = ( pllmull >> 18) + 2;
+ 80016a2:	68bb      	ldr	r3, [r7, #8]
+ 80016a4:	0c9b      	lsrs	r3, r3, #18
+ 80016a6:	3302      	adds	r3, #2
+ 80016a8:	60bb      	str	r3, [r7, #8]
+      predivfactor = (RCC->CFGR2 & RCC_CFGR2_PREDIV) + 1;
+ 80016aa:	4b19      	ldr	r3, [pc, #100]	; (8001710 <SystemCoreClockUpdate+0xc4>)
+ 80016ac:	6adb      	ldr	r3, [r3, #44]	; 0x2c
+ 80016ae:	220f      	movs	r2, #15
+ 80016b0:	4013      	ands	r3, r2
+ 80016b2:	3301      	adds	r3, #1
+ 80016b4:	603b      	str	r3, [r7, #0]
+
+      if (pllsource == RCC_CFGR_PLLSRC_HSE_PREDIV)
+ 80016b6:	687a      	ldr	r2, [r7, #4]
+ 80016b8:	2380      	movs	r3, #128	; 0x80
+ 80016ba:	025b      	lsls	r3, r3, #9
+ 80016bc:	429a      	cmp	r2, r3
+ 80016be:	d10a      	bne.n	80016d6 <SystemCoreClockUpdate+0x8a>
+      {
+        /* HSE used as PLL clock source : SystemCoreClock = HSE/PREDIV * PLLMUL */
+        SystemCoreClock = (HSE_VALUE/predivfactor) * pllmull;
+ 80016c0:	6839      	ldr	r1, [r7, #0]
+ 80016c2:	4815      	ldr	r0, [pc, #84]	; (8001718 <SystemCoreClockUpdate+0xcc>)
+ 80016c4:	f000 f82e 	bl	8001724 <__udivsi3>
+ 80016c8:	0003      	movs	r3, r0
+ 80016ca:	001a      	movs	r2, r3
+ 80016cc:	68bb      	ldr	r3, [r7, #8]
+ 80016ce:	435a      	muls	r2, r3
+ 80016d0:	4b10      	ldr	r3, [pc, #64]	; (8001714 <SystemCoreClockUpdate+0xc8>)
+ 80016d2:	601a      	str	r2, [r3, #0]
+        SystemCoreClock = (HSI_VALUE >> 1) * pllmull;
+#endif /* STM32F042x6 || STM32F048xx || STM32F070x6 || 
+          STM32F071xB || STM32F072xB || STM32F078xx || STM32F070xB ||
+          STM32F091xC || STM32F098xx || STM32F030xC */
+      }
+      break;
+ 80016d4:	e009      	b.n	80016ea <SystemCoreClockUpdate+0x9e>
+        SystemCoreClock = (HSI_VALUE >> 1) * pllmull;
+ 80016d6:	68bb      	ldr	r3, [r7, #8]
+ 80016d8:	4a10      	ldr	r2, [pc, #64]	; (800171c <SystemCoreClockUpdate+0xd0>)
+ 80016da:	435a      	muls	r2, r3
+ 80016dc:	4b0d      	ldr	r3, [pc, #52]	; (8001714 <SystemCoreClockUpdate+0xc8>)
+ 80016de:	601a      	str	r2, [r3, #0]
+      break;
+ 80016e0:	e003      	b.n	80016ea <SystemCoreClockUpdate+0x9e>
+    default: /* HSI used as system clock */
+      SystemCoreClock = HSI_VALUE;
+ 80016e2:	4b0c      	ldr	r3, [pc, #48]	; (8001714 <SystemCoreClockUpdate+0xc8>)
+ 80016e4:	4a0c      	ldr	r2, [pc, #48]	; (8001718 <SystemCoreClockUpdate+0xcc>)
+ 80016e6:	601a      	str	r2, [r3, #0]
+      break;
+ 80016e8:	46c0      	nop			; (mov r8, r8)
+  }
+  /* Compute HCLK clock frequency ----------------*/
+  /* Get HCLK prescaler */
+  tmp = AHBPrescTable[((RCC->CFGR & RCC_CFGR_HPRE) >> 4)];
+ 80016ea:	4b09      	ldr	r3, [pc, #36]	; (8001710 <SystemCoreClockUpdate+0xc4>)
+ 80016ec:	685b      	ldr	r3, [r3, #4]
+ 80016ee:	091b      	lsrs	r3, r3, #4
+ 80016f0:	220f      	movs	r2, #15
+ 80016f2:	4013      	ands	r3, r2
+ 80016f4:	4a0a      	ldr	r2, [pc, #40]	; (8001720 <SystemCoreClockUpdate+0xd4>)
+ 80016f6:	5cd3      	ldrb	r3, [r2, r3]
+ 80016f8:	60fb      	str	r3, [r7, #12]
+  /* HCLK clock frequency */
+  SystemCoreClock >>= tmp;
+ 80016fa:	4b06      	ldr	r3, [pc, #24]	; (8001714 <SystemCoreClockUpdate+0xc8>)
+ 80016fc:	681a      	ldr	r2, [r3, #0]
+ 80016fe:	68fb      	ldr	r3, [r7, #12]
+ 8001700:	40da      	lsrs	r2, r3
+ 8001702:	4b04      	ldr	r3, [pc, #16]	; (8001714 <SystemCoreClockUpdate+0xc8>)
+ 8001704:	601a      	str	r2, [r3, #0]
+}
+ 8001706:	46c0      	nop			; (mov r8, r8)
+ 8001708:	46bd      	mov	sp, r7
+ 800170a:	b004      	add	sp, #16
+ 800170c:	bd80      	pop	{r7, pc}
+ 800170e:	46c0      	nop			; (mov r8, r8)
+ 8001710:	40021000 	.word	0x40021000
+ 8001714:	20000000 	.word	0x20000000
+ 8001718:	007a1200 	.word	0x007a1200
+ 800171c:	003d0900 	.word	0x003d0900
+ 8001720:	08001f60 	.word	0x08001f60
+
+08001724 <__udivsi3>:
+ 8001724:	2200      	movs	r2, #0
+ 8001726:	0843      	lsrs	r3, r0, #1
+ 8001728:	428b      	cmp	r3, r1
+ 800172a:	d374      	bcc.n	8001816 <__udivsi3+0xf2>
+ 800172c:	0903      	lsrs	r3, r0, #4
+ 800172e:	428b      	cmp	r3, r1
+ 8001730:	d35f      	bcc.n	80017f2 <__udivsi3+0xce>
+ 8001732:	0a03      	lsrs	r3, r0, #8
+ 8001734:	428b      	cmp	r3, r1
+ 8001736:	d344      	bcc.n	80017c2 <__udivsi3+0x9e>
+ 8001738:	0b03      	lsrs	r3, r0, #12
+ 800173a:	428b      	cmp	r3, r1
+ 800173c:	d328      	bcc.n	8001790 <__udivsi3+0x6c>
+ 800173e:	0c03      	lsrs	r3, r0, #16
+ 8001740:	428b      	cmp	r3, r1
+ 8001742:	d30d      	bcc.n	8001760 <__udivsi3+0x3c>
+ 8001744:	22ff      	movs	r2, #255	; 0xff
+ 8001746:	0209      	lsls	r1, r1, #8
+ 8001748:	ba12      	rev	r2, r2
+ 800174a:	0c03      	lsrs	r3, r0, #16
+ 800174c:	428b      	cmp	r3, r1
+ 800174e:	d302      	bcc.n	8001756 <__udivsi3+0x32>
+ 8001750:	1212      	asrs	r2, r2, #8
+ 8001752:	0209      	lsls	r1, r1, #8
+ 8001754:	d065      	beq.n	8001822 <__udivsi3+0xfe>
+ 8001756:	0b03      	lsrs	r3, r0, #12
+ 8001758:	428b      	cmp	r3, r1
+ 800175a:	d319      	bcc.n	8001790 <__udivsi3+0x6c>
+ 800175c:	e000      	b.n	8001760 <__udivsi3+0x3c>
+ 800175e:	0a09      	lsrs	r1, r1, #8
+ 8001760:	0bc3      	lsrs	r3, r0, #15
+ 8001762:	428b      	cmp	r3, r1
+ 8001764:	d301      	bcc.n	800176a <__udivsi3+0x46>
+ 8001766:	03cb      	lsls	r3, r1, #15
+ 8001768:	1ac0      	subs	r0, r0, r3
+ 800176a:	4152      	adcs	r2, r2
+ 800176c:	0b83      	lsrs	r3, r0, #14
+ 800176e:	428b      	cmp	r3, r1
+ 8001770:	d301      	bcc.n	8001776 <__udivsi3+0x52>
+ 8001772:	038b      	lsls	r3, r1, #14
+ 8001774:	1ac0      	subs	r0, r0, r3
+ 8001776:	4152      	adcs	r2, r2
+ 8001778:	0b43      	lsrs	r3, r0, #13
+ 800177a:	428b      	cmp	r3, r1
+ 800177c:	d301      	bcc.n	8001782 <__udivsi3+0x5e>
+ 800177e:	034b      	lsls	r3, r1, #13
+ 8001780:	1ac0      	subs	r0, r0, r3
+ 8001782:	4152      	adcs	r2, r2
+ 8001784:	0b03      	lsrs	r3, r0, #12
+ 8001786:	428b      	cmp	r3, r1
+ 8001788:	d301      	bcc.n	800178e <__udivsi3+0x6a>
+ 800178a:	030b      	lsls	r3, r1, #12
+ 800178c:	1ac0      	subs	r0, r0, r3
+ 800178e:	4152      	adcs	r2, r2
+ 8001790:	0ac3      	lsrs	r3, r0, #11
+ 8001792:	428b      	cmp	r3, r1
+ 8001794:	d301      	bcc.n	800179a <__udivsi3+0x76>
+ 8001796:	02cb      	lsls	r3, r1, #11
+ 8001798:	1ac0      	subs	r0, r0, r3
+ 800179a:	4152      	adcs	r2, r2
+ 800179c:	0a83      	lsrs	r3, r0, #10
+ 800179e:	428b      	cmp	r3, r1
+ 80017a0:	d301      	bcc.n	80017a6 <__udivsi3+0x82>
+ 80017a2:	028b      	lsls	r3, r1, #10
+ 80017a4:	1ac0      	subs	r0, r0, r3
+ 80017a6:	4152      	adcs	r2, r2
+ 80017a8:	0a43      	lsrs	r3, r0, #9
+ 80017aa:	428b      	cmp	r3, r1
+ 80017ac:	d301      	bcc.n	80017b2 <__udivsi3+0x8e>
+ 80017ae:	024b      	lsls	r3, r1, #9
+ 80017b0:	1ac0      	subs	r0, r0, r3
+ 80017b2:	4152      	adcs	r2, r2
+ 80017b4:	0a03      	lsrs	r3, r0, #8
+ 80017b6:	428b      	cmp	r3, r1
+ 80017b8:	d301      	bcc.n	80017be <__udivsi3+0x9a>
+ 80017ba:	020b      	lsls	r3, r1, #8
+ 80017bc:	1ac0      	subs	r0, r0, r3
+ 80017be:	4152      	adcs	r2, r2
+ 80017c0:	d2cd      	bcs.n	800175e <__udivsi3+0x3a>
+ 80017c2:	09c3      	lsrs	r3, r0, #7
+ 80017c4:	428b      	cmp	r3, r1
+ 80017c6:	d301      	bcc.n	80017cc <__udivsi3+0xa8>
+ 80017c8:	01cb      	lsls	r3, r1, #7
+ 80017ca:	1ac0      	subs	r0, r0, r3
+ 80017cc:	4152      	adcs	r2, r2
+ 80017ce:	0983      	lsrs	r3, r0, #6
+ 80017d0:	428b      	cmp	r3, r1
+ 80017d2:	d301      	bcc.n	80017d8 <__udivsi3+0xb4>
+ 80017d4:	018b      	lsls	r3, r1, #6
+ 80017d6:	1ac0      	subs	r0, r0, r3
+ 80017d8:	4152      	adcs	r2, r2
+ 80017da:	0943      	lsrs	r3, r0, #5
+ 80017dc:	428b      	cmp	r3, r1
+ 80017de:	d301      	bcc.n	80017e4 <__udivsi3+0xc0>
+ 80017e0:	014b      	lsls	r3, r1, #5
+ 80017e2:	1ac0      	subs	r0, r0, r3
+ 80017e4:	4152      	adcs	r2, r2
+ 80017e6:	0903      	lsrs	r3, r0, #4
+ 80017e8:	428b      	cmp	r3, r1
+ 80017ea:	d301      	bcc.n	80017f0 <__udivsi3+0xcc>
+ 80017ec:	010b      	lsls	r3, r1, #4
+ 80017ee:	1ac0      	subs	r0, r0, r3
+ 80017f0:	4152      	adcs	r2, r2
+ 80017f2:	08c3      	lsrs	r3, r0, #3
+ 80017f4:	428b      	cmp	r3, r1
+ 80017f6:	d301      	bcc.n	80017fc <__udivsi3+0xd8>
+ 80017f8:	00cb      	lsls	r3, r1, #3
+ 80017fa:	1ac0      	subs	r0, r0, r3
+ 80017fc:	4152      	adcs	r2, r2
+ 80017fe:	0883      	lsrs	r3, r0, #2
+ 8001800:	428b      	cmp	r3, r1
+ 8001802:	d301      	bcc.n	8001808 <__udivsi3+0xe4>
+ 8001804:	008b      	lsls	r3, r1, #2
+ 8001806:	1ac0      	subs	r0, r0, r3
+ 8001808:	4152      	adcs	r2, r2
+ 800180a:	0843      	lsrs	r3, r0, #1
+ 800180c:	428b      	cmp	r3, r1
+ 800180e:	d301      	bcc.n	8001814 <__udivsi3+0xf0>
+ 8001810:	004b      	lsls	r3, r1, #1
+ 8001812:	1ac0      	subs	r0, r0, r3
+ 8001814:	4152      	adcs	r2, r2
+ 8001816:	1a41      	subs	r1, r0, r1
+ 8001818:	d200      	bcs.n	800181c <__udivsi3+0xf8>
+ 800181a:	4601      	mov	r1, r0
+ 800181c:	4152      	adcs	r2, r2
+ 800181e:	4610      	mov	r0, r2
+ 8001820:	4770      	bx	lr
+ 8001822:	e7ff      	b.n	8001824 <__udivsi3+0x100>
+ 8001824:	b501      	push	{r0, lr}
+ 8001826:	2000      	movs	r0, #0
+ 8001828:	f000 f806 	bl	8001838 <__aeabi_idiv0>
+ 800182c:	bd02      	pop	{r1, pc}
+ 800182e:	46c0      	nop			; (mov r8, r8)
+
+08001830 <__aeabi_uidivmod>:
+ 8001830:	2900      	cmp	r1, #0
+ 8001832:	d0f7      	beq.n	8001824 <__udivsi3+0x100>
+ 8001834:	e776      	b.n	8001724 <__udivsi3>
+ 8001836:	4770      	bx	lr
+
+08001838 <__aeabi_idiv0>:
+ 8001838:	4770      	bx	lr
+ 800183a:	46c0      	nop			; (mov r8, r8)
+
+0800183c <__aeabi_cdrcmple>:
+ 800183c:	4684      	mov	ip, r0
+ 800183e:	1c10      	adds	r0, r2, #0
+ 8001840:	4662      	mov	r2, ip
+ 8001842:	468c      	mov	ip, r1
+ 8001844:	1c19      	adds	r1, r3, #0
+ 8001846:	4663      	mov	r3, ip
+ 8001848:	e000      	b.n	800184c <__aeabi_cdcmpeq>
+ 800184a:	46c0      	nop			; (mov r8, r8)
+
+0800184c <__aeabi_cdcmpeq>:
+ 800184c:	b51f      	push	{r0, r1, r2, r3, r4, lr}
+ 800184e:	f000 f9d3 	bl	8001bf8 <__ledf2>
+ 8001852:	2800      	cmp	r0, #0
+ 8001854:	d401      	bmi.n	800185a <__aeabi_cdcmpeq+0xe>
+ 8001856:	2100      	movs	r1, #0
+ 8001858:	42c8      	cmn	r0, r1
+ 800185a:	bd1f      	pop	{r0, r1, r2, r3, r4, pc}
+
+0800185c <__aeabi_dcmpeq>:
+ 800185c:	b510      	push	{r4, lr}
+ 800185e:	f000 f92d 	bl	8001abc <__eqdf2>
+ 8001862:	4240      	negs	r0, r0
+ 8001864:	3001      	adds	r0, #1
+ 8001866:	bd10      	pop	{r4, pc}
+
+08001868 <__aeabi_dcmplt>:
+ 8001868:	b510      	push	{r4, lr}
+ 800186a:	f000 f9c5 	bl	8001bf8 <__ledf2>
+ 800186e:	2800      	cmp	r0, #0
+ 8001870:	db01      	blt.n	8001876 <__aeabi_dcmplt+0xe>
+ 8001872:	2000      	movs	r0, #0
+ 8001874:	bd10      	pop	{r4, pc}
+ 8001876:	2001      	movs	r0, #1
+ 8001878:	bd10      	pop	{r4, pc}
+ 800187a:	46c0      	nop			; (mov r8, r8)
+
+0800187c <__aeabi_dcmple>:
+ 800187c:	b510      	push	{r4, lr}
+ 800187e:	f000 f9bb 	bl	8001bf8 <__ledf2>
+ 8001882:	2800      	cmp	r0, #0
+ 8001884:	dd01      	ble.n	800188a <__aeabi_dcmple+0xe>
+ 8001886:	2000      	movs	r0, #0
+ 8001888:	bd10      	pop	{r4, pc}
+ 800188a:	2001      	movs	r0, #1
+ 800188c:	bd10      	pop	{r4, pc}
+ 800188e:	46c0      	nop			; (mov r8, r8)
+
+08001890 <__aeabi_dcmpgt>:
+ 8001890:	b510      	push	{r4, lr}
+ 8001892:	f000 f94d 	bl	8001b30 <__gedf2>
+ 8001896:	2800      	cmp	r0, #0
+ 8001898:	dc01      	bgt.n	800189e <__aeabi_dcmpgt+0xe>
+ 800189a:	2000      	movs	r0, #0
+ 800189c:	bd10      	pop	{r4, pc}
+ 800189e:	2001      	movs	r0, #1
+ 80018a0:	bd10      	pop	{r4, pc}
+ 80018a2:	46c0      	nop			; (mov r8, r8)
+
+080018a4 <__aeabi_dcmpge>:
+ 80018a4:	b510      	push	{r4, lr}
+ 80018a6:	f000 f943 	bl	8001b30 <__gedf2>
+ 80018aa:	2800      	cmp	r0, #0
+ 80018ac:	da01      	bge.n	80018b2 <__aeabi_dcmpge+0xe>
+ 80018ae:	2000      	movs	r0, #0
+ 80018b0:	bd10      	pop	{r4, pc}
+ 80018b2:	2001      	movs	r0, #1
+ 80018b4:	bd10      	pop	{r4, pc}
+ 80018b6:	46c0      	nop			; (mov r8, r8)
+
+080018b8 <__aeabi_cfrcmple>:
+ 80018b8:	4684      	mov	ip, r0
+ 80018ba:	1c08      	adds	r0, r1, #0
+ 80018bc:	4661      	mov	r1, ip
+ 80018be:	e7ff      	b.n	80018c0 <__aeabi_cfcmpeq>
+
+080018c0 <__aeabi_cfcmpeq>:
+ 80018c0:	b51f      	push	{r0, r1, r2, r3, r4, lr}
+ 80018c2:	f000 f899 	bl	80019f8 <__lesf2>
+ 80018c6:	2800      	cmp	r0, #0
+ 80018c8:	d401      	bmi.n	80018ce <__aeabi_cfcmpeq+0xe>
+ 80018ca:	2100      	movs	r1, #0
+ 80018cc:	42c8      	cmn	r0, r1
+ 80018ce:	bd1f      	pop	{r0, r1, r2, r3, r4, pc}
+
+080018d0 <__aeabi_fcmpeq>:
+ 80018d0:	b510      	push	{r4, lr}
+ 80018d2:	f000 f82b 	bl	800192c <__eqsf2>
+ 80018d6:	4240      	negs	r0, r0
+ 80018d8:	3001      	adds	r0, #1
+ 80018da:	bd10      	pop	{r4, pc}
+
+080018dc <__aeabi_fcmplt>:
+ 80018dc:	b510      	push	{r4, lr}
+ 80018de:	f000 f88b 	bl	80019f8 <__lesf2>
+ 80018e2:	2800      	cmp	r0, #0
+ 80018e4:	db01      	blt.n	80018ea <__aeabi_fcmplt+0xe>
+ 80018e6:	2000      	movs	r0, #0
+ 80018e8:	bd10      	pop	{r4, pc}
+ 80018ea:	2001      	movs	r0, #1
+ 80018ec:	bd10      	pop	{r4, pc}
+ 80018ee:	46c0      	nop			; (mov r8, r8)
+
+080018f0 <__aeabi_fcmple>:
+ 80018f0:	b510      	push	{r4, lr}
+ 80018f2:	f000 f881 	bl	80019f8 <__lesf2>
+ 80018f6:	2800      	cmp	r0, #0
+ 80018f8:	dd01      	ble.n	80018fe <__aeabi_fcmple+0xe>
+ 80018fa:	2000      	movs	r0, #0
+ 80018fc:	bd10      	pop	{r4, pc}
+ 80018fe:	2001      	movs	r0, #1
+ 8001900:	bd10      	pop	{r4, pc}
+ 8001902:	46c0      	nop			; (mov r8, r8)
+
+08001904 <__aeabi_fcmpgt>:
+ 8001904:	b510      	push	{r4, lr}
+ 8001906:	f000 f837 	bl	8001978 <__gesf2>
+ 800190a:	2800      	cmp	r0, #0
+ 800190c:	dc01      	bgt.n	8001912 <__aeabi_fcmpgt+0xe>
+ 800190e:	2000      	movs	r0, #0
+ 8001910:	bd10      	pop	{r4, pc}
+ 8001912:	2001      	movs	r0, #1
+ 8001914:	bd10      	pop	{r4, pc}
+ 8001916:	46c0      	nop			; (mov r8, r8)
+
+08001918 <__aeabi_fcmpge>:
+ 8001918:	b510      	push	{r4, lr}
+ 800191a:	f000 f82d 	bl	8001978 <__gesf2>
+ 800191e:	2800      	cmp	r0, #0
+ 8001920:	da01      	bge.n	8001926 <__aeabi_fcmpge+0xe>
+ 8001922:	2000      	movs	r0, #0
+ 8001924:	bd10      	pop	{r4, pc}
+ 8001926:	2001      	movs	r0, #1
+ 8001928:	bd10      	pop	{r4, pc}
+ 800192a:	46c0      	nop			; (mov r8, r8)
+
+0800192c <__eqsf2>:
+ 800192c:	b570      	push	{r4, r5, r6, lr}
+ 800192e:	0042      	lsls	r2, r0, #1
+ 8001930:	0245      	lsls	r5, r0, #9
+ 8001932:	024e      	lsls	r6, r1, #9
+ 8001934:	004c      	lsls	r4, r1, #1
+ 8001936:	0fc3      	lsrs	r3, r0, #31
+ 8001938:	0a6d      	lsrs	r5, r5, #9
+ 800193a:	0e12      	lsrs	r2, r2, #24
+ 800193c:	0a76      	lsrs	r6, r6, #9
+ 800193e:	0e24      	lsrs	r4, r4, #24
+ 8001940:	0fc9      	lsrs	r1, r1, #31
+ 8001942:	2001      	movs	r0, #1
+ 8001944:	2aff      	cmp	r2, #255	; 0xff
+ 8001946:	d006      	beq.n	8001956 <__eqsf2+0x2a>
+ 8001948:	2cff      	cmp	r4, #255	; 0xff
+ 800194a:	d003      	beq.n	8001954 <__eqsf2+0x28>
+ 800194c:	42a2      	cmp	r2, r4
+ 800194e:	d101      	bne.n	8001954 <__eqsf2+0x28>
+ 8001950:	42b5      	cmp	r5, r6
+ 8001952:	d006      	beq.n	8001962 <__eqsf2+0x36>
+ 8001954:	bd70      	pop	{r4, r5, r6, pc}
+ 8001956:	2d00      	cmp	r5, #0
+ 8001958:	d1fc      	bne.n	8001954 <__eqsf2+0x28>
+ 800195a:	2cff      	cmp	r4, #255	; 0xff
+ 800195c:	d1fa      	bne.n	8001954 <__eqsf2+0x28>
+ 800195e:	2e00      	cmp	r6, #0
+ 8001960:	d1f8      	bne.n	8001954 <__eqsf2+0x28>
+ 8001962:	428b      	cmp	r3, r1
+ 8001964:	d006      	beq.n	8001974 <__eqsf2+0x48>
+ 8001966:	2001      	movs	r0, #1
+ 8001968:	2a00      	cmp	r2, #0
+ 800196a:	d1f3      	bne.n	8001954 <__eqsf2+0x28>
+ 800196c:	0028      	movs	r0, r5
+ 800196e:	1e45      	subs	r5, r0, #1
+ 8001970:	41a8      	sbcs	r0, r5
+ 8001972:	e7ef      	b.n	8001954 <__eqsf2+0x28>
+ 8001974:	2000      	movs	r0, #0
+ 8001976:	e7ed      	b.n	8001954 <__eqsf2+0x28>
+
+08001978 <__gesf2>:
+ 8001978:	b5f0      	push	{r4, r5, r6, r7, lr}
+ 800197a:	0042      	lsls	r2, r0, #1
+ 800197c:	0245      	lsls	r5, r0, #9
+ 800197e:	024c      	lsls	r4, r1, #9
+ 8001980:	0fc3      	lsrs	r3, r0, #31
+ 8001982:	0048      	lsls	r0, r1, #1
+ 8001984:	0a6d      	lsrs	r5, r5, #9
+ 8001986:	0e12      	lsrs	r2, r2, #24
+ 8001988:	0a64      	lsrs	r4, r4, #9
+ 800198a:	0e00      	lsrs	r0, r0, #24
+ 800198c:	0fc9      	lsrs	r1, r1, #31
+ 800198e:	2aff      	cmp	r2, #255	; 0xff
+ 8001990:	d01e      	beq.n	80019d0 <__gesf2+0x58>
+ 8001992:	28ff      	cmp	r0, #255	; 0xff
+ 8001994:	d021      	beq.n	80019da <__gesf2+0x62>
+ 8001996:	2a00      	cmp	r2, #0
+ 8001998:	d10a      	bne.n	80019b0 <__gesf2+0x38>
+ 800199a:	426e      	negs	r6, r5
+ 800199c:	416e      	adcs	r6, r5
+ 800199e:	b2f6      	uxtb	r6, r6
+ 80019a0:	2800      	cmp	r0, #0
+ 80019a2:	d10f      	bne.n	80019c4 <__gesf2+0x4c>
+ 80019a4:	2c00      	cmp	r4, #0
+ 80019a6:	d10d      	bne.n	80019c4 <__gesf2+0x4c>
+ 80019a8:	2000      	movs	r0, #0
+ 80019aa:	2d00      	cmp	r5, #0
+ 80019ac:	d009      	beq.n	80019c2 <__gesf2+0x4a>
+ 80019ae:	e005      	b.n	80019bc <__gesf2+0x44>
+ 80019b0:	2800      	cmp	r0, #0
+ 80019b2:	d101      	bne.n	80019b8 <__gesf2+0x40>
+ 80019b4:	2c00      	cmp	r4, #0
+ 80019b6:	d001      	beq.n	80019bc <__gesf2+0x44>
+ 80019b8:	428b      	cmp	r3, r1
+ 80019ba:	d011      	beq.n	80019e0 <__gesf2+0x68>
+ 80019bc:	2101      	movs	r1, #1
+ 80019be:	4258      	negs	r0, r3
+ 80019c0:	4308      	orrs	r0, r1
+ 80019c2:	bdf0      	pop	{r4, r5, r6, r7, pc}
+ 80019c4:	2e00      	cmp	r6, #0
+ 80019c6:	d0f7      	beq.n	80019b8 <__gesf2+0x40>
+ 80019c8:	2001      	movs	r0, #1
+ 80019ca:	3901      	subs	r1, #1
+ 80019cc:	4308      	orrs	r0, r1
+ 80019ce:	e7f8      	b.n	80019c2 <__gesf2+0x4a>
+ 80019d0:	2d00      	cmp	r5, #0
+ 80019d2:	d0de      	beq.n	8001992 <__gesf2+0x1a>
+ 80019d4:	2002      	movs	r0, #2
+ 80019d6:	4240      	negs	r0, r0
+ 80019d8:	e7f3      	b.n	80019c2 <__gesf2+0x4a>
+ 80019da:	2c00      	cmp	r4, #0
+ 80019dc:	d0db      	beq.n	8001996 <__gesf2+0x1e>
+ 80019de:	e7f9      	b.n	80019d4 <__gesf2+0x5c>
+ 80019e0:	4282      	cmp	r2, r0
+ 80019e2:	dceb      	bgt.n	80019bc <__gesf2+0x44>
+ 80019e4:	db04      	blt.n	80019f0 <__gesf2+0x78>
+ 80019e6:	42a5      	cmp	r5, r4
+ 80019e8:	d8e8      	bhi.n	80019bc <__gesf2+0x44>
+ 80019ea:	2000      	movs	r0, #0
+ 80019ec:	42a5      	cmp	r5, r4
+ 80019ee:	d2e8      	bcs.n	80019c2 <__gesf2+0x4a>
+ 80019f0:	2101      	movs	r1, #1
+ 80019f2:	1e58      	subs	r0, r3, #1
+ 80019f4:	4308      	orrs	r0, r1
+ 80019f6:	e7e4      	b.n	80019c2 <__gesf2+0x4a>
+
+080019f8 <__lesf2>:
+ 80019f8:	b5f0      	push	{r4, r5, r6, r7, lr}
+ 80019fa:	0042      	lsls	r2, r0, #1
+ 80019fc:	024d      	lsls	r5, r1, #9
+ 80019fe:	004c      	lsls	r4, r1, #1
+ 8001a00:	0246      	lsls	r6, r0, #9
+ 8001a02:	0a76      	lsrs	r6, r6, #9
+ 8001a04:	0e12      	lsrs	r2, r2, #24
+ 8001a06:	0fc3      	lsrs	r3, r0, #31
+ 8001a08:	0a6d      	lsrs	r5, r5, #9
+ 8001a0a:	0e24      	lsrs	r4, r4, #24
+ 8001a0c:	0fc9      	lsrs	r1, r1, #31
+ 8001a0e:	2aff      	cmp	r2, #255	; 0xff
+ 8001a10:	d016      	beq.n	8001a40 <__lesf2+0x48>
+ 8001a12:	2cff      	cmp	r4, #255	; 0xff
+ 8001a14:	d018      	beq.n	8001a48 <__lesf2+0x50>
+ 8001a16:	2a00      	cmp	r2, #0
+ 8001a18:	d10a      	bne.n	8001a30 <__lesf2+0x38>
+ 8001a1a:	4270      	negs	r0, r6
+ 8001a1c:	4170      	adcs	r0, r6
+ 8001a1e:	b2c0      	uxtb	r0, r0
+ 8001a20:	2c00      	cmp	r4, #0
+ 8001a22:	d015      	beq.n	8001a50 <__lesf2+0x58>
+ 8001a24:	2800      	cmp	r0, #0
+ 8001a26:	d005      	beq.n	8001a34 <__lesf2+0x3c>
+ 8001a28:	2001      	movs	r0, #1
+ 8001a2a:	3901      	subs	r1, #1
+ 8001a2c:	4308      	orrs	r0, r1
+ 8001a2e:	bdf0      	pop	{r4, r5, r6, r7, pc}
+ 8001a30:	2c00      	cmp	r4, #0
+ 8001a32:	d013      	beq.n	8001a5c <__lesf2+0x64>
+ 8001a34:	4299      	cmp	r1, r3
+ 8001a36:	d014      	beq.n	8001a62 <__lesf2+0x6a>
+ 8001a38:	2001      	movs	r0, #1
+ 8001a3a:	425b      	negs	r3, r3
+ 8001a3c:	4318      	orrs	r0, r3
+ 8001a3e:	e7f6      	b.n	8001a2e <__lesf2+0x36>
+ 8001a40:	2002      	movs	r0, #2
+ 8001a42:	2e00      	cmp	r6, #0
+ 8001a44:	d1f3      	bne.n	8001a2e <__lesf2+0x36>
+ 8001a46:	e7e4      	b.n	8001a12 <__lesf2+0x1a>
+ 8001a48:	2002      	movs	r0, #2
+ 8001a4a:	2d00      	cmp	r5, #0
+ 8001a4c:	d1ef      	bne.n	8001a2e <__lesf2+0x36>
+ 8001a4e:	e7e2      	b.n	8001a16 <__lesf2+0x1e>
+ 8001a50:	2d00      	cmp	r5, #0
+ 8001a52:	d1e7      	bne.n	8001a24 <__lesf2+0x2c>
+ 8001a54:	2000      	movs	r0, #0
+ 8001a56:	2e00      	cmp	r6, #0
+ 8001a58:	d0e9      	beq.n	8001a2e <__lesf2+0x36>
+ 8001a5a:	e7ed      	b.n	8001a38 <__lesf2+0x40>
+ 8001a5c:	2d00      	cmp	r5, #0
+ 8001a5e:	d1e9      	bne.n	8001a34 <__lesf2+0x3c>
+ 8001a60:	e7ea      	b.n	8001a38 <__lesf2+0x40>
+ 8001a62:	42a2      	cmp	r2, r4
+ 8001a64:	dc06      	bgt.n	8001a74 <__lesf2+0x7c>
+ 8001a66:	dbdf      	blt.n	8001a28 <__lesf2+0x30>
+ 8001a68:	42ae      	cmp	r6, r5
+ 8001a6a:	d803      	bhi.n	8001a74 <__lesf2+0x7c>
+ 8001a6c:	2000      	movs	r0, #0
+ 8001a6e:	42ae      	cmp	r6, r5
+ 8001a70:	d3da      	bcc.n	8001a28 <__lesf2+0x30>
+ 8001a72:	e7dc      	b.n	8001a2e <__lesf2+0x36>
+ 8001a74:	2001      	movs	r0, #1
+ 8001a76:	4249      	negs	r1, r1
+ 8001a78:	4308      	orrs	r0, r1
+ 8001a7a:	e7d8      	b.n	8001a2e <__lesf2+0x36>
+
+08001a7c <__aeabi_f2iz>:
+ 8001a7c:	0241      	lsls	r1, r0, #9
+ 8001a7e:	0043      	lsls	r3, r0, #1
+ 8001a80:	0fc2      	lsrs	r2, r0, #31
+ 8001a82:	0a49      	lsrs	r1, r1, #9
+ 8001a84:	0e1b      	lsrs	r3, r3, #24
+ 8001a86:	2000      	movs	r0, #0
+ 8001a88:	2b7e      	cmp	r3, #126	; 0x7e
+ 8001a8a:	dd0d      	ble.n	8001aa8 <__aeabi_f2iz+0x2c>
+ 8001a8c:	2b9d      	cmp	r3, #157	; 0x9d
+ 8001a8e:	dc0c      	bgt.n	8001aaa <__aeabi_f2iz+0x2e>
+ 8001a90:	2080      	movs	r0, #128	; 0x80
+ 8001a92:	0400      	lsls	r0, r0, #16
+ 8001a94:	4301      	orrs	r1, r0
+ 8001a96:	2b95      	cmp	r3, #149	; 0x95
+ 8001a98:	dc0a      	bgt.n	8001ab0 <__aeabi_f2iz+0x34>
+ 8001a9a:	2096      	movs	r0, #150	; 0x96
+ 8001a9c:	1ac3      	subs	r3, r0, r3
+ 8001a9e:	40d9      	lsrs	r1, r3
+ 8001aa0:	4248      	negs	r0, r1
+ 8001aa2:	2a00      	cmp	r2, #0
+ 8001aa4:	d100      	bne.n	8001aa8 <__aeabi_f2iz+0x2c>
+ 8001aa6:	0008      	movs	r0, r1
+ 8001aa8:	4770      	bx	lr
+ 8001aaa:	4b03      	ldr	r3, [pc, #12]	; (8001ab8 <__aeabi_f2iz+0x3c>)
+ 8001aac:	18d0      	adds	r0, r2, r3
+ 8001aae:	e7fb      	b.n	8001aa8 <__aeabi_f2iz+0x2c>
+ 8001ab0:	3b96      	subs	r3, #150	; 0x96
+ 8001ab2:	4099      	lsls	r1, r3
+ 8001ab4:	e7f4      	b.n	8001aa0 <__aeabi_f2iz+0x24>
+ 8001ab6:	46c0      	nop			; (mov r8, r8)
+ 8001ab8:	7fffffff 	.word	0x7fffffff
+
+08001abc <__eqdf2>:
+ 8001abc:	b5f0      	push	{r4, r5, r6, r7, lr}
+ 8001abe:	464f      	mov	r7, r9
+ 8001ac0:	4646      	mov	r6, r8
+ 8001ac2:	46d6      	mov	lr, sl
+ 8001ac4:	005c      	lsls	r4, r3, #1
+ 8001ac6:	b5c0      	push	{r6, r7, lr}
+ 8001ac8:	031f      	lsls	r7, r3, #12
+ 8001aca:	0fdb      	lsrs	r3, r3, #31
+ 8001acc:	469a      	mov	sl, r3
+ 8001ace:	4b17      	ldr	r3, [pc, #92]	; (8001b2c <__eqdf2+0x70>)
+ 8001ad0:	030e      	lsls	r6, r1, #12
+ 8001ad2:	004d      	lsls	r5, r1, #1
+ 8001ad4:	4684      	mov	ip, r0
+ 8001ad6:	4680      	mov	r8, r0
+ 8001ad8:	0b36      	lsrs	r6, r6, #12
+ 8001ada:	0d6d      	lsrs	r5, r5, #21
+ 8001adc:	0fc9      	lsrs	r1, r1, #31
+ 8001ade:	4691      	mov	r9, r2
+ 8001ae0:	0b3f      	lsrs	r7, r7, #12
+ 8001ae2:	0d64      	lsrs	r4, r4, #21
+ 8001ae4:	2001      	movs	r0, #1
+ 8001ae6:	429d      	cmp	r5, r3
+ 8001ae8:	d008      	beq.n	8001afc <__eqdf2+0x40>
+ 8001aea:	429c      	cmp	r4, r3
+ 8001aec:	d001      	beq.n	8001af2 <__eqdf2+0x36>
+ 8001aee:	42a5      	cmp	r5, r4
+ 8001af0:	d00b      	beq.n	8001b0a <__eqdf2+0x4e>
+ 8001af2:	bc1c      	pop	{r2, r3, r4}
+ 8001af4:	4690      	mov	r8, r2
+ 8001af6:	4699      	mov	r9, r3
+ 8001af8:	46a2      	mov	sl, r4
+ 8001afa:	bdf0      	pop	{r4, r5, r6, r7, pc}
+ 8001afc:	4663      	mov	r3, ip
+ 8001afe:	4333      	orrs	r3, r6
+ 8001b00:	d1f7      	bne.n	8001af2 <__eqdf2+0x36>
+ 8001b02:	42ac      	cmp	r4, r5
+ 8001b04:	d1f5      	bne.n	8001af2 <__eqdf2+0x36>
+ 8001b06:	433a      	orrs	r2, r7
+ 8001b08:	d1f3      	bne.n	8001af2 <__eqdf2+0x36>
+ 8001b0a:	2001      	movs	r0, #1
+ 8001b0c:	42be      	cmp	r6, r7
+ 8001b0e:	d1f0      	bne.n	8001af2 <__eqdf2+0x36>
+ 8001b10:	45c8      	cmp	r8, r9
+ 8001b12:	d1ee      	bne.n	8001af2 <__eqdf2+0x36>
+ 8001b14:	4551      	cmp	r1, sl
+ 8001b16:	d007      	beq.n	8001b28 <__eqdf2+0x6c>
+ 8001b18:	2d00      	cmp	r5, #0
+ 8001b1a:	d1ea      	bne.n	8001af2 <__eqdf2+0x36>
+ 8001b1c:	4663      	mov	r3, ip
+ 8001b1e:	431e      	orrs	r6, r3
+ 8001b20:	0030      	movs	r0, r6
+ 8001b22:	1e46      	subs	r6, r0, #1
+ 8001b24:	41b0      	sbcs	r0, r6
+ 8001b26:	e7e4      	b.n	8001af2 <__eqdf2+0x36>
+ 8001b28:	2000      	movs	r0, #0
+ 8001b2a:	e7e2      	b.n	8001af2 <__eqdf2+0x36>
+ 8001b2c:	000007ff 	.word	0x000007ff
+
+08001b30 <__gedf2>:
+ 8001b30:	b5f0      	push	{r4, r5, r6, r7, lr}
+ 8001b32:	4645      	mov	r5, r8
+ 8001b34:	46de      	mov	lr, fp
+ 8001b36:	4657      	mov	r7, sl
+ 8001b38:	464e      	mov	r6, r9
+ 8001b3a:	b5e0      	push	{r5, r6, r7, lr}
+ 8001b3c:	031f      	lsls	r7, r3, #12
+ 8001b3e:	0b3d      	lsrs	r5, r7, #12
+ 8001b40:	4f2c      	ldr	r7, [pc, #176]	; (8001bf4 <__gedf2+0xc4>)
+ 8001b42:	030e      	lsls	r6, r1, #12
+ 8001b44:	004c      	lsls	r4, r1, #1
+ 8001b46:	46ab      	mov	fp, r5
+ 8001b48:	005d      	lsls	r5, r3, #1
+ 8001b4a:	4684      	mov	ip, r0
+ 8001b4c:	0b36      	lsrs	r6, r6, #12
+ 8001b4e:	0d64      	lsrs	r4, r4, #21
+ 8001b50:	0fc9      	lsrs	r1, r1, #31
+ 8001b52:	4690      	mov	r8, r2
+ 8001b54:	0d6d      	lsrs	r5, r5, #21
+ 8001b56:	0fdb      	lsrs	r3, r3, #31
+ 8001b58:	42bc      	cmp	r4, r7
+ 8001b5a:	d02a      	beq.n	8001bb2 <__gedf2+0x82>
+ 8001b5c:	4f25      	ldr	r7, [pc, #148]	; (8001bf4 <__gedf2+0xc4>)
+ 8001b5e:	42bd      	cmp	r5, r7
+ 8001b60:	d02d      	beq.n	8001bbe <__gedf2+0x8e>
+ 8001b62:	2c00      	cmp	r4, #0
+ 8001b64:	d10f      	bne.n	8001b86 <__gedf2+0x56>
+ 8001b66:	4330      	orrs	r0, r6
+ 8001b68:	0007      	movs	r7, r0
+ 8001b6a:	4681      	mov	r9, r0
+ 8001b6c:	4278      	negs	r0, r7
+ 8001b6e:	4178      	adcs	r0, r7
+ 8001b70:	b2c0      	uxtb	r0, r0
+ 8001b72:	2d00      	cmp	r5, #0
+ 8001b74:	d117      	bne.n	8001ba6 <__gedf2+0x76>
+ 8001b76:	465f      	mov	r7, fp
+ 8001b78:	433a      	orrs	r2, r7
+ 8001b7a:	d114      	bne.n	8001ba6 <__gedf2+0x76>
+ 8001b7c:	464b      	mov	r3, r9
+ 8001b7e:	2000      	movs	r0, #0
+ 8001b80:	2b00      	cmp	r3, #0
+ 8001b82:	d00a      	beq.n	8001b9a <__gedf2+0x6a>
+ 8001b84:	e006      	b.n	8001b94 <__gedf2+0x64>
+ 8001b86:	2d00      	cmp	r5, #0
+ 8001b88:	d102      	bne.n	8001b90 <__gedf2+0x60>
+ 8001b8a:	4658      	mov	r0, fp
+ 8001b8c:	4302      	orrs	r2, r0
+ 8001b8e:	d001      	beq.n	8001b94 <__gedf2+0x64>
+ 8001b90:	4299      	cmp	r1, r3
+ 8001b92:	d018      	beq.n	8001bc6 <__gedf2+0x96>
+ 8001b94:	4248      	negs	r0, r1
+ 8001b96:	2101      	movs	r1, #1
+ 8001b98:	4308      	orrs	r0, r1
+ 8001b9a:	bc3c      	pop	{r2, r3, r4, r5}
+ 8001b9c:	4690      	mov	r8, r2
+ 8001b9e:	4699      	mov	r9, r3
+ 8001ba0:	46a2      	mov	sl, r4
+ 8001ba2:	46ab      	mov	fp, r5
+ 8001ba4:	bdf0      	pop	{r4, r5, r6, r7, pc}
+ 8001ba6:	2800      	cmp	r0, #0
+ 8001ba8:	d0f2      	beq.n	8001b90 <__gedf2+0x60>
+ 8001baa:	2001      	movs	r0, #1
+ 8001bac:	3b01      	subs	r3, #1
+ 8001bae:	4318      	orrs	r0, r3
+ 8001bb0:	e7f3      	b.n	8001b9a <__gedf2+0x6a>
+ 8001bb2:	0037      	movs	r7, r6
+ 8001bb4:	4307      	orrs	r7, r0
+ 8001bb6:	d0d1      	beq.n	8001b5c <__gedf2+0x2c>
+ 8001bb8:	2002      	movs	r0, #2
+ 8001bba:	4240      	negs	r0, r0
+ 8001bbc:	e7ed      	b.n	8001b9a <__gedf2+0x6a>
+ 8001bbe:	465f      	mov	r7, fp
+ 8001bc0:	4317      	orrs	r7, r2
+ 8001bc2:	d0ce      	beq.n	8001b62 <__gedf2+0x32>
+ 8001bc4:	e7f8      	b.n	8001bb8 <__gedf2+0x88>
+ 8001bc6:	42ac      	cmp	r4, r5
+ 8001bc8:	dce4      	bgt.n	8001b94 <__gedf2+0x64>
+ 8001bca:	da03      	bge.n	8001bd4 <__gedf2+0xa4>
+ 8001bcc:	1e48      	subs	r0, r1, #1
+ 8001bce:	2101      	movs	r1, #1
+ 8001bd0:	4308      	orrs	r0, r1
+ 8001bd2:	e7e2      	b.n	8001b9a <__gedf2+0x6a>
+ 8001bd4:	455e      	cmp	r6, fp
+ 8001bd6:	d8dd      	bhi.n	8001b94 <__gedf2+0x64>
+ 8001bd8:	d006      	beq.n	8001be8 <__gedf2+0xb8>
+ 8001bda:	2000      	movs	r0, #0
+ 8001bdc:	455e      	cmp	r6, fp
+ 8001bde:	d2dc      	bcs.n	8001b9a <__gedf2+0x6a>
+ 8001be0:	2301      	movs	r3, #1
+ 8001be2:	1e48      	subs	r0, r1, #1
+ 8001be4:	4318      	orrs	r0, r3
+ 8001be6:	e7d8      	b.n	8001b9a <__gedf2+0x6a>
+ 8001be8:	45c4      	cmp	ip, r8
+ 8001bea:	d8d3      	bhi.n	8001b94 <__gedf2+0x64>
+ 8001bec:	2000      	movs	r0, #0
+ 8001bee:	45c4      	cmp	ip, r8
+ 8001bf0:	d3f6      	bcc.n	8001be0 <__gedf2+0xb0>
+ 8001bf2:	e7d2      	b.n	8001b9a <__gedf2+0x6a>
+ 8001bf4:	000007ff 	.word	0x000007ff
+
+08001bf8 <__ledf2>:
+ 8001bf8:	b5f0      	push	{r4, r5, r6, r7, lr}
+ 8001bfa:	464e      	mov	r6, r9
+ 8001bfc:	4645      	mov	r5, r8
+ 8001bfe:	46de      	mov	lr, fp
+ 8001c00:	4657      	mov	r7, sl
+ 8001c02:	005c      	lsls	r4, r3, #1
+ 8001c04:	b5e0      	push	{r5, r6, r7, lr}
+ 8001c06:	031f      	lsls	r7, r3, #12
+ 8001c08:	0fdb      	lsrs	r3, r3, #31
+ 8001c0a:	4699      	mov	r9, r3
+ 8001c0c:	4b2a      	ldr	r3, [pc, #168]	; (8001cb8 <__ledf2+0xc0>)
+ 8001c0e:	030e      	lsls	r6, r1, #12
+ 8001c10:	004d      	lsls	r5, r1, #1
+ 8001c12:	0fc9      	lsrs	r1, r1, #31
+ 8001c14:	4684      	mov	ip, r0
+ 8001c16:	0b36      	lsrs	r6, r6, #12
+ 8001c18:	0d6d      	lsrs	r5, r5, #21
+ 8001c1a:	468b      	mov	fp, r1
+ 8001c1c:	4690      	mov	r8, r2
+ 8001c1e:	0b3f      	lsrs	r7, r7, #12
+ 8001c20:	0d64      	lsrs	r4, r4, #21
+ 8001c22:	429d      	cmp	r5, r3
+ 8001c24:	d020      	beq.n	8001c68 <__ledf2+0x70>
+ 8001c26:	4b24      	ldr	r3, [pc, #144]	; (8001cb8 <__ledf2+0xc0>)
+ 8001c28:	429c      	cmp	r4, r3
+ 8001c2a:	d022      	beq.n	8001c72 <__ledf2+0x7a>
+ 8001c2c:	2d00      	cmp	r5, #0
+ 8001c2e:	d112      	bne.n	8001c56 <__ledf2+0x5e>
+ 8001c30:	4330      	orrs	r0, r6
+ 8001c32:	4243      	negs	r3, r0
+ 8001c34:	4143      	adcs	r3, r0
+ 8001c36:	b2db      	uxtb	r3, r3
+ 8001c38:	2c00      	cmp	r4, #0
+ 8001c3a:	d01f      	beq.n	8001c7c <__ledf2+0x84>
+ 8001c3c:	2b00      	cmp	r3, #0
+ 8001c3e:	d00c      	beq.n	8001c5a <__ledf2+0x62>
+ 8001c40:	464b      	mov	r3, r9
+ 8001c42:	2001      	movs	r0, #1
+ 8001c44:	3b01      	subs	r3, #1
+ 8001c46:	4303      	orrs	r3, r0
+ 8001c48:	0018      	movs	r0, r3
+ 8001c4a:	bc3c      	pop	{r2, r3, r4, r5}
+ 8001c4c:	4690      	mov	r8, r2
+ 8001c4e:	4699      	mov	r9, r3
+ 8001c50:	46a2      	mov	sl, r4
+ 8001c52:	46ab      	mov	fp, r5
+ 8001c54:	bdf0      	pop	{r4, r5, r6, r7, pc}
+ 8001c56:	2c00      	cmp	r4, #0
+ 8001c58:	d016      	beq.n	8001c88 <__ledf2+0x90>
+ 8001c5a:	45cb      	cmp	fp, r9
+ 8001c5c:	d017      	beq.n	8001c8e <__ledf2+0x96>
+ 8001c5e:	465b      	mov	r3, fp
+ 8001c60:	4259      	negs	r1, r3
+ 8001c62:	2301      	movs	r3, #1
+ 8001c64:	430b      	orrs	r3, r1
+ 8001c66:	e7ef      	b.n	8001c48 <__ledf2+0x50>
+ 8001c68:	0031      	movs	r1, r6
+ 8001c6a:	2302      	movs	r3, #2
+ 8001c6c:	4301      	orrs	r1, r0
+ 8001c6e:	d1eb      	bne.n	8001c48 <__ledf2+0x50>
+ 8001c70:	e7d9      	b.n	8001c26 <__ledf2+0x2e>
+ 8001c72:	0039      	movs	r1, r7
+ 8001c74:	2302      	movs	r3, #2
+ 8001c76:	4311      	orrs	r1, r2
+ 8001c78:	d1e6      	bne.n	8001c48 <__ledf2+0x50>
+ 8001c7a:	e7d7      	b.n	8001c2c <__ledf2+0x34>
+ 8001c7c:	433a      	orrs	r2, r7
+ 8001c7e:	d1dd      	bne.n	8001c3c <__ledf2+0x44>
+ 8001c80:	2300      	movs	r3, #0
+ 8001c82:	2800      	cmp	r0, #0
+ 8001c84:	d0e0      	beq.n	8001c48 <__ledf2+0x50>
+ 8001c86:	e7ea      	b.n	8001c5e <__ledf2+0x66>
+ 8001c88:	433a      	orrs	r2, r7
+ 8001c8a:	d1e6      	bne.n	8001c5a <__ledf2+0x62>
+ 8001c8c:	e7e7      	b.n	8001c5e <__ledf2+0x66>
+ 8001c8e:	42a5      	cmp	r5, r4
+ 8001c90:	dce5      	bgt.n	8001c5e <__ledf2+0x66>
+ 8001c92:	db05      	blt.n	8001ca0 <__ledf2+0xa8>
+ 8001c94:	42be      	cmp	r6, r7
+ 8001c96:	d8e2      	bhi.n	8001c5e <__ledf2+0x66>
+ 8001c98:	d007      	beq.n	8001caa <__ledf2+0xb2>
+ 8001c9a:	2300      	movs	r3, #0
+ 8001c9c:	42be      	cmp	r6, r7
+ 8001c9e:	d2d3      	bcs.n	8001c48 <__ledf2+0x50>
+ 8001ca0:	4659      	mov	r1, fp
+ 8001ca2:	2301      	movs	r3, #1
+ 8001ca4:	3901      	subs	r1, #1
+ 8001ca6:	430b      	orrs	r3, r1
+ 8001ca8:	e7ce      	b.n	8001c48 <__ledf2+0x50>
+ 8001caa:	45c4      	cmp	ip, r8
+ 8001cac:	d8d7      	bhi.n	8001c5e <__ledf2+0x66>
+ 8001cae:	2300      	movs	r3, #0
+ 8001cb0:	45c4      	cmp	ip, r8
+ 8001cb2:	d3f5      	bcc.n	8001ca0 <__ledf2+0xa8>
+ 8001cb4:	e7c8      	b.n	8001c48 <__ledf2+0x50>
+ 8001cb6:	46c0      	nop			; (mov r8, r8)
+ 8001cb8:	000007ff 	.word	0x000007ff
+
+08001cbc <__aeabi_f2d>:
+ 8001cbc:	0041      	lsls	r1, r0, #1
+ 8001cbe:	0e09      	lsrs	r1, r1, #24
+ 8001cc0:	1c4b      	adds	r3, r1, #1
+ 8001cc2:	b570      	push	{r4, r5, r6, lr}
+ 8001cc4:	b2db      	uxtb	r3, r3
+ 8001cc6:	0246      	lsls	r6, r0, #9
+ 8001cc8:	0a75      	lsrs	r5, r6, #9
+ 8001cca:	0fc4      	lsrs	r4, r0, #31
+ 8001ccc:	2b01      	cmp	r3, #1
+ 8001cce:	dd14      	ble.n	8001cfa <__aeabi_f2d+0x3e>
+ 8001cd0:	23e0      	movs	r3, #224	; 0xe0
+ 8001cd2:	009b      	lsls	r3, r3, #2
+ 8001cd4:	076d      	lsls	r5, r5, #29
+ 8001cd6:	0b36      	lsrs	r6, r6, #12
+ 8001cd8:	18cb      	adds	r3, r1, r3
+ 8001cda:	2100      	movs	r1, #0
+ 8001cdc:	0d0a      	lsrs	r2, r1, #20
+ 8001cde:	0028      	movs	r0, r5
+ 8001ce0:	0512      	lsls	r2, r2, #20
+ 8001ce2:	4d1c      	ldr	r5, [pc, #112]	; (8001d54 <__aeabi_f2d+0x98>)
+ 8001ce4:	4332      	orrs	r2, r6
+ 8001ce6:	055b      	lsls	r3, r3, #21
+ 8001ce8:	402a      	ands	r2, r5
+ 8001cea:	085b      	lsrs	r3, r3, #1
+ 8001cec:	4313      	orrs	r3, r2
+ 8001cee:	005b      	lsls	r3, r3, #1
+ 8001cf0:	07e4      	lsls	r4, r4, #31
+ 8001cf2:	085b      	lsrs	r3, r3, #1
+ 8001cf4:	4323      	orrs	r3, r4
+ 8001cf6:	0019      	movs	r1, r3
+ 8001cf8:	bd70      	pop	{r4, r5, r6, pc}
+ 8001cfa:	2900      	cmp	r1, #0
+ 8001cfc:	d114      	bne.n	8001d28 <__aeabi_f2d+0x6c>
+ 8001cfe:	2d00      	cmp	r5, #0
+ 8001d00:	d01e      	beq.n	8001d40 <__aeabi_f2d+0x84>
+ 8001d02:	0028      	movs	r0, r5
+ 8001d04:	f000 f82c 	bl	8001d60 <__clzsi2>
+ 8001d08:	280a      	cmp	r0, #10
+ 8001d0a:	dc1c      	bgt.n	8001d46 <__aeabi_f2d+0x8a>
+ 8001d0c:	230b      	movs	r3, #11
+ 8001d0e:	002a      	movs	r2, r5
+ 8001d10:	1a1b      	subs	r3, r3, r0
+ 8001d12:	40da      	lsrs	r2, r3
+ 8001d14:	0003      	movs	r3, r0
+ 8001d16:	3315      	adds	r3, #21
+ 8001d18:	409d      	lsls	r5, r3
+ 8001d1a:	4b0f      	ldr	r3, [pc, #60]	; (8001d58 <__aeabi_f2d+0x9c>)
+ 8001d1c:	0312      	lsls	r2, r2, #12
+ 8001d1e:	1a1b      	subs	r3, r3, r0
+ 8001d20:	055b      	lsls	r3, r3, #21
+ 8001d22:	0b16      	lsrs	r6, r2, #12
+ 8001d24:	0d5b      	lsrs	r3, r3, #21
+ 8001d26:	e7d8      	b.n	8001cda <__aeabi_f2d+0x1e>
+ 8001d28:	2d00      	cmp	r5, #0
+ 8001d2a:	d006      	beq.n	8001d3a <__aeabi_f2d+0x7e>
+ 8001d2c:	0b32      	lsrs	r2, r6, #12
+ 8001d2e:	2680      	movs	r6, #128	; 0x80
+ 8001d30:	0336      	lsls	r6, r6, #12
+ 8001d32:	076d      	lsls	r5, r5, #29
+ 8001d34:	4316      	orrs	r6, r2
+ 8001d36:	4b09      	ldr	r3, [pc, #36]	; (8001d5c <__aeabi_f2d+0xa0>)
+ 8001d38:	e7cf      	b.n	8001cda <__aeabi_f2d+0x1e>
+ 8001d3a:	4b08      	ldr	r3, [pc, #32]	; (8001d5c <__aeabi_f2d+0xa0>)
+ 8001d3c:	2600      	movs	r6, #0
+ 8001d3e:	e7cc      	b.n	8001cda <__aeabi_f2d+0x1e>
+ 8001d40:	2300      	movs	r3, #0
+ 8001d42:	2600      	movs	r6, #0
+ 8001d44:	e7c9      	b.n	8001cda <__aeabi_f2d+0x1e>
+ 8001d46:	0003      	movs	r3, r0
+ 8001d48:	002a      	movs	r2, r5
+ 8001d4a:	3b0b      	subs	r3, #11
+ 8001d4c:	409a      	lsls	r2, r3
+ 8001d4e:	2500      	movs	r5, #0
+ 8001d50:	e7e3      	b.n	8001d1a <__aeabi_f2d+0x5e>
+ 8001d52:	46c0      	nop			; (mov r8, r8)
+ 8001d54:	800fffff 	.word	0x800fffff
+ 8001d58:	00000389 	.word	0x00000389
+ 8001d5c:	000007ff 	.word	0x000007ff
+
+08001d60 <__clzsi2>:
+ 8001d60:	211c      	movs	r1, #28
+ 8001d62:	2301      	movs	r3, #1
+ 8001d64:	041b      	lsls	r3, r3, #16
+ 8001d66:	4298      	cmp	r0, r3
+ 8001d68:	d301      	bcc.n	8001d6e <__clzsi2+0xe>
+ 8001d6a:	0c00      	lsrs	r0, r0, #16
+ 8001d6c:	3910      	subs	r1, #16
+ 8001d6e:	0a1b      	lsrs	r3, r3, #8
+ 8001d70:	4298      	cmp	r0, r3
+ 8001d72:	d301      	bcc.n	8001d78 <__clzsi2+0x18>
+ 8001d74:	0a00      	lsrs	r0, r0, #8
+ 8001d76:	3908      	subs	r1, #8
+ 8001d78:	091b      	lsrs	r3, r3, #4
+ 8001d7a:	4298      	cmp	r0, r3
+ 8001d7c:	d301      	bcc.n	8001d82 <__clzsi2+0x22>
+ 8001d7e:	0900      	lsrs	r0, r0, #4
+ 8001d80:	3904      	subs	r1, #4
+ 8001d82:	a202      	add	r2, pc, #8	; (adr r2, 8001d8c <__clzsi2+0x2c>)
+ 8001d84:	5c10      	ldrb	r0, [r2, r0]
+ 8001d86:	1840      	adds	r0, r0, r1
+ 8001d88:	4770      	bx	lr
+ 8001d8a:	46c0      	nop			; (mov r8, r8)
+ 8001d8c:	02020304 	.word	0x02020304
+ 8001d90:	01010101 	.word	0x01010101
+	...
+
+08001d9c <Reset_Handler>:
+
+  .section .text.Reset_Handler
+  .weak Reset_Handler
+  .type Reset_Handler, %function
+Reset_Handler:
+  ldr   r0, =_estack
+ 8001d9c:	480d      	ldr	r0, [pc, #52]	; (8001dd4 <LoopForever+0x2>)
+  mov   sp, r0          /* set stack pointer */
+ 8001d9e:	4685      	mov	sp, r0
+
+/* Copy the data segment initializers from flash to SRAM */
+  movs r1, #0
+ 8001da0:	2100      	movs	r1, #0
+  b LoopCopyDataInit
+ 8001da2:	e003      	b.n	8001dac <LoopCopyDataInit>
+
+08001da4 <CopyDataInit>:
+
+CopyDataInit:
+  ldr r3, =_sidata
+ 8001da4:	4b0c      	ldr	r3, [pc, #48]	; (8001dd8 <LoopForever+0x6>)
+  ldr r3, [r3, r1]
+ 8001da6:	585b      	ldr	r3, [r3, r1]
+  str r3, [r0, r1]
+ 8001da8:	5043      	str	r3, [r0, r1]
+  adds r1, r1, #4
+ 8001daa:	3104      	adds	r1, #4
+
+08001dac <LoopCopyDataInit>:
+
+LoopCopyDataInit:
+  ldr r0, =_sdata
+ 8001dac:	480b      	ldr	r0, [pc, #44]	; (8001ddc <LoopForever+0xa>)
+  ldr r3, =_edata
+ 8001dae:	4b0c      	ldr	r3, [pc, #48]	; (8001de0 <LoopForever+0xe>)
+  adds r2, r0, r1
+ 8001db0:	1842      	adds	r2, r0, r1
+  cmp r2, r3
+ 8001db2:	429a      	cmp	r2, r3
+  bcc CopyDataInit
+ 8001db4:	d3f6      	bcc.n	8001da4 <CopyDataInit>
+  ldr r2, =_sbss
+ 8001db6:	4a0b      	ldr	r2, [pc, #44]	; (8001de4 <LoopForever+0x12>)
+  b LoopFillZerobss
+ 8001db8:	e002      	b.n	8001dc0 <LoopFillZerobss>
+
+08001dba <FillZerobss>:
+/* Zero fill the bss segment. */
+FillZerobss:
+  movs r3, #0
+ 8001dba:	2300      	movs	r3, #0
+  str  r3, [r2]
+ 8001dbc:	6013      	str	r3, [r2, #0]
+  adds r2, r2, #4
+ 8001dbe:	3204      	adds	r2, #4
+
+08001dc0 <LoopFillZerobss>:
+
+
+LoopFillZerobss:
+  ldr r3, = _ebss
+ 8001dc0:	4b09      	ldr	r3, [pc, #36]	; (8001de8 <LoopForever+0x16>)
+  cmp r2, r3
+ 8001dc2:	429a      	cmp	r2, r3
+  bcc FillZerobss
+ 8001dc4:	d3f9      	bcc.n	8001dba <FillZerobss>
+
+/* Call the clock system intitialization function.*/
+  bl  SystemInit
+ 8001dc6:	f7ff fbfd 	bl	80015c4 <SystemInit>
+/* Call static constructors */
+  bl __libc_init_array
+ 8001dca:	f000 f811 	bl	8001df0 <__libc_init_array>
+/* Call the application's entry point.*/
+  bl main
+ 8001dce:	f7ff f843 	bl	8000e58 <main>
+
+08001dd2 <LoopForever>:
+
+LoopForever:
+    b LoopForever
+ 8001dd2:	e7fe      	b.n	8001dd2 <LoopForever>
+  ldr   r0, =_estack
+ 8001dd4:	20002000 	.word	0x20002000
+  ldr r3, =_sidata
+ 8001dd8:	08001f78 	.word	0x08001f78
+  ldr r0, =_sdata
+ 8001ddc:	20000000 	.word	0x20000000
+  ldr r3, =_edata
+ 8001de0:	20000004 	.word	0x20000004
+  ldr r2, =_sbss
+ 8001de4:	20000004 	.word	0x20000004
+  ldr r3, = _ebss
+ 8001de8:	20000020 	.word	0x20000020
+
+08001dec <ADC1_COMP_IRQHandler>:
+ * @retval : None
+*/
+    .section .text.Default_Handler,"ax",%progbits
+Default_Handler:
+Infinite_Loop:
+  b Infinite_Loop
+ 8001dec:	e7fe      	b.n	8001dec <ADC1_COMP_IRQHandler>
+	...
+
+08001df0 <__libc_init_array>:
+ 8001df0:	b570      	push	{r4, r5, r6, lr}
+ 8001df2:	2600      	movs	r6, #0
+ 8001df4:	4d0c      	ldr	r5, [pc, #48]	; (8001e28 <__libc_init_array+0x38>)
+ 8001df6:	4c0d      	ldr	r4, [pc, #52]	; (8001e2c <__libc_init_array+0x3c>)
+ 8001df8:	1b64      	subs	r4, r4, r5
+ 8001dfa:	10a4      	asrs	r4, r4, #2
+ 8001dfc:	42a6      	cmp	r6, r4
+ 8001dfe:	d109      	bne.n	8001e14 <__libc_init_array+0x24>
+ 8001e00:	2600      	movs	r6, #0
+ 8001e02:	f000 f82b 	bl	8001e5c <_init>
+ 8001e06:	4d0a      	ldr	r5, [pc, #40]	; (8001e30 <__libc_init_array+0x40>)
+ 8001e08:	4c0a      	ldr	r4, [pc, #40]	; (8001e34 <__libc_init_array+0x44>)
+ 8001e0a:	1b64      	subs	r4, r4, r5
+ 8001e0c:	10a4      	asrs	r4, r4, #2
+ 8001e0e:	42a6      	cmp	r6, r4
+ 8001e10:	d105      	bne.n	8001e1e <__libc_init_array+0x2e>
+ 8001e12:	bd70      	pop	{r4, r5, r6, pc}
+ 8001e14:	00b3      	lsls	r3, r6, #2
+ 8001e16:	58eb      	ldr	r3, [r5, r3]
+ 8001e18:	4798      	blx	r3
+ 8001e1a:	3601      	adds	r6, #1
+ 8001e1c:	e7ee      	b.n	8001dfc <__libc_init_array+0xc>
+ 8001e1e:	00b3      	lsls	r3, r6, #2
+ 8001e20:	58eb      	ldr	r3, [r5, r3]
+ 8001e22:	4798      	blx	r3
+ 8001e24:	3601      	adds	r6, #1
+ 8001e26:	e7f2      	b.n	8001e0e <__libc_init_array+0x1e>
+ 8001e28:	08001f70 	.word	0x08001f70
+ 8001e2c:	08001f70 	.word	0x08001f70
+ 8001e30:	08001f70 	.word	0x08001f70
+ 8001e34:	08001f74 	.word	0x08001f74
+
+08001e38 <memcpy>:
+ 8001e38:	2300      	movs	r3, #0
+ 8001e3a:	b510      	push	{r4, lr}
+ 8001e3c:	429a      	cmp	r2, r3
+ 8001e3e:	d100      	bne.n	8001e42 <memcpy+0xa>
+ 8001e40:	bd10      	pop	{r4, pc}
+ 8001e42:	5ccc      	ldrb	r4, [r1, r3]
+ 8001e44:	54c4      	strb	r4, [r0, r3]
+ 8001e46:	3301      	adds	r3, #1
+ 8001e48:	e7f8      	b.n	8001e3c <memcpy+0x4>
+
+08001e4a <memset>:
+ 8001e4a:	0003      	movs	r3, r0
+ 8001e4c:	1882      	adds	r2, r0, r2
+ 8001e4e:	4293      	cmp	r3, r2
+ 8001e50:	d100      	bne.n	8001e54 <memset+0xa>
+ 8001e52:	4770      	bx	lr
+ 8001e54:	7019      	strb	r1, [r3, #0]
+ 8001e56:	3301      	adds	r3, #1
+ 8001e58:	e7f9      	b.n	8001e4e <memset+0x4>
+	...
+
+08001e5c <_init>:
+ 8001e5c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8001e5e:	46c0      	nop			; (mov r8, r8)
+ 8001e60:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 8001e62:	bc08      	pop	{r3}
+ 8001e64:	469e      	mov	lr, r3
+ 8001e66:	4770      	bx	lr
+
+08001e68 <_fini>:
+ 8001e68:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8001e6a:	46c0      	nop			; (mov r8, r8)
+ 8001e6c:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 8001e6e:	bc08      	pop	{r3}
+ 8001e70:	469e      	mov	lr, r3
+ 8001e72:	4770      	bx	lr
