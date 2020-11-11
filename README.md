@@ -6,5 +6,5 @@ It contains the code which was used to build the model as well as convert it to 
 
 Fail1 contains the microcontroller C99 code which uses the functions generated in tree_hugger_blackhole to classify 40 datapoints. This was the code used to measure the size of the compiled code as well as the space that it uses on the stack during execution. It was also used to verify that the converted code works on the microcontroller, which is why there are delays built into the code.
 
-G
+Getting_up_to_speed contains the microcontroller C99 code without delays which was used to measure the execution time of the classification of 40 datapoints.
 
